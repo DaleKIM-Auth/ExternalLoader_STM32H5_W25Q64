@@ -1,0 +1,1509 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.40.1.364/W64 for ARM         23/Nov/2023  21:46:12
+# Copyright 1999-2023 IAR Systems AB.
+#
+#    Cpu mode          =  thumb
+#    Endian            =  little
+#    Source file       =
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Source\Library\stm32h5xx_hal_pwr_ex.c
+#    Command line      =
+#        -f
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\stm32h5xx_hal_pwr_ex.o.rsp
+#        (C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Source\Library\stm32h5xx_hal_pwr_ex.c
+#        -D STM32H562xx -lCN
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\List\Library_12270351780628986503.dir
+#        -lA
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\List\Library_12270351780628986503.dir
+#        -o
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M33.no_dsp.no_se -e --fpu=VFPv5_sp --dlib_config
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.2\arm\inc\c\DLib_Config_Normal.h" -I
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\..\Includes\CMSIS\
+#        -I
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\..\Includes\Library\
+#        -I
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\..\Includes\Loader\
+#        -Ol) --dependencies=n
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\stm32h5xx_hal_pwr_ex.o.iar_deps
+#    Locale            =  C
+#    List file         =
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\List\Library_12270351780628986503.dir\stm32h5xx_hal_pwr_ex.lst
+#    Object file       =
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\stm32h5xx_hal_pwr_ex.o
+#    Runtime model:       
+#      __CPP_Runtime   =  1
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#
+###############################################################################
+
+C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Source\Library\stm32h5xx_hal_pwr_ex.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32h5xx_hal_pwr_ex.c
+      4            * @author  MCD Application Team
+      5            * @brief   Extended PWR HAL module driver.
+      6            *          This file provides firmware functions to manage the following
+      7            *          functionalities of the Power Controller extension peripheral :
+      8            *           + Power Supply Control Functions
+      9            *           + Voltage Monitoring Functions
+     10            *           + Wakeup Pins configuration Functions
+     11            *           + Memories Retention Functions
+     12            *           + IO and JTAG Retention Functions
+     13            ******************************************************************************
+     14            * @attention
+     15            *
+     16            * Copyright (c) 2023 STMicroelectronics.
+     17            * All rights reserved.
+     18            *
+     19            * This software is licensed under terms that can be found in the LICENSE file
+     20            * in the root directory of this software component.
+     21            * If no LICENSE file comes with this software, it is provided AS-IS.
+     22            *
+     23            ******************************************************************************
+     24            */
+     25          
+     26          /* Includes ------------------------------------------------------------------*/
+     27          #include "stm32h5xx_hal.h"
+     28          
+     29          /** @addtogroup STM32H5xx_HAL_Driver
+     30            * @{
+     31            */
+     32          
+     33          /** @defgroup PWREx PWREx
+     34            * @brief    PWR Extended HAL module driver
+     35            * @{
+     36            */
+     37          
+     38          #if defined (HAL_PWR_MODULE_ENABLED)
+     39          
+     40          /* Private typedef -----------------------------------------------------------*/
+     41          /* Private define ------------------------------------------------------------*/
+     42          
+     43          /** @defgroup PWR_Extended_Private_Defines PWR Extended Private Defines
+     44            * @{
+     45            */
+     46          /* PORTI pins mask */
+     47          #define PWR_PORTI_AVAILABLE_PINS  (0xFFU)
+     48          /*!< Time out value of flags setting */
+     49          #define PWR_FLAG_SETTING_DELAY    (0x32U)
+     50          
+     51          /** @defgroup PWR_PVM_Mode_Mask PWR PVM Mode Mask
+     52            * @{
+     53            */
+     54          #define PVM_RISING_EDGE  (0x01U)  /*!< Mask for rising edge set as PVM trigger                      */
+     55          #define PVM_FALLING_EDGE (0x02U)  /*!< Mask for falling edge set as PVM trigger                     */
+     56          #define PVM_MODE_IT      (0x04U)  /*!< Mask for interruption yielded by PVM threshold crossing      */
+     57          #define PVM_MODE_EVT     (0x08U)  /*!< Mask for event yielded by PVM threshold crossing             */
+     58          /**
+     59            * @}
+     60            */
+     61          
+     62          /** @defgroup PWREx_WakeUp_Pins_Offsets PWREx Wake-Up Pins offsets
+     63            * @{
+     64            */
+     65          
+     66          /* Wake-Up Pins PWR Pin Pull shift offsets */
+     67          #define PWR_WAKEUP_PINS_PULL_SHIFT_OFFSET (2U)
+     68          
+     69          /**
+     70            * @}
+     71            */
+     72          
+     73          /**
+     74            * @}
+     75            */
+     76          
+     77          /* Private macro -------------------------------------------------------------*/
+     78          /* Private variables ---------------------------------------------------------*/
+     79          /* Private function prototypes -----------------------------------------------*/
+     80          /* Exported functions --------------------------------------------------------*/
+     81          
+     82          /** @defgroup PWREx_Exported_Functions PWR Extended Exported Functions
+     83            * @{
+     84            */
+     85          
+     86          /** @defgroup PWREx_Exported_Functions_Group1 Power Supply Control Functions
+     87            * @brief    Power supply control functions
+     88            *
+     89          @verbatim
+     90           ===============================================================================
+     91                            ##### Power supply control functions #####
+     92           ===============================================================================
+     93              [..]
+     94          @endverbatim
+     95            * @{
+     96            */
+     97          
+     98          /**
+     99            * @brief Configure the system Power Supply.
+    100            * @param  SupplySource : Specifies the Power Supply source to set after a
+    101            *                        system startup.
+    102            *         This parameter can be one of the following values :
+    103            *            @arg PWR_EXTERNAL_SOURCE_SUPPLY : The SMPS and the LDO are
+    104            *                                              Bypassed. The Vcore Power
+    105            *                                              Domains are supplied from
+    106            *                                              external source.
+    107            * @retval HAL status.
+    108            */
+
+   \                                 In section .text, align 2, keep-with-next
+    109          HAL_StatusTypeDef HAL_PWREx_ConfigSupply(uint32_t SupplySource)
+    110          {
+   \                     HAL_PWREx_ConfigSupply: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    111            uint32_t tickstart;
+    112          
+    113            /* Check the parameters */
+    114            assert_param(IS_PWR_SUPPLY(SupplySource));
+    115          
+    116            if ((PWR->SCCR & PWR_SCCR_BYPASS) != (PWR_SCCR_BYPASS))
+   \        0x2   0x....             LDR.N    R2,??DataTable35
+   \        0x4   0x6811             LDR      R1,[R2, #+0]
+   \        0x6   0x07C9             LSLS     R1,R1,#+31
+   \        0x8   0xD412             BMI.N    ??HAL_PWREx_ConfigSupply_0
+    117            {
+    118              /* Set the power supply configuration */
+    119              MODIFY_REG(PWR->SCCR, PWR_SUPPLY_CONFIG_MASK, SupplySource);
+   \        0xA   0x6813             LDR      R3,[R2, #+0]
+   \        0xC   0x....             LDR.N    R1,??DataTable35_1
+   \        0xE   0x400B             ANDS     R3,R1,R3
+   \       0x10   0x4318             ORRS     R0,R0,R3
+   \       0x12   0x6010             STR      R0,[R2, #+0]
+    120          
+    121              /* Get tick */
+    122              tickstart = HAL_GetTick();
+   \       0x14   0x.... 0x....      BL       HAL_GetTick
+   \       0x18   0x0004             MOVS     R4,R0
+    123          
+    124              /* Wait till voltage level flag is set */
+    125              while (__HAL_PWR_GET_FLAG(PWR_FLAG_ACTVOSRDY) == 0U)
+   \                     ??HAL_PWREx_ConfigSupply_1: (+1)
+   \       0x1A   0x....             LDR.N    R0,??DataTable35_2
+   \       0x1C   0x6800             LDR      R0,[R0, #+0]
+   \       0x1E   0x0480             LSLS     R0,R0,#+18
+   \       0x20   0xD406             BMI.N    ??HAL_PWREx_ConfigSupply_0
+    126              {
+    127                if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY)
+   \       0x22   0x.... 0x....      BL       HAL_GetTick
+   \       0x26   0x1B00             SUBS     R0,R0,R4
+   \       0x28   0x2833             CMP      R0,#+51
+   \       0x2A   0xD3F6             BCC.N    ??HAL_PWREx_ConfigSupply_1
+    128                {
+    129                  return HAL_ERROR;
+   \       0x2C   0x2001             MOVS     R0,#+1
+   \       0x2E   0xE000             B.N      ??HAL_PWREx_ConfigSupply_2
+    130                }
+    131              }
+    132            }
+    133          
+    134            return HAL_OK;
+   \                     ??HAL_PWREx_ConfigSupply_0: (+1)
+   \       0x30   0x2000             MOVS     R0,#+0
+   \                     ??HAL_PWREx_ConfigSupply_2: (+1)
+   \       0x32   0xBD10             POP      {R4,PC}
+    135          }
+    136          
+    137          /**
+    138            * @brief Get the power supply configuration.
+    139            * @retval The supply configuration.
+    140            */
+
+   \                                 In section .text, align 2, keep-with-next
+    141          uint32_t HAL_PWREx_GetSupplyConfig(void)
+    142          {
+    143            return (PWR->SCCR & PWR_SUPPLY_CONFIG_MASK);
+   \                     HAL_PWREx_GetSupplyConfig: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0xF240 0x3101      MOVW     R1,#+769
+   \        0x8   0x4008             ANDS     R0,R1,R0
+   \        0xA   0x4770             BX       LR
+    144          }
+    145          
+    146          /**
+    147            * @brief Configure the main internal regulator output voltage.
+    148            * @param  VoltageScaling : Specifies the regulator output voltage to achieve
+    149            *                          a tradeoff between performance and power
+    150            *                          consumption.
+    151            *          This parameter can be one of the following values :
+    152            *            @arg PWR_REGULATOR_VOLTAGE_SCALE0 : Regulator voltage output
+    153            *                                                Scale 0 mode.
+    154            *            @arg PWR_REGULATOR_VOLTAGE_SCALE1 : Regulator voltage output
+    155            *                                                range 1 mode.
+    156            *            @arg PWR_REGULATOR_VOLTAGE_SCALE2 : Regulator voltage output
+    157            *                                                range 2 mode.
+    158            *            @arg PWR_REGULATOR_VOLTAGE_SCALE3 : Regulator voltage output
+    159            *                                                range 3 mode.
+    160            * @retval HAL Status
+    161            */
+
+   \                                 In section .text, align 2, keep-with-next
+    162          HAL_StatusTypeDef HAL_PWREx_ControlVoltageScaling(uint32_t VoltageScaling)
+    163          {
+   \                     HAL_PWREx_ControlVoltageScaling: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    164            uint32_t tickstart = HAL_GetTick();
+   \        0x4   0x.... 0x....      BL       HAL_GetTick
+   \        0x8   0x0005             MOVS     R5,R0
+    165          
+    166            /* Check the parameters */
+    167            assert_param(IS_PWR_VOLTAGE_SCALING_RANGE(VoltageScaling));
+    168          
+    169            /* Get the voltage scaling  */
+    170            if ((PWR->VOSSR & PWR_VOSSR_ACTVOS) == (VoltageScaling << 10U))
+   \        0xA   0x....             LDR.N    R6,??DataTable35_2
+   \        0xC   0x6830             LDR      R0,[R6, #+0]
+   \        0xE   0xF410 0x4040      ANDS     R0,R0,#0xC000
+   \       0x12   0xEBB0 0x2F84      CMP      R0,R4, LSL #+10
+   \       0x16   0xD101             BNE.N    ??HAL_PWREx_ControlVoltageScaling_0
+    171            {
+    172              /* Old and new voltage scaling configuration match : nothing to do */
+    173              return HAL_OK;
+   \       0x18   0x2000             MOVS     R0,#+0
+   \       0x1A   0xE010             B.N      ??HAL_PWREx_ControlVoltageScaling_1
+    174            }
+    175          
+    176            /* Set the voltage range */
+    177            MODIFY_REG(PWR->VOSCR, PWR_VOSCR_VOS, VoltageScaling);
+   \                     ??HAL_PWREx_ControlVoltageScaling_0: (+1)
+   \       0x1C   0x....             LDR.N    R0,??DataTable35_3
+   \       0x1E   0x6801             LDR      R1,[R0, #+0]
+   \       0x20   0xF031 0x0130      BICS     R1,R1,#0x30
+   \       0x24   0x430C             ORRS     R4,R4,R1
+   \       0x26   0x6004             STR      R4,[R0, #+0]
+    178          
+    179            /* Wait till voltage level flag is set */
+    180            while (__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY) == 0U)
+   \                     ??HAL_PWREx_ControlVoltageScaling_2: (+1)
+   \       0x28   0x6830             LDR      R0,[R6, #+0]
+   \       0x2A   0x0700             LSLS     R0,R0,#+28
+   \       0x2C   0xD406             BMI.N    ??HAL_PWREx_ControlVoltageScaling_3
+    181            {
+    182              if ((HAL_GetTick() - tickstart) > PWR_FLAG_SETTING_DELAY)
+   \       0x2E   0x.... 0x....      BL       HAL_GetTick
+   \       0x32   0x1B40             SUBS     R0,R0,R5
+   \       0x34   0x2833             CMP      R0,#+51
+   \       0x36   0xD3F7             BCC.N    ??HAL_PWREx_ControlVoltageScaling_2
+    183              {
+    184                return HAL_ERROR;
+   \       0x38   0x2001             MOVS     R0,#+1
+   \       0x3A   0xE000             B.N      ??HAL_PWREx_ControlVoltageScaling_1
+    185              }
+    186            }
+    187          
+    188            return HAL_OK;
+   \                     ??HAL_PWREx_ControlVoltageScaling_3: (+1)
+   \       0x3C   0x2000             MOVS     R0,#+0
+   \                     ??HAL_PWREx_ControlVoltageScaling_1: (+1)
+   \       0x3E   0xBD70             POP      {R4-R6,PC}
+    189          }
+    190          
+    191          /**
+    192            * @brief Get the main internal regulator output voltage. Reflecting the last
+    193            *        VOS value applied to the PMU.
+    194            * @retval The current applied VOS selection.
+    195            */
+
+   \                                 In section .text, align 2, keep-with-next
+    196          uint32_t HAL_PWREx_GetVoltageRange(void)
+    197          {
+    198            /* Get the active voltage scaling */
+    199            return (PWR->VOSSR & PWR_VOSSR_ACTVOS);
+   \                     HAL_PWREx_GetVoltageRange: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_2
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0xF410 0x4040      ANDS     R0,R0,#0xC000
+   \        0x8   0x4770             BX       LR
+    200          }
+    201          
+    202          /**
+    203            * @brief Configure the main internal regulator output voltage in STOP mode.
+    204            * @param  VoltageScaling : Specifies the regulator output voltage when the
+    205            *         system enters Stop mode to achieve a tradeoff between performance
+    206            *         and power consumption.
+    207            *          This parameter can be one of the following values:
+    208            *            @arg PWR_REGULATOR_SVOS_SCALE3 : Regulator voltage output range
+    209            *                                             3 mode.
+    210            *            @arg PWR_REGULATOR_SVOS_SCALE4 : Regulator voltage output range
+    211            *                                             4 mode.
+    212            *            @arg PWR_REGULATOR_SVOS_SCALE5 : Regulator voltage output range
+    213            *                                             5 mode.
+    214            * @note   The Stop mode voltage scaling for SVOS4 and SVOS5 sets the voltage
+    215            *         regulator in Low-power (LP) mode to further reduce power consumption.
+    216            *         When preselecting SVOS3, the use of the voltage regulator low-power
+    217            *         mode (LP) can be selected by LPDS register bit.
+    218            * @note   The selected SVOS4 and SVOS5 levels add an additional startup delay
+    219            *         when exiting from system Stop mode.
+    220            * @retval HAL Status.
+    221            */
+
+   \                                 In section .text, align 2, keep-with-next
+    222          HAL_StatusTypeDef HAL_PWREx_ControlStopModeVoltageScaling(uint32_t VoltageScaling)
+    223          {
+    224            /* Check the parameters */
+    225            assert_param(IS_PWR_STOP_MODE_REGULATOR_VOLTAGE(VoltageScaling));
+    226          
+    227            /* Return the stop mode voltage range */
+    228            MODIFY_REG(PWR->PMCR, PWR_PMCR_SVOS, VoltageScaling);
+   \                     HAL_PWREx_ControlStopModeVoltageScaling: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable35_4
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0xF032 0x020C      BICS     R2,R2,#0xC
+   \        0x8   0x4310             ORRS     R0,R0,R2
+   \        0xA   0x6008             STR      R0,[R1, #+0]
+    229          
+    230            return HAL_OK;
+   \        0xC   0x2000             MOVS     R0,#+0
+   \        0xE   0x4770             BX       LR
+    231          }
+    232          
+    233          /**
+    234            * @brief Get the main internal regulator output voltage in STOP mode.
+    235            * @retval The actual applied VOS selection.
+    236            */
+
+   \                                 In section .text, align 2, keep-with-next
+    237          uint32_t HAL_PWREx_GetStopModeVoltageRange(void)
+    238          {
+    239            /* Return the stop voltage scaling */
+    240            return (PWR->PMCR & PWR_PMCR_SVOS);
+   \                     HAL_PWREx_GetStopModeVoltageRange: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_4
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0xF010 0x000C      ANDS     R0,R0,#0xC
+   \        0x8   0x4770             BX       LR
+    241          }
+    242          /**
+    243            * @}
+    244            */
+    245          
+    246          /** @defgroup PWREx_Exported_Functions_Group2 Voltage Monitoring Functions
+    247            * @brief    Voltage monitoring functions
+    248            *
+    249          @verbatim
+    250           ===============================================================================
+    251                               ##### Voltage Monitoring Functions #####
+    252           ===============================================================================
+    253              [..]
+    254          @endverbatim
+    255            * @{
+    256            */
+    257          
+    258          /**
+    259            * @brief  Configure the event mode and the voltage threshold detected by the
+    260            *         Analog Voltage Detector (AVD).
+    261            * @param  sConfigAVD : Pointer to an PWREx_AVDTypeDef structure that contains
+    262            *                      the configuration information for the AVD.
+    263            * @note   Refer to the electrical characteristics of your device datasheet for
+    264            *         more details about the voltage threshold corresponding to each
+    265            *         detection level.
+    266            * @retval None.
+    267            */
+
+   \                                 In section .text, align 2, keep-with-next
+    268          void HAL_PWREx_ConfigAVD(const PWREx_AVDTypeDef *sConfigAVD)
+    269          {
+   \                     HAL_PWREx_ConfigAVD: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+    270            /* Check the parameters */
+    271            assert_param(IS_PWR_AVD_LEVEL(sConfigAVD->AVDLevel));
+    272            assert_param(IS_PWR_AVD_MODE(sConfigAVD->Mode));
+    273          
+    274            /* Set the ALS[10:9] bits according to AVDLevel value */
+    275            MODIFY_REG(PWR->VMCR, PWR_VMCR_ALS, sConfigAVD->AVDLevel);
+   \        0x2   0x....             LDR.N    R2,??DataTable35_5
+   \        0x4   0x6813             LDR      R3,[R2, #+0]
+   \        0x6   0xF433 0x63C0      BICS     R3,R3,#0x600
+   \        0xA   0x6801             LDR      R1,[R0, #+0]
+   \        0xC   0x430B             ORRS     R3,R1,R3
+   \        0xE   0x6013             STR      R3,[R2, #+0]
+    276          
+    277            /* Clear any previous config */
+    278            __HAL_PWR_AVD_EXTI_DISABLE_EVENT();
+   \       0x10   0x....             LDR.N    R1,??DataTable35_6
+   \       0x12   0x680A             LDR      R2,[R1, #+0]
+   \       0x14   0xF432 0x3280      BICS     R2,R2,#0x10000
+   \       0x18   0x600A             STR      R2,[R1, #+0]
+    279            __HAL_PWR_AVD_EXTI_DISABLE_IT();
+   \       0x1A   0x....             LDR.N    R4,??DataTable35_7
+   \       0x1C   0x6822             LDR      R2,[R4, #+0]
+   \       0x1E   0xF432 0x3280      BICS     R2,R2,#0x10000
+   \       0x22   0x6022             STR      R2,[R4, #+0]
+    280            __HAL_PWR_AVD_EXTI_DISABLE_RISING_EDGE();
+   \       0x24   0x....             LDR.N    R2,??DataTable35_8
+   \       0x26   0x6813             LDR      R3,[R2, #+0]
+   \       0x28   0xF433 0x3380      BICS     R3,R3,#0x10000
+   \       0x2C   0x6013             STR      R3,[R2, #+0]
+    281            __HAL_PWR_AVD_EXTI_DISABLE_FALLING_EDGE();
+   \       0x2E   0x....             LDR.N    R3,??DataTable35_9
+   \       0x30   0x681D             LDR      R5,[R3, #+0]
+   \       0x32   0xF435 0x3580      BICS     R5,R5,#0x10000
+   \       0x36   0x601D             STR      R5,[R3, #+0]
+    282          
+    283            /* Configure the interrupt mode */
+    284            if ((sConfigAVD->Mode & AVD_MODE_IT) == AVD_MODE_IT)
+   \       0x38   0x6845             LDR      R5,[R0, #+4]
+   \       0x3A   0x03ED             LSLS     R5,R5,#+15
+   \       0x3C   0xD503             BPL.N    ??HAL_PWREx_ConfigAVD_0
+    285            {
+    286              __HAL_PWR_AVD_EXTI_ENABLE_IT();
+   \       0x3E   0x6825             LDR      R5,[R4, #+0]
+   \       0x40   0xF455 0x3580      ORRS     R5,R5,#0x10000
+   \       0x44   0x6025             STR      R5,[R4, #+0]
+    287            }
+    288          
+    289            /* Configure the event mode */
+    290            if ((sConfigAVD->Mode & AVD_MODE_EVT) == AVD_MODE_EVT)
+   \                     ??HAL_PWREx_ConfigAVD_0: (+1)
+   \       0x46   0x6844             LDR      R4,[R0, #+4]
+   \       0x48   0x03A4             LSLS     R4,R4,#+14
+   \       0x4A   0xD503             BPL.N    ??HAL_PWREx_ConfigAVD_1
+    291            {
+    292              __HAL_PWR_AVD_EXTI_ENABLE_EVENT();
+   \       0x4C   0x680C             LDR      R4,[R1, #+0]
+   \       0x4E   0xF454 0x3480      ORRS     R4,R4,#0x10000
+   \       0x52   0x600C             STR      R4,[R1, #+0]
+    293            }
+    294          
+    295            /* Rising edge configuration */
+    296            if ((sConfigAVD->Mode & AVD_RISING_EDGE) == AVD_RISING_EDGE)
+   \                     ??HAL_PWREx_ConfigAVD_1: (+1)
+   \       0x54   0x7901             LDRB     R1,[R0, #+4]
+   \       0x56   0x07C9             LSLS     R1,R1,#+31
+   \       0x58   0xD503             BPL.N    ??HAL_PWREx_ConfigAVD_2
+    297            {
+    298              __HAL_PWR_AVD_EXTI_ENABLE_RISING_EDGE();
+   \       0x5A   0x6811             LDR      R1,[R2, #+0]
+   \       0x5C   0xF451 0x3180      ORRS     R1,R1,#0x10000
+   \       0x60   0x6011             STR      R1,[R2, #+0]
+    299            }
+    300          
+    301            /* Falling edge configuration */
+    302            if ((sConfigAVD->Mode & AVD_FALLING_EDGE) == AVD_FALLING_EDGE)
+   \                     ??HAL_PWREx_ConfigAVD_2: (+1)
+   \       0x62   0x7900             LDRB     R0,[R0, #+4]
+   \       0x64   0x0780             LSLS     R0,R0,#+30
+   \       0x66   0xD503             BPL.N    ??HAL_PWREx_ConfigAVD_3
+    303            {
+    304              __HAL_PWR_AVD_EXTI_ENABLE_FALLING_EDGE();
+   \       0x68   0x6818             LDR      R0,[R3, #+0]
+   \       0x6A   0xF450 0x3080      ORRS     R0,R0,#0x10000
+   \       0x6E   0x6018             STR      R0,[R3, #+0]
+    305            }
+    306          }
+   \                     ??HAL_PWREx_ConfigAVD_3: (+1)
+   \       0x70   0xBC30             POP      {R4,R5}
+   \       0x72   0x4770             BX       LR
+    307          
+    308          /**
+    309            * @brief Enable the Analog Voltage Detector (AVD).
+    310            * @retval None.
+    311            */
+
+   \                                 In section .text, align 2, keep-with-next
+    312          void HAL_PWREx_EnableAVD(void)
+    313          {
+    314            /* Enable the Analog Voltage Detector */
+    315            SET_BIT(PWR->VMCR, PWR_VMCR_AVDEN);
+   \                     HAL_PWREx_EnableAVD: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_5
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF451 0x7180      ORRS     R1,R1,#0x100
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    316          }
+   \        0xA   0x4770             BX       LR
+    317          
+    318          /**
+    319            * @brief Disable the Analog Voltage Detector(AVD).
+    320            * @retval None.
+    321            */
+
+   \                                 In section .text, align 2, keep-with-next
+    322          void HAL_PWREx_DisableAVD(void)
+    323          {
+    324            /* Disable the Analog Voltage Detector */
+    325            CLEAR_BIT(PWR->VMCR, PWR_VMCR_AVDEN);
+   \                     HAL_PWREx_DisableAVD: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_5
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF431 0x7180      BICS     R1,R1,#0x100
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    326          }
+   \        0xA   0x4770             BX       LR
+    327          
+    328          #if defined (PWR_USBSCR_USB33DEN)
+    329          /**
+    330            * @brief Enable the USB voltage level detector.
+    331            * @retval None.
+    332            */
+
+   \                                 In section .text, align 2, keep-with-next
+    333          void HAL_PWREx_EnableUSBVoltageDetector(void)
+    334          {
+    335            /* Enable the USB voltage detector */
+    336            SET_BIT(PWR->USBSCR, PWR_USBSCR_USB33DEN);
+   \                     HAL_PWREx_EnableUSBVoltageDetector: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_10
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF051 0x7180      ORRS     R1,R1,#0x1000000
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    337          }
+   \        0xA   0x4770             BX       LR
+    338          
+    339          /**
+    340            * @brief Disable the USB voltage level detector.
+    341            * @retval None.
+    342            */
+
+   \                                 In section .text, align 2, keep-with-next
+    343          void HAL_PWREx_DisableUSBVoltageDetector(void)
+    344          {
+    345            /* Disable the USB voltage detector */
+    346            CLEAR_BIT(PWR->USBSCR, PWR_USBSCR_USB33DEN);
+   \                     HAL_PWREx_DisableUSBVoltageDetector: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_10
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF031 0x7180      BICS     R1,R1,#0x1000000
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    347          }
+   \        0xA   0x4770             BX       LR
+    348          
+    349          /**
+    350            * @brief  Enable VDDUSB supply.
+    351            * @note   Remove VDDUSB electrical and logical isolation, once VDDUSB supply
+    352            *         is present for consumption saving.
+    353            * @retval None.
+    354            */
+
+   \                                 In section .text, align 2, keep-with-next
+    355          void HAL_PWREx_EnableVddUSB(void)
+    356          {
+    357            SET_BIT(PWR->USBSCR, PWR_USBSCR_USB33SV);
+   \                     HAL_PWREx_EnableVddUSB: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_10
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF051 0x7100      ORRS     R1,R1,#0x2000000
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    358          }
+   \        0xA   0x4770             BX       LR
+    359          
+    360          /**
+    361            * @brief  Disable VDDUSB supply.
+    362            * @retval None.
+    363            */
+
+   \                                 In section .text, align 2, keep-with-next
+    364          void HAL_PWREx_DisableVddUSB(void)
+    365          {
+    366            CLEAR_BIT(PWR->USBSCR, PWR_USBSCR_USB33SV);
+   \                     HAL_PWREx_DisableVddUSB: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_10
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF031 0x7100      BICS     R1,R1,#0x2000000
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    367          }
+   \        0xA   0x4770             BX       LR
+    368          #endif /* PWR_USBSCR_USB33DEN */
+    369          
+    370          /**
+    371            * @brief  Enable the VBAT and temperature monitoring.
+    372            * @retval None.
+    373            */
+
+   \                                 In section .text, align 2, keep-with-next
+    374          void HAL_PWREx_EnableMonitoring(void)
+    375          {
+    376            SET_BIT(PWR->BDCR, PWR_BDCR_MONEN);
+   \                     HAL_PWREx_EnableMonitoring: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_11
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF051 0x0102      ORRS     R1,R1,#0x2
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    377          }
+   \        0xA   0x4770             BX       LR
+    378          
+    379          /**
+    380            * @brief  Disable the VBAT and temperature monitoring.
+    381            * @retval None.
+    382            */
+
+   \                                 In section .text, align 2, keep-with-next
+    383          void HAL_PWREx_DisableMonitoring(void)
+    384          {
+    385            CLEAR_BIT(PWR->BDCR, PWR_BDCR_MONEN);
+   \                     HAL_PWREx_DisableMonitoring: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_11
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF031 0x0102      BICS     R1,R1,#0x2
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    386          }
+   \        0xA   0x4770             BX       LR
+    387          
+    388          #if defined (PWR_UCPDR_UCPD_STBY)
+    389          /**
+    390            * @brief  Enable UCPD configuration memorization in Standby mode.
+    391            * @retval None.
+    392            */
+
+   \                                 In section .text, align 2, keep-with-next
+    393          void HAL_PWREx_EnableUCPDStandbyMode(void)
+    394          {
+    395            SET_BIT(PWR->UCPDR, PWR_UCPDR_UCPD_STBY);
+   \                     HAL_PWREx_EnableUCPDStandbyMode: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_12
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF051 0x0102      ORRS     R1,R1,#0x2
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    396          }
+   \        0xA   0x4770             BX       LR
+    397          
+    398          /**
+    399            * @brief  Disable UCPD configuration memorization in Standby mode.
+    400            * @note   This function must be called on exiting the Standby mode and before
+    401            *         any UCPD configuration update.
+    402            * @retval None.
+    403            */
+
+   \                                 In section .text, align 2, keep-with-next
+    404          void HAL_PWREx_DisableUCPDStandbyMode(void)
+    405          {
+    406            CLEAR_BIT(PWR->UCPDR, PWR_UCPDR_UCPD_STBY);
+   \                     HAL_PWREx_DisableUCPDStandbyMode: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_12
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF031 0x0102      BICS     R1,R1,#0x2
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    407          }
+   \        0xA   0x4770             BX       LR
+    408          #endif /* PWR_UCPDR_UCPD_STBY */
+    409          
+    410          #if defined (PWR_UCPDR_UCPD_DBDIS)
+    411          /**
+    412            * @brief  Enable dead battery behavior.
+    413            * @note   After exiting reset, the USB Type-C (dead battery) behavior is
+    414            *         enabled, which may have a pull-down effect on CC1 and CC2 pins.
+    415            *         It is recommended to disable it in all cases, either to stop this
+    416            *         pull-down or to handover control to the UCPD (the UCPD must be
+    417            *         initialized before doing the disable).
+    418            * @retval None.
+    419            */
+
+   \                                 In section .text, align 2, keep-with-next
+    420          void HAL_PWREx_EnableUCPDDeadBattery(void)
+    421          {
+    422            CLEAR_BIT(PWR->UCPDR, PWR_UCPDR_UCPD_DBDIS);
+   \                     HAL_PWREx_EnableUCPDDeadBattery: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_12
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0x0849             LSRS     R1,R1,#+1
+   \        0x6   0x0049             LSLS     R1,R1,#+1
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    423          }
+   \        0xA   0x4770             BX       LR
+    424          
+    425          /**
+    426            * @brief  Disable dead battery behavior.
+    427            * @note   After exiting reset, the USB Type-C (dead battery) behavior is
+    428            *         enabled, which may have a pull-down effect on CC1 and CC2 pins.
+    429            *         It is recommended to disable it in all cases, either to stop this
+    430            *         pull-down or to handover control to the UCPD (the UCPD must be
+    431            *         initialized before doing the disable).
+    432            * @retval None.
+    433            */
+
+   \                                 In section .text, align 2, keep-with-next
+    434          void HAL_PWREx_DisableUCPDDeadBattery(void)
+    435          {
+    436            SET_BIT(PWR->UCPDR, PWR_UCPDR_UCPD_DBDIS);
+   \                     HAL_PWREx_DisableUCPDDeadBattery: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_12
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF051 0x0101      ORRS     R1,R1,#0x1
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    437          }
+   \        0xA   0x4770             BX       LR
+    438          #endif /* PWR_UCPDR_UCPD_DBDIS */
+    439          
+    440          /**
+    441            * @brief  Enable the Battery charging.
+    442            * @note   When VDD is present, charge the external battery through an internal
+    443            *         resistor.
+    444            * @param  ResistorValue : Specifies the charging resistor.
+    445            *                         This parameter can be one of the following values :
+    446            *                         @arg PWR_BATTERY_CHARGING_RESISTOR_5   : 5 KOhm resistor.
+    447            *                         @arg PWR_BATTERY_CHARGING_RESISTOR_1_5 : 1.5 KOhm resistor.
+    448            * @retval None.
+    449            */
+
+   \                                 In section .text, align 2, keep-with-next
+    450          void HAL_PWREx_EnableBatteryCharging(uint32_t ResistorValue)
+    451          {
+    452            /* Check the parameter */
+    453            assert_param(IS_PWR_BATTERY_RESISTOR_SELECT(ResistorValue));
+    454          
+    455            /* Specify the charging resistor */
+    456            MODIFY_REG(PWR->BDCR, PWR_BDCR_VBRS, ResistorValue);
+   \                     HAL_PWREx_EnableBatteryCharging: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable35_11
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0xF432 0x7200      BICS     R2,R2,#0x200
+   \        0x8   0x4310             ORRS     R0,R0,R2
+   \        0xA   0x6008             STR      R0,[R1, #+0]
+    457          
+    458            /* Enable the Battery charging */
+    459            SET_BIT(PWR->BDCR, PWR_BDCR_VBE);
+   \        0xC   0x6808             LDR      R0,[R1, #+0]
+   \        0xE   0xF450 0x7080      ORRS     R0,R0,#0x100
+   \       0x12   0x6008             STR      R0,[R1, #+0]
+    460          }
+   \       0x14   0x4770             BX       LR
+    461          
+    462          /**
+    463            * @brief  Disable the Battery charging.
+    464            * @retval None.
+    465            */
+
+   \                                 In section .text, align 2, keep-with-next
+    466          void HAL_PWREx_DisableBatteryCharging(void)
+    467          {
+    468            CLEAR_BIT(PWR->BDCR, PWR_BDCR_VBE);
+   \                     HAL_PWREx_DisableBatteryCharging: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_11
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF431 0x7180      BICS     R1,R1,#0x100
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    469          }
+   \        0xA   0x4770             BX       LR
+    470          
+    471          /**
+    472            * @brief Enable the booster to guarantee the analog switch AC performance when
+    473            *        the VDD supply voltage is below 2V7.
+    474            * @note   The VDD supply voltage can be monitored through the PVD and the PLS
+    475            *         field bits.
+    476            * @retval None.
+    477            */
+
+   \                                 In section .text, align 2, keep-with-next
+    478          void HAL_PWREx_EnableAnalogBooster(void)
+    479          {
+    480            /* Enable the Analog voltage */
+    481            SET_BIT(PWR->PMCR, PWR_PMCR_AVD_READY);
+   \                     HAL_PWREx_EnableAnalogBooster: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_4
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF451 0x5100      ORRS     R1,R1,#0x2000
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    482          
+    483            /* Enable VDDA booster */
+    484            SET_BIT(PWR->PMCR, PWR_PMCR_BOOSTE);
+   \        0xA   0x6801             LDR      R1,[R0, #+0]
+   \        0xC   0xF451 0x5180      ORRS     R1,R1,#0x1000
+   \       0x10   0x6001             STR      R1,[R0, #+0]
+    485          }
+   \       0x12   0x4770             BX       LR
+    486          
+    487          /**
+    488            * @brief Disable the analog booster.
+    489            * @retval None.
+    490            */
+
+   \                                 In section .text, align 2, keep-with-next
+    491          void HAL_PWREx_DisableAnalogBooster(void)
+    492          {
+    493            /* Disable VDDA booster */
+    494            CLEAR_BIT(PWR->PMCR, PWR_PMCR_BOOSTE);
+   \                     HAL_PWREx_DisableAnalogBooster: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_4
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF431 0x5180      BICS     R1,R1,#0x1000
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    495          
+    496            /* Disable the Analog voltage */
+    497            CLEAR_BIT(PWR->PMCR, PWR_PMCR_AVD_READY);
+   \        0xA   0x6801             LDR      R1,[R0, #+0]
+   \        0xC   0xF431 0x5100      BICS     R1,R1,#0x2000
+   \       0x10   0x6001             STR      R1,[R0, #+0]
+    498          }
+   \       0x12   0x4770             BX       LR
+    499          
+    500          /**
+    501            * @brief  This function handles the PWR PVD/AVD interrupt request.
+    502            * @note   This API should be called under the PVD_AVD_IRQHandler().
+    503            * @note   The use of this API is when the PVD and AVD are activated at the same time.
+    504            * @retval None
+    505            */
+
+   \                                 In section .text, align 2, keep-with-next
+    506          void HAL_PWREx_PVD_AVD_IRQHandler(void)
+    507          {
+   \                     HAL_PWREx_PVD_AVD_IRQHandler: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+    508            /* Check PWR PVD AVD EXTI Rising flag */
+    509            if (__HAL_PWR_PVD_AVD_EXTI_GET_RISING_FLAG() != 0U)
+   \        0x2   0x....             LDR.N    R0,??DataTable35_13
+   \        0x4   0x6801             LDR      R1,[R0, #+0]
+   \        0x6   0x03C9             LSLS     R1,R1,#+15
+   \        0x8   0xD504             BPL.N    ??HAL_PWREx_PVD_AVD_IRQHandler_0
+    510            {
+    511              /* Clear PWR PVD AVD EXTI Rising pending bit */
+    512              WRITE_REG(EXTI->RPR1, PWR_EXTI_LINE_AVD);
+   \        0xA   0xF45F 0x3180      MOVS     R1,#+65536
+   \        0xE   0x6001             STR      R1,[R0, #+0]
+    513          
+    514              /* PWR PVD AVD Rising interrupt user callback */
+    515              HAL_PWREx_PVD_AVD_Rising_Callback();
+   \       0x10   0x.... 0x....      BL       HAL_PWREx_PVD_AVD_Rising_Callback
+    516            }
+    517          
+    518            /* Check PWR PVD AVD EXTI Falling flag */
+    519            if (__HAL_PWR_PVD_AVD_EXTI_GET_FALLING_FLAG() != 0U)
+   \                     ??HAL_PWREx_PVD_AVD_IRQHandler_0: (+1)
+   \       0x14   0x....             LDR.N    R0,??DataTable35_14
+   \       0x16   0x6801             LDR      R1,[R0, #+0]
+   \       0x18   0x03C9             LSLS     R1,R1,#+15
+   \       0x1A   0xD504             BPL.N    ??HAL_PWREx_PVD_AVD_IRQHandler_1
+    520            {
+    521              /* Clear PWR PVD AVD EXTI Falling pending bit */
+    522              WRITE_REG(EXTI->FPR1, PWR_EXTI_LINE_AVD);
+   \       0x1C   0xF45F 0x3180      MOVS     R1,#+65536
+   \       0x20   0x6001             STR      R1,[R0, #+0]
+    523          
+    524              /* PWR PVD AVD Falling interrupt user callback */
+    525              HAL_PWREx_PVD_AVD_Falling_Callback();
+   \       0x22   0x.... 0x....      BL       HAL_PWREx_PVD_AVD_Falling_Callback
+    526            }
+    527          }
+   \                     ??HAL_PWREx_PVD_AVD_IRQHandler_1: (+1)
+   \       0x26   0xBD01             POP      {R0,PC}
+    528          
+    529          /**
+    530            * @brief PWR PVD AVD Rising interrupt callback.
+    531            * @retval None.
+    532            */
+
+   \                                 In section .text, align 2
+    533          __weak void HAL_PWREx_PVD_AVD_Rising_Callback(void)
+    534          {
+    535            /* NOTE : This function should not be modified, when the callback is needed,
+    536                      the HAL_PWR_AVDCallback can be implemented in the user file
+    537            */
+    538          }
+   \                     HAL_PWREx_PVD_AVD_Rising_Callback: (+1)
+   \        0x0   0x4770             BX       LR
+    539          
+    540          /**
+    541            * @brief PWR PVD AVD Falling interrupt callback.
+    542            * @retval None.
+    543            */
+
+   \                                 In section .text, align 2
+    544          __weak void HAL_PWREx_PVD_AVD_Falling_Callback(void)
+    545          {
+    546            /* NOTE : This function should not be modified, when the callback is needed,
+    547                      the HAL_PWR_AVDCallback can be implemented in the user file
+    548            */
+    549          }
+   \                     HAL_PWREx_PVD_AVD_Falling_Callback: (+1)
+   \        0x0   0x4770             BX       LR
+    550          /**
+    551            * @}
+    552            */
+    553          
+    554          /** @defgroup PWREx_Exported_Functions_Group3 Wakeup Pins configuration Functions
+    555            * @brief    Wakeup Pins configuration functions
+    556            *
+    557          @verbatim
+    558           ===============================================================================
+    559                               ##### Wakeup Pins configuration Functions #####
+    560           ===============================================================================
+    561              [..]
+    562          @endverbatim
+    563            * @{
+    564            */
+    565          
+    566          /**
+    567            * @brief Enable the Wake-up PINx functionality.
+    568            * @param  sPinParams : Pointer to a PWREx_WakeupPinTypeDef structure that
+    569            *                      contains the configuration information for the wake-up
+    570            *                      Pin.
+    571            * @retval None.
+    572            */
+
+   \                                 In section .text, align 2, keep-with-next
+    573          void HAL_PWREx_EnableWakeUpPin(const PWREx_WakeupPinTypeDef *sPinParams)
+    574          {
+   \                     HAL_PWREx_EnableWakeUpPin: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+    575            uint32_t pinConfig;
+    576            uint32_t regMask;
+    577            const uint32_t pullMask = PWR_WUCR_WUPPUPD1;
+   \        0x2   0xF45F 0x3140      MOVS     R1,#+196608
+    578          
+    579            /* Check the parameters */
+    580            assert_param(IS_PWR_WAKEUP_PIN(sPinParams->WakeUpPin));
+    581            assert_param(IS_PWR_WAKEUP_PIN_POLARITY(sPinParams->PinPolarity));
+    582            assert_param(IS_PWR_WAKEUP_PIN_PULL(sPinParams->PinPull));
+    583          
+    584            pinConfig = sPinParams->WakeUpPin | \
+    585                        (sPinParams->PinPolarity << ((POSITION_VAL(sPinParams->WakeUpPin) + PWR_WUCR_WUPP1_Pos) & 0x1FU)) | \
+    586                        (sPinParams->PinPull << (((POSITION_VAL(sPinParams->WakeUpPin) * PWR_WAKEUP_PINS_PULL_SHIFT_OFFSET) \
+    587                                                  + PWR_WUCR_WUPPUPD1_Pos) & 0x1FU));
+   \        0x6   0x6802             LDR      R2,[R0, #+0]
+   \        0x8   0xFA92 0xF2A2      RBIT     R2,R2
+   \        0xC   0xFAB2 0xF382      CLZ      R3,R2
+   \       0x10   0x6802             LDR      R2,[R0, #+0]
+   \       0x12   0xFA92 0xF2A2      RBIT     R2,R2
+   \       0x16   0xFAB2 0xF482      CLZ      R4,R2
+   \       0x1A   0x6802             LDR      R2,[R0, #+0]
+   \       0x1C   0x6845             LDR      R5,[R0, #+4]
+   \       0x1E   0x3308             ADDS     R3,R3,#+8
+   \       0x20   0xF013 0x031F      ANDS     R3,R3,#0x1F
+   \       0x24   0xFA15 0xF303      LSLS     R3,R5,R3
+   \       0x28   0x4313             ORRS     R3,R3,R2
+   \       0x2A   0x6882             LDR      R2,[R0, #+8]
+   \       0x2C   0x0064             LSLS     R4,R4,#+1
+   \       0x2E   0x3410             ADDS     R4,R4,#+16
+   \       0x30   0xF014 0x041F      ANDS     R4,R4,#0x1F
+   \       0x34   0x40A2             LSLS     R2,R2,R4
+   \       0x36   0x431A             ORRS     R2,R2,R3
+    588          
+    589            regMask   = sPinParams->WakeUpPin | \
+    590                        (PWR_WUCR_WUPP1 << (POSITION_VAL(sPinParams->WakeUpPin) & 0x1FU)) | \
+    591                        (pullMask << ((POSITION_VAL(sPinParams->WakeUpPin) * PWR_WAKEUP_PINS_PULL_SHIFT_OFFSET) & 0x1FU));
+   \       0x38   0x6803             LDR      R3,[R0, #+0]
+   \       0x3A   0xFA93 0xF3A3      RBIT     R3,R3
+   \       0x3E   0xFAB3 0xF383      CLZ      R3,R3
+   \       0x42   0x6804             LDR      R4,[R0, #+0]
+   \       0x44   0xFA94 0xF4A4      RBIT     R4,R4
+   \       0x48   0xFAB4 0xF484      CLZ      R4,R4
+   \       0x4C   0x6800             LDR      R0,[R0, #+0]
+   \       0x4E   0xF44F 0x7580      MOV      R5,#+256
+   \       0x52   0xF013 0x031F      ANDS     R3,R3,#0x1F
+   \       0x56   0xFA15 0xF303      LSLS     R3,R5,R3
+   \       0x5A   0x4303             ORRS     R3,R3,R0
+   \       0x5C   0x0060             LSLS     R0,R4,#+1
+   \       0x5E   0xF010 0x001F      ANDS     R0,R0,#0x1F
+   \       0x62   0x4081             LSLS     R1,R1,R0
+   \       0x64   0x4319             ORRS     R1,R1,R3
+    592          
+    593            /* Enable and Specify the Wake-Up pin polarity and the pull configuration
+    594               for the event detection (rising or falling edge) */
+    595            MODIFY_REG(PWR->WUCR, regMask, pinConfig);
+   \       0x66   0x....             LDR.N    R0,??DataTable35_15
+   \       0x68   0x6803             LDR      R3,[R0, #+0]
+   \       0x6A   0xEA33 0x0101      BICS     R1,R3,R1
+   \       0x6E   0x430A             ORRS     R2,R2,R1
+   \       0x70   0x6002             STR      R2,[R0, #+0]
+    596          }
+   \       0x72   0xBC30             POP      {R4,R5}
+   \       0x74   0x4770             BX       LR
+    597          
+    598          /**
+    599            * @brief Disable the Wake-up PINx functionality.
+    600            * @param  WakeUpPinx : Specifies the Wake-Up pin to be disabled.
+    601            *          This parameter can be one of the following values:
+    602            *           @arg PWR_WAKEUP_PIN1
+    603            *           @arg PWR_WAKEUP_PIN2
+    604            *           @arg PWR_WAKEUP_PIN3
+    605            *           @arg PWR_WAKEUP_PIN4
+    606            *           @arg PWR_WAKEUP_PIN5
+    607            *           @arg PWR_WAKEUP_PIN6
+    608            *           @arg PWR_WAKEUP_PIN7
+    609            *           @arg PWR_WAKEUP_PIN8
+    610            * @note   The PWR_WAKEUP_PIN6, PWR_WAKEUP_PIN7 and PWR_WAKEUP_PIN8 are not available for
+    611            *         STM32H503xx devices.
+    612            * @retval None
+    613            */
+
+   \                                 In section .text, align 2, keep-with-next
+    614          void HAL_PWREx_DisableWakeUpPin(uint32_t WakeUpPinx)
+    615          {
+    616            /* Check the parameter */
+    617            assert_param(IS_PWR_WAKEUP_PIN(WakeUpPinx));
+    618          
+    619            /* Disable the WakeUpPin */
+    620            CLEAR_BIT(PWR->WUCR, (PWR_WUCR_WUPEN & WakeUpPinx));
+   \                     HAL_PWREx_DisableWakeUpPin: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable35_15
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0xF000 0x00FF      AND      R0,R0,#0xFF
+   \        0x8   0xEA32 0x0000      BICS     R0,R2,R0
+   \        0xC   0x6008             STR      R0,[R1, #+0]
+    621          }
+   \        0xE   0x4770             BX       LR
+    622          
+    623          /**
+    624            * @}
+    625            */
+    626          
+    627          /** @defgroup PWREx_Exported_Functions_Group4 Memories Retention Functions
+    628            * @brief    Memories retention functions
+    629            *
+    630          @verbatim
+    631           ===============================================================================
+    632                               ##### Memories Retention Functions #####
+    633           ===============================================================================
+    634              [..]
+    635          @endverbatim
+    636            * @{
+    637            */
+    638          
+    639          /**
+    640            * @brief Enable the Flash Power Down in Stop mode.
+    641            * @note   When Flash Power Down is enabled  the Flash memory enters low-power
+    642            *         mode. This feature allows to
+    643            *         obtain the best trade-off between low-power consumption and restart
+    644            *         time when exiting from Stop mode.
+    645            * @retval None.
+    646            */
+
+   \                                 In section .text, align 2, keep-with-next
+    647          void HAL_PWREx_EnableFlashPowerDown(void)
+    648          {
+    649            /* Enable the Flash Power Down */
+    650            SET_BIT(PWR->PMCR, PWR_PMCR_FLPS);
+   \                     HAL_PWREx_EnableFlashPowerDown: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_4
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF451 0x7100      ORRS     R1,R1,#0x200
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    651          }
+   \        0xA   0x4770             BX       LR
+    652          
+    653          /**
+    654            * @brief Disable the Flash Power Down in Stop mode.
+    655            * @note   When Flash Power Down is disabled  the Flash memory is kept on
+    656            *         normal mode. This feature allows
+    657            *         to obtain the best trade-off between low-power consumption and
+    658            *         restart time when exiting from Stop mode.
+    659            * @retval None.
+    660            */
+
+   \                                 In section .text, align 2, keep-with-next
+    661          void HAL_PWREx_DisableFlashPowerDown(void)
+    662          {
+    663            /* Disable the Flash Power Down */
+    664            CLEAR_BIT(PWR->PMCR, PWR_PMCR_FLPS);
+   \                     HAL_PWREx_DisableFlashPowerDown: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_4
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF431 0x7100      BICS     R1,R1,#0x200
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    665          }
+   \        0xA   0x4770             BX       LR
+    666          
+    667          /**
+    668            * @brief Enable memory block shut-off in Stop mode
+    669            * @note   In Stop mode, the content of the memory blocks is
+    670            *         maintained. Further power optimization can be obtained by switching
+    671            *         off some memory blocks. This optimization implies loss of the memory
+    672            *         content. The user can select which memory is discarded during STOP
+    673            *         mode by means of xxSO bits.
+    674            * @param  MemoryBlock : Specifies the memory block to shut-off during Stop mode.
+    675            *          This parameter can be one of the following values:
+    676            *            @arg PWR_ETHERNET_MEMORY_BLOCK PWR_PMCR_ETHERNETSO    : Ethernet shut-off control in Stop mode
+    677            *            @arg PWR_RAM3_MEMORY_BLOCK     PWR_PMCR_SRAM3SO       : RAM3 shut-off control in Stop mode
+    678            *            @arg PWR_RAM2_16_MEMORY_BLOCK  PWR_PMCR_SRAM2_16SO    : RAM2 16k byte shut-off control in Stop mode
+    679            *            @arg PWR_RAM2_48_MEMORY_BLOCK  PWR_PMCR_SRAM2_48SO    : RAM2 48k byte shut-off control in Stop mode
+    680            *            @arg PWR_RAM1_MEMORY_BLOCK     PWR_PMCR_SRAM1SO       : RAM1 shut-off control in Stop mode
+    681            * @note   The PWR_ETHERNET_MEMORY_BLOCK is not available for STM32H503xx devices.
+    682            * @retval None.
+    683            */
+
+   \                                 In section .text, align 2, keep-with-next
+    684          void HAL_PWREx_EnableMemoryShutOff(uint32_t MemoryBlock)
+    685          {
+    686            /* Check the parameter */
+    687            assert_param(IS_PWR_MEMORY_BLOCK(MemoryBlock));
+    688          
+    689            /* Enable memory block shut-off */
+    690            SET_BIT(PWR->PMCR, MemoryBlock);
+   \                     HAL_PWREx_EnableMemoryShutOff: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable35_4
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0x4310             ORRS     R0,R0,R2
+   \        0x6   0x6008             STR      R0,[R1, #+0]
+    691          }
+   \        0x8   0x4770             BX       LR
+    692          
+    693          /**
+    694            * @brief Disable memory block shut-off in Stop mode
+    695            * @param  MemoryBlock : Specifies the memory block to keep content during
+    696            *                       Stop mode.
+    697            *          This parameter can be one of the following values:
+    698            *            @arg PWR_ETHERNET_MEMORY_BLOCK PWR_PMCR_ETHERNETSO    : Ethernet shut-off control in Stop mode
+    699            *            @arg PWR_RAM3_MEMORY_BLOCK     PWR_PMCR_SRAM3SO       : RAM3 shut-off control in Stop mode
+    700            *            @arg PWR_RAM2_16_MEMORY_BLOCK  PWR_PMCR_SRAM2_16SO    : RAM2 16k byte shut-off control in Stop mode
+    701            *            @arg PWR_RAM2_48_MEMORY_BLOCK  PWR_PMCR_SRAM2_48SO    : RAM2 48k byte shut-off control in Stop mode
+    702            *            @arg PWR_RAM1_MEMORY_BLOCK     PWR_PMCR_SRAM1SO       : RAM1 shut-off control in Stop mode
+    703            * @note   The PWR_ETHERNET_MEMORY_BLOCK is not available for STM32H503xx devices.
+    704            * @retval None.
+    705            */
+
+   \                                 In section .text, align 2, keep-with-next
+    706          void HAL_PWREx_DisableMemoryShutOff(uint32_t MemoryBlock)
+    707          {
+    708            /* Check the parameter */
+    709            assert_param(IS_PWR_MEMORY_BLOCK(MemoryBlock));
+    710          
+    711            /* Disable memory block shut-off */
+    712            CLEAR_BIT(PWR->PMCR, MemoryBlock);
+   \                     HAL_PWREx_DisableMemoryShutOff: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable35_4
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0xEA32 0x0000      BICS     R0,R2,R0
+   \        0x8   0x6008             STR      R0,[R1, #+0]
+    713          }
+   \        0xA   0x4770             BX       LR
+    714          
+    715          /**
+    716            * @brief  Enable the Backup RAM retention in Standby and VBAT modes.
+    717            * @note   If BREN is reset, the backup RAM can still be used in Run, Sleep and
+    718            *         Stop modes. However, its content is lost in Standby, Shutdown and
+    719            *         VBAT modes. This bit can be writte
+    720            * @retval None.
+    721            */
+
+   \                                 In section .text, align 2, keep-with-next
+    722          HAL_StatusTypeDef HAL_PWREx_EnableBkupRAMRetention(void)
+    723          {
+    724            SET_BIT(PWR->BDCR, PWR_BDCR_BREN);
+   \                     HAL_PWREx_EnableBkupRAMRetention: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_11
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF051 0x0101      ORRS     R1,R1,#0x1
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    725          
+    726            return HAL_OK;
+   \        0xA   0x2000             MOVS     R0,#+0
+   \        0xC   0x4770             BX       LR
+    727          }
+    728          
+    729          /**
+    730            * @brief  Disable the Backup RAM retention in Standby and VBAT modes.
+    731            * @note   If BREN is reset, the backup RAM can still be used in Run, Sleep and
+    732            *         Stop modes. However, its content is lost in Standby, Shutdown and
+    733            *         VBAT modes. This bit can be write
+    734            * @retval None.
+    735            */
+
+   \                                 In section .text, align 2, keep-with-next
+    736          void HAL_PWREx_DisableBkupRAMRetention(void)
+    737          {
+    738            CLEAR_BIT(PWR->BDCR, PWR_BDCR_BREN);
+   \                     HAL_PWREx_DisableBkupRAMRetention: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_11
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0x0849             LSRS     R1,R1,#+1
+   \        0x6   0x0049             LSLS     R1,R1,#+1
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    739          }
+   \        0xA   0x4770             BX       LR
+    740          /**
+    741            * @}
+    742            */
+    743          
+    744          /** @defgroup PWREx_Exported_Functions_Group5 IO and JTAG Retention Functions
+    745            * @brief    IO and JTAG Retention functions
+    746            *
+    747          @verbatim
+    748           ===============================================================================
+    749                               ##### IO and JTAG Retention Functions #####
+    750           ===============================================================================
+    751              [..]
+    752                In the Standby mode, the I/Os are by default in floating state. If the IORETEN bit in the
+    753                PWR_IORETR register is set, the I/Os output state is retained. IO Retention mode is
+    754                enabled for all IO except the IO support the standby functionality and JTAG IOs (PA13,
+    755                PA14, PA15 and PB4). When entering into Standby mode, the state of the output is
+    756                sampled, and pull-up or pull-down resistor are set to maintain the IO output during Standby
+    757                mode.
+    758                If the JTAGIORETEN bit in the PWR_IORETR register is set, the I/Os output state is
+    759                retained. IO Retention mode is enabled for PA13, PA14, PA15 and PB4 (default JTAG pullup/
+    760                pull-down after wakeup are not enabled).
+    761          @endverbatim
+    762            * @{
+    763            */
+    764          
+    765          /**
+    766            * @brief Enable GPIO state retention in Standby mode.
+    767            * @note   When entering into standby mode, the output is sampled, and applied to the output IO during
+    768            *         the standby power mode
+    769            * @retval None.
+    770            */
+
+   \                                 In section .text, align 2, keep-with-next
+    771          void HAL_PWREx_EnableStandbyIORetention(void)
+    772          {
+    773            /* Enable GPIO state retention */
+    774            SET_BIT(PWR->IORETR, PWR_IORETR_IORETEN);
+   \                     HAL_PWREx_EnableStandbyIORetention: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_16
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF051 0x0101      ORRS     R1,R1,#0x1
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    775          }
+   \        0xA   0x4770             BX       LR
+    776          
+    777          /**
+    778            * @brief Disable GPIO state retention in Standby mode.
+    779            * @retval None.
+    780            */
+
+   \                                 In section .text, align 2, keep-with-next
+    781          void HAL_PWREx_DisableStandbyIORetention(void)
+    782          {
+    783            /* Disable GPIO state retention */
+    784            CLEAR_BIT(PWR->IORETR, PWR_IORETR_IORETEN);
+   \                     HAL_PWREx_DisableStandbyIORetention: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_16
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0x0849             LSRS     R1,R1,#+1
+   \        0x6   0x0049             LSLS     R1,R1,#+1
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    785          }
+   \        0xA   0x4770             BX       LR
+    786          
+    787          /**
+    788            * @brief  Enable JTAG IOs state retention in Standby mode.
+    789            * @note   when entering into standby mode, the output is sampled, and applied to the output IO during
+    790            *         the standby power mode
+    791            * @retval None.
+    792            */
+
+   \                                 In section .text, align 2, keep-with-next
+    793          void HAL_PWREx_EnableStandbyJTAGIORetention(void)
+    794          {
+    795            /* Enable JTAG IOs state retention */
+    796            SET_BIT(PWR->IORETR, PWR_IORETR_JTAGIORETEN);
+   \                     HAL_PWREx_EnableStandbyJTAGIORetention: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_16
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF451 0x3180      ORRS     R1,R1,#0x10000
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    797          }
+   \        0xA   0x4770             BX       LR
+    798          
+    799          /**
+    800            * @brief Disable JTAG IOs state retention in Standby mode.
+    801            * @retval None.
+    802            */
+
+   \                                 In section .text, align 2, keep-with-next
+    803          void HAL_PWREx_DisableStandbyJTAGIORetention(void)
+    804          {
+    805            /* Enable JTAG IOs state retention */
+    806            CLEAR_BIT(PWR->IORETR, PWR_IORETR_JTAGIORETEN);
+   \                     HAL_PWREx_DisableStandbyJTAGIORetention: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable35_16
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF431 0x3180      BICS     R1,R1,#0x10000
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+    807          }
+   \        0xA   0x4770             BX       LR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35:
+   \        0x0   0x4402'0830        DC32     0x44020830
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_1:
+   \        0x0   0xFFFF'FCFE        DC32     0xfffffcfe
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_2:
+   \        0x0   0x4402'0814        DC32     0x44020814
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_3:
+   \        0x0   0x4402'0810        DC32     0x44020810
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_4:
+   \        0x0   0x4402'0800        DC32     0x44020800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_5:
+   \        0x0   0x4402'0834        DC32     0x44020834
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_6:
+   \        0x0   0x4402'2084        DC32     0x44022084
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_7:
+   \        0x0   0x4402'2080        DC32     0x44022080
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_8:
+   \        0x0   0x4402'2000        DC32     0x44022000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_9:
+   \        0x0   0x4402'2004        DC32     0x44022004
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_10:
+   \        0x0   0x4402'0838        DC32     0x44020838
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_11:
+   \        0x0   0x4402'0820        DC32     0x44020820
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_12:
+   \        0x0   0x4402'082C        DC32     0x4402082c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_13:
+   \        0x0   0x4402'200C        DC32     0x4402200c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_14:
+   \        0x0   0x4402'2010        DC32     0x44022010
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_15:
+   \        0x0   0x4402'0848        DC32     0x44020848
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable35_16:
+   \        0x0   0x4402'0850        DC32     0x44020850
+    808          
+    809          /**
+    810            * @}
+    811            */
+    812          #endif /* defined (HAL_PWR_MODULE_ENABLED) */
+    813          
+    814          /**
+    815            * @}
+    816            */
+    817          
+    818          /**
+    819            * @}
+    820            */
+    821          
+    822          /**
+    823            * @}
+    824            */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   HAL_PWREx_ConfigAVD
+       8   HAL_PWREx_ConfigSupply
+         8   -> HAL_GetTick
+       0   HAL_PWREx_ControlStopModeVoltageScaling
+      16   HAL_PWREx_ControlVoltageScaling
+        16   -> HAL_GetTick
+       0   HAL_PWREx_DisableAVD
+       0   HAL_PWREx_DisableAnalogBooster
+       0   HAL_PWREx_DisableBatteryCharging
+       0   HAL_PWREx_DisableBkupRAMRetention
+       0   HAL_PWREx_DisableFlashPowerDown
+       0   HAL_PWREx_DisableMemoryShutOff
+       0   HAL_PWREx_DisableMonitoring
+       0   HAL_PWREx_DisableStandbyIORetention
+       0   HAL_PWREx_DisableStandbyJTAGIORetention
+       0   HAL_PWREx_DisableUCPDDeadBattery
+       0   HAL_PWREx_DisableUCPDStandbyMode
+       0   HAL_PWREx_DisableUSBVoltageDetector
+       0   HAL_PWREx_DisableVddUSB
+       0   HAL_PWREx_DisableWakeUpPin
+       0   HAL_PWREx_EnableAVD
+       0   HAL_PWREx_EnableAnalogBooster
+       0   HAL_PWREx_EnableBatteryCharging
+       0   HAL_PWREx_EnableBkupRAMRetention
+       0   HAL_PWREx_EnableFlashPowerDown
+       0   HAL_PWREx_EnableMemoryShutOff
+       0   HAL_PWREx_EnableMonitoring
+       0   HAL_PWREx_EnableStandbyIORetention
+       0   HAL_PWREx_EnableStandbyJTAGIORetention
+       0   HAL_PWREx_EnableUCPDDeadBattery
+       0   HAL_PWREx_EnableUCPDStandbyMode
+       0   HAL_PWREx_EnableUSBVoltageDetector
+       0   HAL_PWREx_EnableVddUSB
+       8   HAL_PWREx_EnableWakeUpPin
+       0   HAL_PWREx_GetStopModeVoltageRange
+       0   HAL_PWREx_GetSupplyConfig
+       0   HAL_PWREx_GetVoltageRange
+       0   HAL_PWREx_PVD_AVD_Falling_Callback
+       8   HAL_PWREx_PVD_AVD_IRQHandler
+         8   -> HAL_PWREx_PVD_AVD_Falling_Callback
+         8   -> HAL_PWREx_PVD_AVD_Rising_Callback
+       0   HAL_PWREx_PVD_AVD_Rising_Callback
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable35
+       4  ??DataTable35_1
+       4  ??DataTable35_10
+       4  ??DataTable35_11
+       4  ??DataTable35_12
+       4  ??DataTable35_13
+       4  ??DataTable35_14
+       4  ??DataTable35_15
+       4  ??DataTable35_16
+       4  ??DataTable35_2
+       4  ??DataTable35_3
+       4  ??DataTable35_4
+       4  ??DataTable35_5
+       4  ??DataTable35_6
+       4  ??DataTable35_7
+       4  ??DataTable35_8
+       4  ??DataTable35_9
+     116  HAL_PWREx_ConfigAVD
+      52  HAL_PWREx_ConfigSupply
+      16  HAL_PWREx_ControlStopModeVoltageScaling
+      64  HAL_PWREx_ControlVoltageScaling
+      12  HAL_PWREx_DisableAVD
+      20  HAL_PWREx_DisableAnalogBooster
+      12  HAL_PWREx_DisableBatteryCharging
+      12  HAL_PWREx_DisableBkupRAMRetention
+      12  HAL_PWREx_DisableFlashPowerDown
+      12  HAL_PWREx_DisableMemoryShutOff
+      12  HAL_PWREx_DisableMonitoring
+      12  HAL_PWREx_DisableStandbyIORetention
+      12  HAL_PWREx_DisableStandbyJTAGIORetention
+      12  HAL_PWREx_DisableUCPDDeadBattery
+      12  HAL_PWREx_DisableUCPDStandbyMode
+      12  HAL_PWREx_DisableUSBVoltageDetector
+      12  HAL_PWREx_DisableVddUSB
+      16  HAL_PWREx_DisableWakeUpPin
+      12  HAL_PWREx_EnableAVD
+      20  HAL_PWREx_EnableAnalogBooster
+      22  HAL_PWREx_EnableBatteryCharging
+      14  HAL_PWREx_EnableBkupRAMRetention
+      12  HAL_PWREx_EnableFlashPowerDown
+      10  HAL_PWREx_EnableMemoryShutOff
+      12  HAL_PWREx_EnableMonitoring
+      12  HAL_PWREx_EnableStandbyIORetention
+      12  HAL_PWREx_EnableStandbyJTAGIORetention
+      12  HAL_PWREx_EnableUCPDDeadBattery
+      12  HAL_PWREx_EnableUCPDStandbyMode
+      12  HAL_PWREx_EnableUSBVoltageDetector
+      12  HAL_PWREx_EnableVddUSB
+     118  HAL_PWREx_EnableWakeUpPin
+      10  HAL_PWREx_GetStopModeVoltageRange
+      12  HAL_PWREx_GetSupplyConfig
+      10  HAL_PWREx_GetVoltageRange
+       2  HAL_PWREx_PVD_AVD_Falling_Callback
+      40  HAL_PWREx_PVD_AVD_IRQHandler
+       2  HAL_PWREx_PVD_AVD_Rising_Callback
+
+ 
+ 864 bytes in section .text
+ 
+ 860 bytes of CODE memory (+ 4 bytes shared)
+
+Errors: none
+Warnings: none

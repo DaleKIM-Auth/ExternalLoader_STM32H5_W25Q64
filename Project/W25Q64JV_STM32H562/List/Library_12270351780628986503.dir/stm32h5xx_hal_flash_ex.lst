@@ -1,0 +1,3053 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V9.40.1.364/W64 for ARM         23/Nov/2023  21:46:10
+# Copyright 1999-2023 IAR Systems AB.
+#
+#    Cpu mode          =  thumb
+#    Endian            =  little
+#    Source file       =
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Source\Library\stm32h5xx_hal_flash_ex.c
+#    Command line      =
+#        -f
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\stm32h5xx_hal_flash_ex.o.rsp
+#        (C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Source\Library\stm32h5xx_hal_flash_ex.c
+#        -D STM32H562xx -lCN
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\List\Library_12270351780628986503.dir
+#        -lA
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\List\Library_12270351780628986503.dir
+#        -o
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M33.no_dsp.no_se -e --fpu=VFPv5_sp --dlib_config
+#        "C:\Program Files\IAR Systems\Embedded Workbench
+#        9.2\arm\inc\c\DLib_Config_Normal.h" -I
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\..\Includes\CMSIS\
+#        -I
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\..\Includes\Library\
+#        -I
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\..\Includes\Loader\
+#        -Ol) --dependencies=n
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\stm32h5xx_hal_flash_ex.o.iar_deps
+#    Locale            =  C
+#    List file         =
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\List\Library_12270351780628986503.dir\stm32h5xx_hal_flash_ex.lst
+#    Object file       =
+#        C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\stm32h5xx_hal_flash_ex.o
+#    Runtime model:       
+#      __CPP_Runtime   =  1
+#      __SystemLibrary =  DLib
+#      __dlib_version  =  6
+#
+###############################################################################
+
+C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Source\Library\stm32h5xx_hal_flash_ex.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    stm32h5xx_hal_flash_ex.c
+      4            * @author  MCD Application Team
+      5            * @brief   Extended FLASH HAL module driver.
+      6            *          This file provides firmware functions to manage the following
+      7            *          functionalities of the FLASH extension peripheral:
+      8            *           + Extended programming operations functions
+      9            *
+     10            ******************************************************************************
+     11            * @attention
+     12            *
+     13            * Copyright (c) 2023 STMicroelectronics.
+     14            * All rights reserved.
+     15            *
+     16            * This software is licensed under terms that can be found in the LICENSE file
+     17            * in the root directory of this software component.
+     18            * If no LICENSE file comes with this software, it is provided AS-IS.
+     19            *
+     20            ******************************************************************************
+     21           @verbatim
+     22           ==============================================================================
+     23                             ##### Flash Extension features #####
+     24            ==============================================================================
+     25          
+     26            [..] Comparing to other previous devices, the FLASH interface for STM32H5xx
+     27                 devices contains the following additional features
+     28          
+     29                 (+) Capacity up to 2 Mbyte with dual bank architecture supporting read-while-write
+     30                     capability (RWW)
+     31                 (+) Dual bank memory organization
+     32                 (+) Product State protection
+     33                 (+) Write protection
+     34                 (+) Secure access only protection
+     35                 (+) Bank / register swapping (when Dual-Bank)
+     36                 (+) Watermark-based secure protection
+     37                 (+) Block-based secure protection
+     38                 (+) Block-based privilege protection
+     39                 (+) Hide Protection areas
+     40          
+     41                                  ##### How to use this driver #####
+     42           ==============================================================================
+     43            [..] This driver provides functions to configure and program the FLASH memory
+     44                 of all STM32H5xx devices. It includes
+     45                (#) FLASH Memory Erase functions:
+     46                     (++) Lock and Unlock the FLASH interface using HAL_FLASH_Unlock() and
+     47                          HAL_FLASH_Lock() functions
+     48                     (++) Erase function: Sector erase, bank erase and dual-bank mass erase
+     49                     (++) There are two modes of erase :
+     50                       (+++) Polling Mode using HAL_FLASHEx_Erase()
+     51                       (+++) Interrupt Mode using HAL_FLASHEx_Erase_IT()
+     52          
+     53                (#) Option Bytes Programming functions: Use HAL_FLASHEx_OBProgram() to:
+     54                  (++) Configure the write protection per bank
+     55                  (++) Set the Product State
+     56                  (++) Program the user Option Bytes
+     57                  (++) Configure the watermark security for each area
+     58                  (++) Configure the Hide protection areas
+     59                  (++) Configure the Boot addresses
+     60          
+     61                (#) Get Option Bytes Configuration function: Use HAL_FLASHEx_OBGetConfig() to:
+     62                  (++) Get the value of a write protection area
+     63                  (++) Get the Product State
+     64                  (++) Get the value of the user Option Bytes
+     65                  (++) Get the configuration of watermark security areas
+     66                  (++) Get the configuration of Hide protection areas
+     67                  (++) Get the value of a boot address
+     68          
+     69                (#) Block-based secure / privilege area configuration function: Use HAL_FLASHEx_ConfigBBAttributes()
+     70                  (++) Bit-field allowing to secure or un-secure each sector
+     71                  (++) Bit-field allowing to privilege or un-privilege each sector
+     72          
+     73                (#) Get the block-based secure / privilege area configuration function: Use HAL_FLASHEx_GetConfigBBAttributes()
+     74                  (++) Return the configuration of the block-based security and privilege for all the sectors
+     75          
+     76                (#) Privilege mode configuration function: Use HAL_FLASHEx_ConfigPrivMode()
+     77                  (++) FLASH register can be protected against non-privilege accesses
+     78          
+     79                (#) Get the privilege mode configuration function: Use HAL_FLASHEx_GetPrivMode()
+     80                  (++) Return if the FLASH registers are protected against non-privilege accesses
+     81          
+     82          
+     83           @endverbatim
+     84            */
+     85          
+     86          /* Includes ------------------------------------------------------------------*/
+     87          #include "stm32h5xx_hal.h"
+     88          
+     89          /** @addtogroup STM32H5xx_HAL_Driver
+     90            * @{
+     91            */
+     92          
+     93          /** @defgroup FLASHEx  FLASHEx
+     94            * @brief FLASH HAL Extension module driver
+     95            * @{
+     96            */
+     97          
+     98          #ifdef HAL_FLASH_MODULE_ENABLED
+     99          
+    100          /* Private typedef -----------------------------------------------------------*/
+    101          /* Private define ------------------------------------------------------------*/
+    102          /* Private macro -------------------------------------------------------------*/
+    103          /* Private variables ---------------------------------------------------------*/
+    104          /* Private function prototypes -----------------------------------------------*/
+    105          /** @defgroup FLASHEx_Private_Functions FLASHEx Private Functions
+    106            * @{
+    107            */
+    108          static void FLASH_MassErase(uint32_t Banks);
+    109          #if defined (FLASH_SR_OBKERR)
+    110          static void FLASH_OBKErase(void);
+    111          #endif /* FLASH_SR_OBKERR */
+    112          static void FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks);
+    113          static void FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Bank);
+    114          static void FLASH_OB_GetWRP(uint32_t Bank, uint32_t *WRPState, uint32_t *WRPSector);
+    115          static void FLASH_OB_ProdStateConfig(uint32_t ProdStateConfig);
+    116          static uint32_t FLASH_OB_GetProdState(void);
+    117          static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig1, uint32_t UserConfig2);
+    118          static void FLASH_OB_GetUser(uint32_t *UserConfig1, uint32_t *UserConfig2);
+    119          static void FLASH_OB_BootAddrConfig(uint32_t BootOption, uint32_t BootAddress);
+    120          static void FLASH_OB_BootLockConfig(uint32_t BootLockOption, uint32_t BootLockConfig);
+    121          static void FLASH_OB_GetBootConfig(uint32_t BootOption, uint32_t *BootAddress, uint32_t *BootLockConfig);
+    122          static void FLASH_OB_OTP_LockConfig(uint32_t OTP_Block);
+    123          static uint32_t FLASH_OB_OTP_GetLock(void);
+    124          static void FLASH_OB_HDPConfig(uint32_t Banks, uint32_t HDPStartSector, uint32_t HDPEndSector);
+    125          static void FLASH_OB_GetHDP(uint32_t Bank, uint32_t *HDPStartSector, uint32_t *HDPEndSector);
+    126          #if defined(FLASH_EDATAR_EDATA_EN)
+    127          static void FLASH_OB_EDATAConfig(uint32_t Banks, uint32_t EDATASize);
+    128          static void FLASH_OB_GetEDATA(uint32_t Bank, uint32_t *EDATASize);
+    129          #endif /* FLASH_EDATAR_EDATA_EN */
+    130          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    131          static void FLASH_OB_WMSECConfig(uint32_t Banks, uint32_t WMSecStartSector, uint32_t WMSecEndSector);
+    132          static void FLASH_OB_GetWMSEC(uint32_t Bank, uint32_t *WMSecStartSector, uint32_t *WMSecEndSector);
+    133          #endif /* __ARM_FEATURE_CMSE */
+    134          /**
+    135            * @}
+    136            */
+    137          
+    138          /* Exported functions ---------------------------------------------------------*/
+    139          /** @defgroup FLASHEx_Exported_Functions FLASHEx Exported Functions
+    140            * @{
+    141            */
+    142          
+    143          /** @defgroup FLASHEx_Exported_Functions_Group1 FLASHEx Extended IO operation functions
+    144            *  @brief   FLASHEx Extended IO operation functions
+    145            *
+    146          @verbatim
+    147           ===============================================================================
+    148                          ##### Extended programming operation functions #####
+    149           ===============================================================================
+    150              [..]
+    151              This subsection provides a set of functions allowing to manage the Extended FLASH
+    152              programming operations Operations.
+    153          
+    154          @endverbatim
+    155            * @{
+    156            */
+    157          /**
+    158            * @brief  Perform a mass erase or erase the specified FLASH memory sectors
+    159            * @param[in]  pEraseInit pointer to an FLASH_EraseInitTypeDef structure that
+    160            *         contains the configuration information for the erasing.
+    161            *
+    162            * @param[out]  SectorError pointer to variable that contains the configuration
+    163            *          information on faulty sector in case of error (0xFFFFFFFF means that all
+    164            *          the sectors have been correctly erased).
+    165            *
+    166            * @retval HAL Status
+    167            */
+
+   \                                 In section .text, align 2, keep-with-next
+    168          HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *pEraseInit, uint32_t *SectorError)
+    169          {
+   \                     HAL_FLASHEx_Erase: (+1)
+   \        0x0   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \        0x4   0x0004             MOVS     R4,R0
+   \        0x6   0x000D             MOVS     R5,R1
+    170            HAL_StatusTypeDef status;
+    171            uint32_t sector_index;
+    172            __IO uint32_t *reg_cr;
+    173          
+    174            /* Check the parameters */
+    175            assert_param(IS_FLASH_TYPEERASE(pEraseInit->TypeErase));
+    176          
+    177            /* Process Locked */
+    178            __HAL_LOCK(&pFlash);
+   \        0x8   0x.... 0x....      LDR.W    R6,??DataTable30
+   \        0xC   0x7830             LDRB     R0,[R6, #+0]
+   \        0xE   0x2801             CMP      R0,#+1
+   \       0x10   0xD101             BNE.N    ??HAL_FLASHEx_Erase_0
+   \       0x12   0x2002             MOVS     R0,#+2
+   \       0x14   0xE04E             B.N      ??HAL_FLASHEx_Erase_1
+   \                     ??HAL_FLASHEx_Erase_0: (+1)
+   \       0x16   0x2001             MOVS     R0,#+1
+   \       0x18   0x7030             STRB     R0,[R6, #+0]
+    179          
+    180            /* Reset error code */
+    181            pFlash.ErrorCode = HAL_FLASH_ERROR_NONE;
+   \       0x1A   0x2000             MOVS     R0,#+0
+   \       0x1C   0x6070             STR      R0,[R6, #+4]
+    182          
+    183            /* Wait for last operation to be completed */
+    184            status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \       0x1E   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x22   0x.... 0x....      BL       FLASH_WaitForLastOperation
+    185          
+    186            if (status == HAL_OK)
+   \       0x26   0x0001             MOVS     R1,R0
+   \       0x28   0xB2C9             UXTB     R1,R1
+   \       0x2A   0x2900             CMP      R1,#+0
+   \       0x2C   0xD13F             BNE.N    ??HAL_FLASHEx_Erase_2
+    187            {
+    188              /* Current operation type */
+    189              pFlash.ProcedureOnGoing = pEraseInit->TypeErase;
+   \       0x2E   0x6821             LDR      R1,[R4, #+0]
+   \       0x30   0x60B1             STR      R1,[R6, #+8]
+    190          
+    191              /* Access to SECCR or NSCR depends on operation type */
+    192          #if defined (FLASH_OPTSR2_TZEN)
+    193              reg_cr = IS_FLASH_SECURE_OPERATION() ? &(FLASH->SECCR) : &(FLASH_NS->NSCR);
+   \       0x32   0x.... 0x....      LDR.W    R7,??DataTable30_1
+    194          #else
+    195              reg_cr = &(FLASH_NS->NSCR);
+    196          #endif /* FLASH_OPTSR2_TZEN */
+    197          
+    198              if ((pEraseInit->TypeErase & (~FLASH_NON_SECURE_MASK)) == FLASH_TYPEERASE_MASSERASE)
+   \       0x36   0x6821             LDR      R1,[R4, #+0]
+   \       0x38   0xF021 0x4100      BIC      R1,R1,#0x80000000
+   \       0x3C   0xF248 0x0208      MOVW     R2,#+32776
+   \       0x40   0x4291             CMP      R1,R2
+   \       0x42   0xD107             BNE.N    ??HAL_FLASHEx_Erase_3
+    199              {
+    200                /* Mass erase to be done */
+    201                FLASH_MassErase(pEraseInit->Banks);
+   \       0x44   0x6860             LDR      R0,[R4, #+4]
+   \       0x46   0x.... 0x....      BL       FLASH_MassErase
+    202          
+    203                /* Wait for last operation to be completed */
+    204                status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \       0x4A   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x4E   0x.... 0x....      BL       FLASH_WaitForLastOperation
+   \       0x52   0xE026             B.N      ??HAL_FLASHEx_Erase_4
+    205              }
+    206          #if defined (FLASH_SR_OBKERR)
+    207              else if (pEraseInit->TypeErase == FLASH_TYPEERASE_OBK_ALT)
+   \                     ??HAL_FLASHEx_Erase_3: (+1)
+   \       0x54   0x6821             LDR      R1,[R4, #+0]
+   \       0x56   0x.... 0x....      LDR.W    R2,??DataTable30_2
+   \       0x5A   0x4291             CMP      R1,R2
+   \       0x5C   0xD106             BNE.N    ??HAL_FLASHEx_Erase_5
+    208              {
+    209                /* OBK erase to be done */
+    210                FLASH_OBKErase();
+   \       0x5E   0x.... 0x....      BL       FLASH_OBKErase
+    211          
+    212                /* Wait for last operation to be completed */
+    213                status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \       0x62   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x66   0x.... 0x....      BL       FLASH_WaitForLastOperation
+   \       0x6A   0xE01A             B.N      ??HAL_FLASHEx_Erase_4
+    214              }
+    215          #endif /* FLASH_SR_OBKERR */
+    216              else
+    217              {
+    218                /* Initialization of SectorError variable */
+    219                *SectorError = 0xFFFFFFFFU;
+   \                     ??HAL_FLASHEx_Erase_5: (+1)
+   \       0x6C   0xF05F 0x31FF      MOVS     R1,#+4294967295
+   \       0x70   0x6029             STR      R1,[R5, #+0]
+    220          
+    221                /* Erase by sector by sector to be done*/
+    222                for (sector_index = pEraseInit->Sector; sector_index < (pEraseInit->NbSectors + pEraseInit->Sector); \
+   \       0x72   0xF8D4 0x8008      LDR      R8,[R4, #+8]
+   \       0x76   0xE001             B.N      ??HAL_FLASHEx_Erase_6
+    223                     sector_index++)
+   \                     ??HAL_FLASHEx_Erase_7: (+1)
+   \       0x78   0xF118 0x0801      ADDS     R8,R8,#+1
+   \                     ??HAL_FLASHEx_Erase_6: (+1)
+   \       0x7C   0x68E2             LDR      R2,[R4, #+12]
+   \       0x7E   0x68A1             LDR      R1,[R4, #+8]
+   \       0x80   0x188A             ADDS     R2,R1,R2
+   \       0x82   0x4590             CMP      R8,R2
+   \       0x84   0xD20D             BCS.N    ??HAL_FLASHEx_Erase_4
+    224                {
+    225                  FLASH_Erase_Sector(sector_index, pEraseInit->Banks);
+   \       0x86   0x6861             LDR      R1,[R4, #+4]
+   \       0x88   0x4640             MOV      R0,R8
+   \       0x8A   0x.... 0x....      BL       FLASH_Erase_Sector
+    226          
+    227                  /* Wait for last operation to be completed */
+    228                  status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \       0x8E   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x92   0x.... 0x....      BL       FLASH_WaitForLastOperation
+    229          
+    230                  if (status != HAL_OK)
+   \       0x96   0x0001             MOVS     R1,R0
+   \       0x98   0xB2C9             UXTB     R1,R1
+   \       0x9A   0x2900             CMP      R1,#+0
+   \       0x9C   0xD0EC             BEQ.N    ??HAL_FLASHEx_Erase_7
+    231                  {
+    232                    /* In case of error, stop erase procedure and return the faulty sector */
+    233                    *SectorError = sector_index;
+   \       0x9E   0xF8C5 0x8000      STR      R8,[R5, #+0]
+    234                    break;
+    235                  }
+    236                }
+    237              }
+    238          
+    239              /* If the erase operation is completed, disable the associated bits */
+    240              CLEAR_BIT((*reg_cr), (pEraseInit->TypeErase) & (~(FLASH_NON_SECURE_MASK)));
+   \                     ??HAL_FLASHEx_Erase_4: (+1)
+   \       0xA2   0x6839             LDR      R1,[R7, #+0]
+   \       0xA4   0x6822             LDR      R2,[R4, #+0]
+   \       0xA6   0xF022 0x4200      BIC      R2,R2,#0x80000000
+   \       0xAA   0x4391             BICS     R1,R1,R2
+   \       0xAC   0x6039             STR      R1,[R7, #+0]
+    241            }
+    242          
+    243            /* Process Unlocked */
+    244            __HAL_UNLOCK(&pFlash);
+   \                     ??HAL_FLASHEx_Erase_2: (+1)
+   \       0xAE   0x2100             MOVS     R1,#+0
+   \       0xB0   0x7031             STRB     R1,[R6, #+0]
+    245          
+    246            return status;
+   \       0xB2   0xB2C0             UXTB     R0,R0
+   \                     ??HAL_FLASHEx_Erase_1: (+1)
+   \       0xB4   0xE8BD 0x81F0      POP      {R4-R8,PC}
+    247          }
+    248          
+    249          /**
+    250            * @brief  Perform a mass erase or erase the specified FLASH memory sectors with interrupt enabled
+    251            * @param  pEraseInit pointer to an FLASH_EraseInitTypeDef structure that
+    252            *         contains the configuration information for the erasing.
+    253            *
+    254            * @retval HAL Status
+    255            */
+
+   \                                 In section .text, align 2, keep-with-next
+    256          HAL_StatusTypeDef HAL_FLASHEx_Erase_IT(FLASH_EraseInitTypeDef *pEraseInit)
+    257          {
+   \                     HAL_FLASHEx_Erase_IT: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x0005             MOVS     R5,R0
+    258            HAL_StatusTypeDef status;
+    259            __IO uint32_t *reg_cr;
+    260          
+    261            /* Check the parameters */
+    262            assert_param(IS_FLASH_TYPEERASE(pEraseInit->TypeErase));
+    263          
+    264            /* Process Locked */
+    265            __HAL_LOCK(&pFlash);
+   \        0x4   0x.... 0x....      LDR.W    R4,??DataTable30
+   \        0x8   0x7820             LDRB     R0,[R4, #+0]
+   \        0xA   0x2801             CMP      R0,#+1
+   \        0xC   0xD101             BNE.N    ??HAL_FLASHEx_Erase_IT_0
+   \        0xE   0x2002             MOVS     R0,#+2
+   \       0x10   0xE036             B.N      ??HAL_FLASHEx_Erase_IT_1
+   \                     ??HAL_FLASHEx_Erase_IT_0: (+1)
+   \       0x12   0x2001             MOVS     R0,#+1
+   \       0x14   0x7020             STRB     R0,[R4, #+0]
+    266          
+    267            /* Reset error code */
+    268            pFlash.ErrorCode = HAL_FLASH_ERROR_NONE;
+   \       0x16   0x2000             MOVS     R0,#+0
+   \       0x18   0x6060             STR      R0,[R4, #+4]
+    269          
+    270            /* Wait for last operation to be completed */
+    271            status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \       0x1A   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x1E   0x.... 0x....      BL       FLASH_WaitForLastOperation
+   \       0x22   0x0006             MOVS     R6,R0
+    272          
+    273            if (status != HAL_OK)
+   \       0x24   0x0030             MOVS     R0,R6
+   \       0x26   0xB2C0             UXTB     R0,R0
+   \       0x28   0x2800             CMP      R0,#+0
+   \       0x2A   0xD002             BEQ.N    ??HAL_FLASHEx_Erase_IT_2
+    274            {
+    275              /* Process Unlocked */
+    276              __HAL_UNLOCK(&pFlash);
+   \       0x2C   0x2000             MOVS     R0,#+0
+   \       0x2E   0x7020             STRB     R0,[R4, #+0]
+   \       0x30   0xE024             B.N      ??HAL_FLASHEx_Erase_IT_3
+    277            }
+    278            else
+    279            {
+    280              /* Set internal variables used by the IRQ handler */
+    281              pFlash.ProcedureOnGoing = pEraseInit->TypeErase;
+   \                     ??HAL_FLASHEx_Erase_IT_2: (+1)
+   \       0x32   0x6828             LDR      R0,[R5, #+0]
+   \       0x34   0x60A0             STR      R0,[R4, #+8]
+    282              pFlash.Bank = pEraseInit->Banks;
+   \       0x36   0x6868             LDR      R0,[R5, #+4]
+   \       0x38   0x6120             STR      R0,[R4, #+16]
+    283          
+    284              /* Access to SECCR or NSCR depends on operation type */
+    285          #if defined (FLASH_OPTSR2_TZEN)
+    286              reg_cr = IS_FLASH_SECURE_OPERATION() ? &(FLASH->SECCR) : &(FLASH_NS->NSCR);
+   \       0x3A   0x.... 0x....      LDR.W    R0,??DataTable30_1
+    287          #else
+    288              reg_cr = &(FLASH_NS->NSCR);
+    289          #endif /* FLASH_OPTSR2_TZEN */
+    290          
+    291              /* Enable End of Operation and Error interrupts */
+    292          #if defined (FLASH_SR_OBKERR)
+    293              (*reg_cr) |= (FLASH_IT_EOP     | FLASH_IT_WRPERR | FLASH_IT_PGSERR | \
+    294                            FLASH_IT_STRBERR | FLASH_IT_INCERR | FLASH_IT_OBKERR | \
+    295                            FLASH_IT_OBKWERR);
+   \       0x3E   0x6801             LDR      R1,[R0, #+0]
+   \       0x40   0xF451 0x01FE      ORRS     R1,R1,#0x7F0000
+   \       0x44   0x6001             STR      R1,[R0, #+0]
+    296          #else
+    297              (*reg_cr) |= (FLASH_IT_EOP     | FLASH_IT_WRPERR | FLASH_IT_PGSERR | \
+    298                            FLASH_IT_STRBERR | FLASH_IT_INCERR);
+    299          #endif /* FLASH_SR_OBKERR */
+    300          
+    301              if ((pEraseInit->TypeErase & (~FLASH_NON_SECURE_MASK)) == FLASH_TYPEERASE_MASSERASE)
+   \       0x46   0x6828             LDR      R0,[R5, #+0]
+   \       0x48   0xF020 0x4000      BIC      R0,R0,#0x80000000
+   \       0x4C   0xF248 0x0108      MOVW     R1,#+32776
+   \       0x50   0x4288             CMP      R0,R1
+   \       0x52   0xD103             BNE.N    ??HAL_FLASHEx_Erase_IT_4
+    302              {
+    303                /* Mass erase to be done */
+    304                FLASH_MassErase(pEraseInit->Banks);
+   \       0x54   0x6868             LDR      R0,[R5, #+4]
+   \       0x56   0x.... 0x....      BL       FLASH_MassErase
+   \       0x5A   0xE00F             B.N      ??HAL_FLASHEx_Erase_IT_3
+    305              }
+    306          #if defined (FLASH_SR_OBKERR)
+    307              else if (pEraseInit->TypeErase == FLASH_TYPEERASE_OBK_ALT)
+   \                     ??HAL_FLASHEx_Erase_IT_4: (+1)
+   \       0x5C   0x6828             LDR      R0,[R5, #+0]
+   \       0x5E   0x.... 0x....      LDR.W    R1,??DataTable30_2
+   \       0x62   0x4288             CMP      R0,R1
+   \       0x64   0xD102             BNE.N    ??HAL_FLASHEx_Erase_IT_5
+    308              {
+    309                /* OBK erase to be done */
+    310                FLASH_OBKErase();
+   \       0x66   0x.... 0x....      BL       FLASH_OBKErase
+   \       0x6A   0xE007             B.N      ??HAL_FLASHEx_Erase_IT_3
+    311              }
+    312          #endif /* FLASH_SR_OBKERR */
+    313              else
+    314              {
+    315                /* Erase by sector to be done */
+    316                pFlash.NbSectorsToErase = pEraseInit->NbSectors;
+   \                     ??HAL_FLASHEx_Erase_IT_5: (+1)
+   \       0x6C   0x68E8             LDR      R0,[R5, #+12]
+   \       0x6E   0x61A0             STR      R0,[R4, #+24]
+    317                pFlash.Sector = pEraseInit->Sector;
+   \       0x70   0x68A8             LDR      R0,[R5, #+8]
+   \       0x72   0x6160             STR      R0,[R4, #+20]
+    318          
+    319                /* Erase first sector and wait for IT */
+    320                FLASH_Erase_Sector(pEraseInit->Sector, pEraseInit->Banks);
+   \       0x74   0x6869             LDR      R1,[R5, #+4]
+   \       0x76   0x68A8             LDR      R0,[R5, #+8]
+   \       0x78   0x.... 0x....      BL       FLASH_Erase_Sector
+    321              }
+    322            }
+    323          
+    324            return status;
+   \                     ??HAL_FLASHEx_Erase_IT_3: (+1)
+   \       0x7C   0x0030             MOVS     R0,R6
+   \       0x7E   0xB2C0             UXTB     R0,R0
+   \                     ??HAL_FLASHEx_Erase_IT_1: (+1)
+   \       0x80   0xBD70             POP      {R4-R6,PC}
+    325          }
+    326          
+    327          /**
+    328            * @brief  Program option bytes
+    329            * @param  pOBInit pointer to an FLASH_OBInitStruct structure that
+    330            *         contains the configuration information for the programming.
+    331            *
+    332            * @note   To configure any option bytes, the option lock bit OPTLOCK must be
+    333            *         cleared with the call of HAL_FLASH_OB_Unlock() function.
+    334            * @note   New option bytes configuration will be taken into account in two cases:
+    335            *         - after an option bytes launch through the call of HAL_FLASH_OB_Launch()
+    336            *         - after a power-on reset (BOR reset or exit from Standby/Shutdown modes)
+    337            * @retval HAL Status
+    338            */
+
+   \                                 In section .text, align 2, keep-with-next
+    339          HAL_StatusTypeDef HAL_FLASHEx_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit)
+    340          {
+   \                     HAL_FLASHEx_OBProgram: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x0005             MOVS     R5,R0
+    341            HAL_StatusTypeDef status;
+    342          
+    343            /* Check the parameters */
+    344            assert_param(IS_OPTIONBYTE(pOBInit->OptionType));
+    345          
+    346            /* Process Locked */
+    347            __HAL_LOCK(&pFlash);
+   \        0x4   0x.... 0x....      LDR.W    R4,??DataTable30
+   \        0x8   0x7820             LDRB     R0,[R4, #+0]
+   \        0xA   0x2801             CMP      R0,#+1
+   \        0xC   0xD101             BNE.N    ??HAL_FLASHEx_OBProgram_0
+   \        0xE   0x2002             MOVS     R0,#+2
+   \       0x10   0xE053             B.N      ??HAL_FLASHEx_OBProgram_1
+   \                     ??HAL_FLASHEx_OBProgram_0: (+1)
+   \       0x12   0x2001             MOVS     R0,#+1
+   \       0x14   0x7020             STRB     R0,[R4, #+0]
+    348          
+    349            /* Reset Error Code */
+    350            pFlash.ErrorCode = HAL_FLASH_ERROR_NONE;
+   \       0x16   0x2000             MOVS     R0,#+0
+   \       0x18   0x6060             STR      R0,[R4, #+4]
+    351          
+    352            /* Current operation type */
+    353            pFlash.ProcedureOnGoing = FLASH_TYPEPROGRAM_OB;
+   \       0x1A   0xF05F 0x2080      MOVS     R0,#+2147516416
+   \       0x1E   0x60A0             STR      R0,[R4, #+8]
+    354          
+    355            /* Wait for last operation to be completed */
+    356            status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \       0x20   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x24   0x.... 0x....      BL       FLASH_WaitForLastOperation
+   \       0x28   0x0006             MOVS     R6,R0
+    357          
+    358            if (status == HAL_OK)
+   \       0x2A   0x0030             MOVS     R0,R6
+   \       0x2C   0xB2C0             UXTB     R0,R0
+   \       0x2E   0x2800             CMP      R0,#+0
+   \       0x30   0xD13F             BNE.N    ??HAL_FLASHEx_OBProgram_2
+    359            {
+    360              /*Write protection configuration*/
+    361              if ((pOBInit->OptionType & OPTIONBYTE_WRP) != 0U)
+   \       0x32   0x7828             LDRB     R0,[R5, #+0]
+   \       0x34   0x07C0             LSLS     R0,R0,#+31
+   \       0x36   0xD50B             BPL.N    ??HAL_FLASHEx_OBProgram_3
+    362              {
+    363                assert_param(IS_WRPSTATE(pOBInit->WRPState));
+    364          
+    365                if (pOBInit->WRPState == OB_WRPSTATE_ENABLE)
+   \       0x38   0x69A8             LDR      R0,[R5, #+24]
+   \       0x3A   0x2801             CMP      R0,#+1
+   \       0x3C   0xD104             BNE.N    ??HAL_FLASHEx_OBProgram_4
+    366                {
+    367                  /* Enable write protection on the selected sectors */
+    368                  FLASH_OB_EnableWRP(pOBInit->WRPSector, pOBInit->Banks);
+   \       0x3E   0x6969             LDR      R1,[R5, #+20]
+   \       0x40   0x69E8             LDR      R0,[R5, #+28]
+   \       0x42   0x.... 0x....      BL       FLASH_OB_EnableWRP
+   \       0x46   0xE003             B.N      ??HAL_FLASHEx_OBProgram_3
+    369                }
+    370                else
+    371                {
+    372                  /* Disable write protection on the selected sectors */
+    373                  FLASH_OB_DisableWRP(pOBInit->WRPSector, pOBInit->Banks);
+   \                     ??HAL_FLASHEx_OBProgram_4: (+1)
+   \       0x48   0x6969             LDR      R1,[R5, #+20]
+   \       0x4A   0x69E8             LDR      R0,[R5, #+28]
+   \       0x4C   0x.... 0x....      BL       FLASH_OB_DisableWRP
+    374                }
+    375              }
+    376          
+    377              /* Product State configuration */
+    378              if ((pOBInit->OptionType & OPTIONBYTE_PROD_STATE) != 0U)
+   \                     ??HAL_FLASHEx_OBProgram_3: (+1)
+   \       0x50   0x7828             LDRB     R0,[R5, #+0]
+   \       0x52   0x0780             LSLS     R0,R0,#+30
+   \       0x54   0xD502             BPL.N    ??HAL_FLASHEx_OBProgram_5
+    379              {
+    380                /* Configure the product state */
+    381                FLASH_OB_ProdStateConfig(pOBInit->ProductState);
+   \       0x56   0x6868             LDR      R0,[R5, #+4]
+   \       0x58   0x.... 0x....      BL       FLASH_OB_ProdStateConfig
+    382              }
+    383          
+    384              /* User Configuration */
+    385              if ((pOBInit->OptionType & OPTIONBYTE_USER) != 0U)
+   \                     ??HAL_FLASHEx_OBProgram_5: (+1)
+   \       0x5C   0x7828             LDRB     R0,[R5, #+0]
+   \       0x5E   0x0740             LSLS     R0,R0,#+29
+   \       0x60   0xD504             BPL.N    ??HAL_FLASHEx_OBProgram_6
+    386              {
+    387                /* Configure the user option bytes */
+    388                FLASH_OB_UserConfig(pOBInit->USERType, pOBInit->USERConfig, pOBInit->USERConfig2);
+   \       0x62   0x692A             LDR      R2,[R5, #+16]
+   \       0x64   0x68E9             LDR      R1,[R5, #+12]
+   \       0x66   0x68A8             LDR      R0,[R5, #+8]
+   \       0x68   0x.... 0x....      BL       FLASH_OB_UserConfig
+    389              }
+    390          
+    391          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    392              /* Watermark secure configuration */
+    393              if ((pOBInit->OptionType & OPTIONBYTE_WMSEC) != 0U)
+    394              {
+    395                /* Configure the watermark-based secure area */
+    396                FLASH_OB_WMSECConfig(pOBInit->Banks, pOBInit->WMSecStartSector, pOBInit->WMSecEndSector);
+    397              }
+    398          #endif /* __ARM_FEATURE_CMSE */
+    399          
+    400              /* Boot Address configuration */
+    401              if ((pOBInit->OptionType & OPTIONBYTE_BOOTADDR) != 0U)
+   \                     ??HAL_FLASHEx_OBProgram_6: (+1)
+   \       0x6C   0x7828             LDRB     R0,[R5, #+0]
+   \       0x6E   0x0700             LSLS     R0,R0,#+28
+   \       0x70   0xD503             BPL.N    ??HAL_FLASHEx_OBProgram_7
+    402              {
+    403                FLASH_OB_BootAddrConfig(pOBInit->BootConfig, pOBInit->BootAddr);
+   \       0x72   0x6A69             LDR      R1,[R5, #+36]
+   \       0x74   0x6A28             LDR      R0,[R5, #+32]
+   \       0x76   0x.... 0x....      BL       FLASH_OB_BootAddrConfig
+    404              }
+    405          
+    406              /* Unique boot entry point configuration */
+    407              if ((pOBInit->OptionType & OPTIONBYTE_BOOT_LOCK) != 0U)
+   \                     ??HAL_FLASHEx_OBProgram_7: (+1)
+   \       0x7A   0x7828             LDRB     R0,[R5, #+0]
+   \       0x7C   0x06C0             LSLS     R0,R0,#+27
+   \       0x7E   0xD503             BPL.N    ??HAL_FLASHEx_OBProgram_8
+    408              {
+    409                /* Configure the unique boot entry point */
+    410                FLASH_OB_BootLockConfig(pOBInit->BootConfig, pOBInit->BootLock);
+   \       0x80   0x6AA9             LDR      R1,[R5, #+40]
+   \       0x82   0x6A28             LDR      R0,[R5, #+32]
+   \       0x84   0x.... 0x....      BL       FLASH_OB_BootLockConfig
+    411              }
+    412          
+    413              /* OTP Block Lock configuration */
+    414              if ((pOBInit->OptionType & OPTIONBYTE_OTP_LOCK) != 0U)
+   \                     ??HAL_FLASHEx_OBProgram_8: (+1)
+   \       0x88   0x7828             LDRB     R0,[R5, #+0]
+   \       0x8A   0x0680             LSLS     R0,R0,#+26
+   \       0x8C   0xD502             BPL.N    ??HAL_FLASHEx_OBProgram_9
+    415              {
+    416                FLASH_OB_OTP_LockConfig(pOBInit->OTPBlockLock);
+   \       0x8E   0x6AE8             LDR      R0,[R5, #+44]
+   \       0x90   0x.... 0x....      BL       FLASH_OB_OTP_LockConfig
+    417              }
+    418          
+    419              /* Hide Protection area configuration */
+    420              if ((pOBInit->OptionType & OPTIONBYTE_HDP) != 0U)
+   \                     ??HAL_FLASHEx_OBProgram_9: (+1)
+   \       0x94   0x7828             LDRB     R0,[R5, #+0]
+   \       0x96   0x0640             LSLS     R0,R0,#+25
+   \       0x98   0xD504             BPL.N    ??HAL_FLASHEx_OBProgram_10
+    421              {
+    422                FLASH_OB_HDPConfig(pOBInit->Banks, pOBInit->HDPStartSector, pOBInit->HDPEndSector);
+   \       0x9A   0x6B6A             LDR      R2,[R5, #+52]
+   \       0x9C   0x6B29             LDR      R1,[R5, #+48]
+   \       0x9E   0x6968             LDR      R0,[R5, #+20]
+   \       0xA0   0x.... 0x....      BL       FLASH_OB_HDPConfig
+    423              }
+    424          
+    425          #if defined(FLASH_EDATAR_EDATA_EN)
+    426              /* Flash high-cycle data area configuration */
+    427              if ((pOBInit->OptionType & OPTIONBYTE_EDATA) != 0U)
+   \                     ??HAL_FLASHEx_OBProgram_10: (+1)
+   \       0xA4   0x7828             LDRB     R0,[R5, #+0]
+   \       0xA6   0x0600             LSLS     R0,R0,#+24
+   \       0xA8   0xD503             BPL.N    ??HAL_FLASHEx_OBProgram_2
+    428              {
+    429                FLASH_OB_EDATAConfig(pOBInit->Banks, pOBInit->EDATASize);
+   \       0xAA   0x6BA9             LDR      R1,[R5, #+56]
+   \       0xAC   0x6968             LDR      R0,[R5, #+20]
+   \       0xAE   0x.... 0x....      BL       FLASH_OB_EDATAConfig
+    430              }
+    431          #endif /* FLASH_EDATAR_EDATA_EN */
+    432            }
+    433          
+    434            /* Process Unlocked */
+    435            __HAL_UNLOCK(&pFlash);
+   \                     ??HAL_FLASHEx_OBProgram_2: (+1)
+   \       0xB2   0x2000             MOVS     R0,#+0
+   \       0xB4   0x7020             STRB     R0,[R4, #+0]
+    436          
+    437            return status;
+   \       0xB6   0x0030             MOVS     R0,R6
+   \       0xB8   0xB2C0             UXTB     R0,R0
+   \                     ??HAL_FLASHEx_OBProgram_1: (+1)
+   \       0xBA   0xBD70             POP      {R4-R6,PC}
+    438          }
+    439          
+    440          /**
+    441            * @brief Get the Option byte configuration
+    442            * @param  pOBInit pointer to an FLASH_OBInitStruct structure that
+    443            *         contains the configuration information for the programming.
+    444            * @note   The parameter Banks of the pOBInit structure must be set exclusively to FLASH_BANK_1 or FLASH_BANK_2,
+    445            *         as this parameter is use to get the given Bank WRP, PCROP and secured area configuration.
+    446            *
+    447            * @retval None
+    448            */
+
+   \                                 In section .text, align 2, keep-with-next
+    449          void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
+    450          {
+   \                     HAL_FLASHEx_OBGetConfig: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    451            pOBInit->OptionType = (OPTIONBYTE_USER | OPTIONBYTE_PROD_STATE);
+   \        0x4   0x2006             MOVS     R0,#+6
+   \        0x6   0x6020             STR      R0,[R4, #+0]
+    452          
+    453            /* Get Product State */
+    454            pOBInit->ProductState = FLASH_OB_GetProdState();
+   \        0x8   0x.... 0x....      BL       FLASH_OB_GetProdState
+   \        0xC   0x6060             STR      R0,[R4, #+4]
+    455          
+    456            /* Get the user option bytes */
+    457            FLASH_OB_GetUser(&(pOBInit->USERConfig), &(pOBInit->USERConfig2));
+   \        0xE   0xF114 0x0110      ADDS     R1,R4,#+16
+   \       0x12   0xF114 0x000C      ADDS     R0,R4,#+12
+   \       0x16   0x.... 0x....      BL       FLASH_OB_GetUser
+    458          
+    459            if ((pOBInit->Banks == FLASH_BANK_1) || (pOBInit->Banks == FLASH_BANK_2))
+   \       0x1A   0x6960             LDR      R0,[R4, #+20]
+   \       0x1C   0x2801             CMP      R0,#+1
+   \       0x1E   0xD002             BEQ.N    ??HAL_FLASHEx_OBGetConfig_0
+   \       0x20   0x6960             LDR      R0,[R4, #+20]
+   \       0x22   0x2802             CMP      R0,#+2
+   \       0x24   0xD11E             BNE.N    ??HAL_FLASHEx_OBGetConfig_1
+    460            {
+    461              /* Get write protection on the selected area */
+    462              pOBInit->OptionType |= OPTIONBYTE_WRP;
+   \                     ??HAL_FLASHEx_OBGetConfig_0: (+1)
+   \       0x26   0x6820             LDR      R0,[R4, #+0]
+   \       0x28   0xF050 0x0001      ORRS     R0,R0,#0x1
+   \       0x2C   0x6020             STR      R0,[R4, #+0]
+    463              FLASH_OB_GetWRP(pOBInit->Banks, &(pOBInit->WRPState), &(pOBInit->WRPSector));
+   \       0x2E   0xF114 0x021C      ADDS     R2,R4,#+28
+   \       0x32   0xF114 0x0118      ADDS     R1,R4,#+24
+   \       0x36   0x6960             LDR      R0,[R4, #+20]
+   \       0x38   0x.... 0x....      BL       FLASH_OB_GetWRP
+    464          
+    465          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    466              /* Get the configuration of the watermark secure area for the selected area */
+    467              pOBInit->OptionType |= OPTIONBYTE_WMSEC;
+    468              FLASH_OB_GetWMSEC(pOBInit->Banks, &(pOBInit->WMSecStartSector), &(pOBInit->WMSecEndSector));
+    469          #endif /* __ARM_FEATURE_CMSE */
+    470          
+    471              /* Get the configuration of the hide protection for the selected area */
+    472              pOBInit->OptionType |= OPTIONBYTE_HDP;
+   \       0x3C   0x6820             LDR      R0,[R4, #+0]
+   \       0x3E   0xF050 0x0040      ORRS     R0,R0,#0x40
+   \       0x42   0x6020             STR      R0,[R4, #+0]
+    473              FLASH_OB_GetHDP(pOBInit->Banks, &(pOBInit->HDPStartSector), &(pOBInit->HDPEndSector));
+   \       0x44   0xF114 0x0234      ADDS     R2,R4,#+52
+   \       0x48   0xF114 0x0130      ADDS     R1,R4,#+48
+   \       0x4C   0x6960             LDR      R0,[R4, #+20]
+   \       0x4E   0x.... 0x....      BL       FLASH_OB_GetHDP
+    474          #if defined (FLASH_EDATAR_EDATA_EN)
+    475              /* Get the Flash high-cycle data configuration for the selected area */
+    476              pOBInit->OptionType |= OPTIONBYTE_EDATA;
+   \       0x52   0x6820             LDR      R0,[R4, #+0]
+   \       0x54   0xF050 0x0080      ORRS     R0,R0,#0x80
+   \       0x58   0x6020             STR      R0,[R4, #+0]
+    477              FLASH_OB_GetEDATA(pOBInit->Banks, &(pOBInit->EDATASize));
+   \       0x5A   0xF114 0x0138      ADDS     R1,R4,#+56
+   \       0x5E   0x6960             LDR      R0,[R4, #+20]
+   \       0x60   0x.... 0x....      BL       FLASH_OB_GetEDATA
+    478          #endif /* FLASH_EDATAR_EDATA_EN */
+    479            }
+    480          
+    481            /* Get boot configuration */
+    482          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    483            if ((pOBInit->BootConfig == OB_BOOT_NS) || (pOBInit->BootConfig == OB_BOOT_SEC))
+    484          #else
+    485            if (pOBInit->BootConfig == OB_BOOT_NS)
+   \                     ??HAL_FLASHEx_OBGetConfig_1: (+1)
+   \       0x64   0x6A20             LDR      R0,[R4, #+32]
+   \       0x66   0x2801             CMP      R0,#+1
+   \       0x68   0xD10A             BNE.N    ??HAL_FLASHEx_OBGetConfig_2
+    486          #endif /* __ARM_FEATURE_CMSE */
+    487            {
+    488              pOBInit->OptionType |= OPTIONBYTE_BOOTADDR | OPTIONBYTE_BOOT_LOCK;
+   \       0x6A   0x6820             LDR      R0,[R4, #+0]
+   \       0x6C   0xF050 0x0018      ORRS     R0,R0,#0x18
+   \       0x70   0x6020             STR      R0,[R4, #+0]
+    489              FLASH_OB_GetBootConfig(pOBInit->BootConfig, &(pOBInit->BootAddr), &(pOBInit->BootLock));
+   \       0x72   0xF114 0x0228      ADDS     R2,R4,#+40
+   \       0x76   0xF114 0x0124      ADDS     R1,R4,#+36
+   \       0x7A   0x6A20             LDR      R0,[R4, #+32]
+   \       0x7C   0x.... 0x....      BL       FLASH_OB_GetBootConfig
+    490            }
+    491          
+    492            /* Get OTP Block Lock */
+    493            pOBInit->OptionType |= OPTIONBYTE_OTP_LOCK;
+   \                     ??HAL_FLASHEx_OBGetConfig_2: (+1)
+   \       0x80   0x6820             LDR      R0,[R4, #+0]
+   \       0x82   0xF050 0x0020      ORRS     R0,R0,#0x20
+   \       0x86   0x6020             STR      R0,[R4, #+0]
+    494            pOBInit->OTPBlockLock = FLASH_OB_OTP_GetLock();
+   \       0x88   0x.... 0x....      BL       FLASH_OB_OTP_GetLock
+   \       0x8C   0x62E0             STR      R0,[R4, #+44]
+    495          }
+   \       0x8E   0xBD10             POP      {R4,PC}
+    496          
+    497          #if defined (FLASH_SR_OBKERR)
+    498          /**
+    499            * @brief  Unlock the FLASH OBK register access
+    500            * @retval HAL Status
+    501            */
+
+   \                                 In section .text, align 2, keep-with-next
+    502          HAL_StatusTypeDef HAL_FLASHEx_OBK_Unlock(void)
+    503          {
+    504            HAL_StatusTypeDef status = HAL_OK;
+   \                     HAL_FLASHEx_OBK_Unlock: (+1)
+   \        0x0   0x2000             MOVS     R0,#+0
+    505          
+    506          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    507            if (READ_BIT(FLASH->SECOBKCFGR, FLASH_OBKCFGR_LOCK) != 0U)
+    508            {
+    509              /* Authorize the FLASH OBK Register access */
+    510              WRITE_REG(FLASH->SECOBKKEYR, FLASH_OBK_KEY1);
+    511              WRITE_REG(FLASH->SECOBKKEYR, FLASH_OBK_KEY2);
+    512          
+    513              /* Verify Flash OBK Register is unlocked */
+    514              if (READ_BIT(FLASH->SECOBKCFGR, FLASH_OBKCFGR_LOCK) != 0U)
+    515              {
+    516                status = HAL_ERROR;
+    517              }
+    518            }
+    519          #else
+    520            if (READ_BIT(FLASH->NSOBKCFGR, FLASH_OBKCFGR_LOCK) != 0U)
+   \        0x2   0x.... 0x....      LDR.W    R1,??DataTable30_3
+   \        0x6   0x680A             LDR      R2,[R1, #+0]
+   \        0x8   0x07D2             LSLS     R2,R2,#+31
+   \        0xA   0xD50B             BPL.N    ??HAL_FLASHEx_OBK_Unlock_0
+    521            {
+    522              /* Authorize the FLASH OBK Register access */
+    523              WRITE_REG(FLASH->NSOBKKEYR, FLASH_OBK_KEY1);
+   \        0xC   0x.... 0x....      LDR.W    R2,??DataTable30_4
+   \       0x10   0x.... 0x....      LDR.W    R3,??DataTable30_5
+   \       0x14   0x6013             STR      R3,[R2, #+0]
+    524              WRITE_REG(FLASH->NSOBKKEYR, FLASH_OBK_KEY2);
+   \       0x16   0x.... 0x....      LDR.W    R3,??DataTable30_6
+   \       0x1A   0x6013             STR      R3,[R2, #+0]
+    525          
+    526              /* Verify Flash OBK Register is unlocked */
+    527              if (READ_BIT(FLASH->NSOBKCFGR, FLASH_OBKCFGR_LOCK) != 0U)
+   \       0x1C   0x6809             LDR      R1,[R1, #+0]
+   \       0x1E   0x07C9             LSLS     R1,R1,#+31
+   \       0x20   0xD500             BPL.N    ??HAL_FLASHEx_OBK_Unlock_0
+    528              {
+    529                status = HAL_ERROR;
+   \       0x22   0x2001             MOVS     R0,#+1
+    530              }
+    531            }
+    532          #endif /* __ARM_FEATURE_CMSE */
+    533          
+    534            return status;
+   \                     ??HAL_FLASHEx_OBK_Unlock_0: (+1)
+   \       0x24   0xB2C0             UXTB     R0,R0
+   \       0x26   0x4770             BX       LR
+    535          }
+    536          
+    537          /**
+    538            * @brief  Locks the FLASH OBK register access
+    539            * @retval HAL Status
+    540            */
+
+   \                                 In section .text, align 2, keep-with-next
+    541          HAL_StatusTypeDef HAL_FLASHEx_OBK_Lock(void)
+    542          {
+    543            HAL_StatusTypeDef status = HAL_ERROR;
+   \                     HAL_FLASHEx_OBK_Lock: (+1)
+   \        0x0   0x2001             MOVS     R0,#+1
+    544          
+    545          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    546            /* Set the LOCK Bit to lock the FLASH OBK Register access */
+    547            SET_BIT(FLASH->SECOBKCFGR, FLASH_OBKCFGR_LOCK);
+    548          
+    549            /* verify Flash is locked */
+    550            if (READ_BIT(FLASH->SECOBKCFGR, FLASH_OBKCFGR_LOCK) != 0U)
+    551            {
+    552              status = HAL_OK;
+    553            }
+    554          #else
+    555            /* Set the LOCK Bit to lock the FLASH OBK Register access */
+    556            SET_BIT(FLASH->NSOBKCFGR, FLASH_OBKCFGR_LOCK);
+   \        0x2   0x.... 0x....      LDR.W    R1,??DataTable30_3
+   \        0x6   0x680A             LDR      R2,[R1, #+0]
+   \        0x8   0xF052 0x0201      ORRS     R2,R2,#0x1
+   \        0xC   0x600A             STR      R2,[R1, #+0]
+    557          
+    558            /* Verify Flash OBK is locked */
+    559            if (READ_BIT(FLASH->NSOBKCFGR, FLASH_OBKCFGR_LOCK) != 0U)
+   \        0xE   0x6809             LDR      R1,[R1, #+0]
+   \       0x10   0x07C9             LSLS     R1,R1,#+31
+   \       0x12   0xD500             BPL.N    ??HAL_FLASHEx_OBK_Lock_0
+    560            {
+    561              status = HAL_OK;
+   \       0x14   0x2000             MOVS     R0,#+0
+    562            }
+    563          #endif /* __ARM_FEATURE_CMSE */
+    564          
+    565            return status;
+   \                     ??HAL_FLASHEx_OBK_Lock_0: (+1)
+   \       0x16   0xB2C0             UXTB     R0,R0
+   \       0x18   0x4770             BX       LR
+    566          }
+    567          
+    568          /**
+    569            * @brief  Swap the FLASH Option Bytes Keys (OBK)
+    570            * @param  SwapOffset Specifies the number of keys to be swapped.
+    571            *         This parameter can be a value between 0 (no OBK data swapped) and 511 (all OBK data swapped).
+    572            *         Typical value are available in @ref FLASH_OBK_SWAP_Offset
+    573            * @retval HAL Status
+    574            */
+
+   \                                 In section .text, align 2, keep-with-next
+    575          HAL_StatusTypeDef HAL_FLASHEx_OBK_Swap(uint32_t SwapOffset)
+    576          {
+   \                     HAL_FLASHEx_OBK_Swap: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    577            HAL_StatusTypeDef status;
+    578            __IO uint32_t *reg_obkcfgr;
+    579          
+    580            /* Wait for last operation to be completed */
+    581            status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \        0x4   0xF44F 0x707A      MOV      R0,#+1000
+   \        0x8   0x.... 0x....      BL       FLASH_WaitForLastOperation
+    582          
+    583            if (status == HAL_OK)
+   \        0xC   0x0001             MOVS     R1,R0
+   \        0xE   0xB2C9             UXTB     R1,R1
+   \       0x10   0x2900             CMP      R1,#+0
+   \       0x12   0xD10F             BNE.N    ??HAL_FLASHEx_OBK_Swap_0
+    584            {
+    585              /* Access to SECOBKCFGR or NSOBKCFGR registers depends on operation type */
+    586              reg_obkcfgr = IS_FLASH_SECURE_OPERATION() ? &(FLASH->SECOBKCFGR) : &(FLASH_NS->NSOBKCFGR);
+   \       0x14   0x.... 0x....      LDR.W    R0,??DataTable30_3
+    587          
+    588              /* Set OBK swap offset */
+    589              MODIFY_REG((*reg_obkcfgr), FLASH_OBKCFGR_SWAP_OFFSET, (SwapOffset << FLASH_OBKCFGR_SWAP_OFFSET_Pos));
+   \       0x18   0x6801             LDR      R1,[R0, #+0]
+   \       0x1A   0xF36F 0x4118      BFC      R1,#+16,#+9
+   \       0x1E   0xEA51 0x4104      ORRS     R1,R1,R4, LSL #+16
+   \       0x22   0x6001             STR      R1,[R0, #+0]
+    590          
+    591              /* Set OBK swap request */
+    592              SET_BIT((*reg_obkcfgr), FLASH_OBKCFGR_SWAP_SECT_REQ);
+   \       0x24   0x6801             LDR      R1,[R0, #+0]
+   \       0x26   0xF051 0x0102      ORRS     R1,R1,#0x2
+   \       0x2A   0x6001             STR      R1,[R0, #+0]
+    593          
+    594              /* Wait for last operation to be completed */
+    595              status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \       0x2C   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x30   0x.... 0x....      BL       FLASH_WaitForLastOperation
+    596            }
+    597          
+    598            return status;
+   \                     ??HAL_FLASHEx_OBK_Swap_0: (+1)
+   \       0x34   0xB2C0             UXTB     R0,R0
+   \       0x36   0xBD10             POP      {R4,PC}
+    599          }
+    600          #endif /* FLASH_SR_OBKERR */
+    601          
+    602          /**
+    603            * @brief  Return the on-going Flash Operation. After a system reset, return
+    604            *         the interrupted Flash operation, if any.
+    605            * @param  pFlashOperation [out] pointer to a FLASH_OperationTypeDef structure
+    606            *                               that contains the Flash operation information.
+    607            * @retval None
+    608            */
+
+   \                                 In section .text, align 2, keep-with-next
+    609          void HAL_FLASHEx_GetOperation(FLASH_OperationTypeDef *pFlashOperation)
+    610          {
+    611            uint32_t opsr_reg = FLASH->OPSR;
+   \                     HAL_FLASHEx_GetOperation: (+1)
+   \        0x0   0x.... 0x....      LDR.W    R1,??DataTable30_7
+   \        0x4   0x6809             LDR      R1,[R1, #+0]
+    612          
+    613            /* Get Flash operation Type */
+    614            pFlashOperation->OperationType = opsr_reg & FLASH_OPSR_CODE_OP;
+   \        0x6   0xF011 0x4260      ANDS     R2,R1,#0xE0000000
+   \        0xA   0x6002             STR      R2,[R0, #+0]
+    615          
+    616            /* Get Flash operation memory */
+    617          #if defined (FLASH_EDATAR_EDATA_EN)
+    618            pFlashOperation->FlashArea = opsr_reg & (FLASH_OPSR_DATA_OP | FLASH_OPSR_BK_OP | \
+    619                                                     FLASH_OPSR_SYSF_OP | FLASH_OPSR_OTP_OP);
+   \        0xC   0xF011 0x72F0      ANDS     R2,R1,#0x1E00000
+   \       0x10   0x6042             STR      R2,[R0, #+4]
+    620          #else
+    621            pFlashOperation->FlashArea = opsr_reg & (FLASH_OPSR_BK_OP | FLASH_OPSR_SYSF_OP | \
+    622                                                     FLASH_OPSR_OTP_OP);
+    623          #endif /* FLASH_EDATAR_EDATA_EN */
+    624            /* Get Flash operation address */
+    625            pFlashOperation->Address = opsr_reg & FLASH_OPSR_ADDR_OP;
+   \       0x12   0x0309             LSLS     R1,R1,#+12
+   \       0x14   0x0B09             LSRS     R1,R1,#+12
+   \       0x16   0x6081             STR      R1,[R0, #+8]
+    626          }
+   \       0x18   0x4770             BX       LR
+    627          
+    628          /**
+    629            * @}
+    630            */
+    631          
+    632          /** @defgroup FLASHEx_Exported_Functions_Group2 FLASHEx Extension Protection configuration functions
+    633            *  @brief   Extension Protection configuration functions
+    634            * @{
+    635            */
+    636          
+    637          /**
+    638            * @brief  Configure the block-based secure area.
+    639            *
+    640            * @param  pBBAttributes pointer to an FLASH_BBAttributesTypeDef structure that
+    641            *         contains the configuration information for the programming.
+    642            *
+    643            * @note   The field pBBAttributes->Bank should indicate which area is requested
+    644            *         for the block-based attributes.
+    645            * @note   The field pBBAttributes->BBAttributesType should indicate which
+    646            *         block-base attribute type is requested: Secure or Privilege.
+    647            *
+    648            * @retval HAL Status
+    649            */
+
+   \                                 In section .text, align 2, keep-with-next
+    650          HAL_StatusTypeDef HAL_FLASHEx_ConfigBBAttributes(FLASH_BBAttributesTypeDef *pBBAttributes)
+    651          {
+   \                     HAL_FLASHEx_ConfigBBAttributes: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    652            HAL_StatusTypeDef status;
+    653            uint8_t index;
+    654            __IO uint32_t *reg;
+    655          
+    656            /* Check the parameters */
+    657            assert_param(IS_FLASH_BANK_EXCLUSIVE(pBBAttributes->Bank));
+    658            assert_param(IS_FLASH_BB_EXCLUSIVE(pBBAttributes->BBAttributesType));
+    659          
+    660            /* Wait for last operation to be completed */
+    661            status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+   \        0x4   0xF44F 0x707A      MOV      R0,#+1000
+   \        0x8   0x.... 0x....      BL       FLASH_WaitForLastOperation
+    662          
+    663            if (status == HAL_OK)
+   \        0xC   0x0001             MOVS     R1,R0
+   \        0xE   0xB2C9             UXTB     R1,R1
+   \       0x10   0x2900             CMP      R1,#+0
+   \       0x12   0xD120             BNE.N    ??HAL_FLASHEx_ConfigBBAttributes_0
+    664            {
+    665              /* Set the first Block-Based register to write */
+    666          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    667              if (pBBAttributes->BBAttributesType == FLASH_BB_SEC)
+    668              {
+    669                if (pBBAttributes->Bank == FLASH_BANK_1)
+    670                {
+    671                  reg = &(FLASH->SECBB1R1);
+    672                }
+    673                else
+    674                {
+    675                  reg = &(FLASH->SECBB2R1);
+    676                }
+    677              }
+    678              else
+    679          #endif /* __ARM_FEATURE_CMSE */
+    680              {
+    681                if (pBBAttributes->Bank == FLASH_BANK_1)
+   \       0x14   0x6821             LDR      R1,[R4, #+0]
+   \       0x16   0x2901             CMP      R1,#+1
+   \       0x18   0xD102             BNE.N    ??HAL_FLASHEx_ConfigBBAttributes_1
+    682                {
+    683                  reg = &(FLASH->PRIVBB1R1);
+   \       0x1A   0x.... 0x....      LDR.W    R2,??DataTable30_8
+   \       0x1E   0xE001             B.N      ??HAL_FLASHEx_ConfigBBAttributes_2
+    684                }
+    685                else
+    686                {
+    687                  reg = &(FLASH->PRIVBB2R1);
+   \                     ??HAL_FLASHEx_ConfigBBAttributes_1: (+1)
+   \       0x20   0x.... 0x....      LDR.W    R2,??DataTable30_9
+    688                }
+    689              }
+    690          
+    691              /* Modify the register values and check that new attributes are taken in account */
+    692              for (index = 0; index < FLASH_BLOCKBASED_NB_REG; index++)
+   \                     ??HAL_FLASHEx_ConfigBBAttributes_2: (+1)
+   \       0x24   0x2100             MOVS     R1,#+0
+   \       0x26   0xE010             B.N      ??HAL_FLASHEx_ConfigBBAttributes_3
+    693              {
+    694                *reg = pBBAttributes->BBAttributes_array[index] & FLASH_PRIVBBR_PRIVBB;
+   \                     ??HAL_FLASHEx_ConfigBBAttributes_4: (+1)
+   \       0x28   0x000B             MOVS     R3,R1
+   \       0x2A   0xB2DB             UXTB     R3,R3
+   \       0x2C   0xEB04 0x0383      ADD      R3,R4,R3, LSL #+2
+   \       0x30   0x689B             LDR      R3,[R3, #+8]
+   \       0x32   0x6013             STR      R3,[R2, #+0]
+    695                if ((*reg) != (pBBAttributes->BBAttributes_array[index] & FLASH_PRIVBBR_PRIVBB))
+   \       0x34   0x6813             LDR      R3,[R2, #+0]
+   \       0x36   0x000D             MOVS     R5,R1
+   \       0x38   0xB2ED             UXTB     R5,R5
+   \       0x3A   0xEB04 0x0585      ADD      R5,R4,R5, LSL #+2
+   \       0x3E   0x68AD             LDR      R5,[R5, #+8]
+   \       0x40   0x42AB             CMP      R3,R5
+   \       0x42   0xD000             BEQ.N    ??HAL_FLASHEx_ConfigBBAttributes_5
+    696                {
+    697                  status = HAL_ERROR;
+   \       0x44   0x2001             MOVS     R0,#+1
+    698                }
+    699                reg++;
+   \                     ??HAL_FLASHEx_ConfigBBAttributes_5: (+1)
+   \       0x46   0x1D12             ADDS     R2,R2,#+4
+    700              }
+   \       0x48   0x1C49             ADDS     R1,R1,#+1
+   \                     ??HAL_FLASHEx_ConfigBBAttributes_3: (+1)
+   \       0x4A   0x000B             MOVS     R3,R1
+   \       0x4C   0xB2DB             UXTB     R3,R3
+   \       0x4E   0x2B04             CMP      R3,#+4
+   \       0x50   0xD3EA             BCC.N    ??HAL_FLASHEx_ConfigBBAttributes_4
+    701          
+    702              /* ISB instruction is called to be sure next instructions are performed with correct attributes */
+    703              __ISB();
+   \       0x52   0xF3BF 0x8F6F      ISB      SY
+    704            }
+    705          
+    706            /* Process Unlocked */
+    707            __HAL_UNLOCK(&pFlash);
+   \                     ??HAL_FLASHEx_ConfigBBAttributes_0: (+1)
+   \       0x56   0x2100             MOVS     R1,#+0
+   \       0x58   0x.... 0x....      LDR.W    R2,??DataTable30
+   \       0x5C   0x7011             STRB     R1,[R2, #+0]
+    708          
+    709            return status;
+   \       0x5E   0xB2C0             UXTB     R0,R0
+   \       0x60   0xBD32             POP      {R1,R4,R5,PC}
+    710          }
+    711          
+    712          /**
+    713            * @brief  Return the block-based attributes.
+    714            *
+    715            * @param  pBBAttributes [in/out] pointer to an FLASH_BBAttributesTypeDef structure
+    716            *                 that contains the configuration information.
+    717            * @note   The field pBBAttributes->Bank should indicate which area is requested
+    718            *         for the block-based attributes.
+    719            * @note   The field pBBAttributes->BBAttributesType should indicate which
+    720            *         block-base attribute type is requested: Secure or Privilege.
+    721            *
+    722            * @retval None
+    723            */
+
+   \                                 In section .text, align 2, keep-with-next
+    724          void HAL_FLASHEx_GetConfigBBAttributes(FLASH_BBAttributesTypeDef *pBBAttributes)
+    725          {
+   \                     HAL_FLASHEx_GetConfigBBAttributes: (+1)
+   \        0x0   0xB410             PUSH     {R4}
+    726            uint8_t index;
+    727            __IO uint32_t *reg;
+    728          
+    729            /* Check the parameters */
+    730            assert_param(IS_FLASH_BANK_EXCLUSIVE(pBBAttributes->Bank));
+    731            assert_param(IS_FLASH_BB_EXCLUSIVE(pBBAttributes->BBAttributesType));
+    732          
+    733            /* Set the first Block-Based register to read */
+    734          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    735            if (pBBAttributes->BBAttributesType == FLASH_BB_SEC)
+    736            {
+    737              if (pBBAttributes->Bank == FLASH_BANK_1)
+    738              {
+    739                reg = &(FLASH->SECBB1R1);
+    740              }
+    741              else
+    742              {
+    743                reg = &(FLASH->SECBB2R1);
+    744              }
+    745            }
+    746            else
+    747          #endif /* __ARM_FEATURE_CMSE */
+    748            {
+    749              if (pBBAttributes->Bank == FLASH_BANK_1)
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0x2901             CMP      R1,#+1
+   \        0x6   0xD102             BNE.N    ??HAL_FLASHEx_GetConfigBBAttributes_0
+    750              {
+    751                reg = &(FLASH->PRIVBB1R1);
+   \        0x8   0x.... 0x....      LDR.W    R2,??DataTable30_8
+   \        0xC   0xE001             B.N      ??HAL_FLASHEx_GetConfigBBAttributes_1
+    752              }
+    753              else
+    754              {
+    755                reg = &(FLASH->PRIVBB2R1);
+   \                     ??HAL_FLASHEx_GetConfigBBAttributes_0: (+1)
+   \        0xE   0x.... 0x....      LDR.W    R2,??DataTable30_9
+    756              }
+    757            }
+    758          
+    759            /* Read the register values */
+    760            for (index = 0; index < FLASH_BLOCKBASED_NB_REG; index++)
+   \                     ??HAL_FLASHEx_GetConfigBBAttributes_1: (+1)
+   \       0x12   0x2100             MOVS     R1,#+0
+   \       0x14   0xE007             B.N      ??HAL_FLASHEx_GetConfigBBAttributes_2
+    761            {
+    762              pBBAttributes->BBAttributes_array[index] = (*reg) & FLASH_PRIVBBR_PRIVBB;
+   \                     ??HAL_FLASHEx_GetConfigBBAttributes_3: (+1)
+   \       0x16   0x6813             LDR      R3,[R2, #+0]
+   \       0x18   0x000C             MOVS     R4,R1
+   \       0x1A   0xB2E4             UXTB     R4,R4
+   \       0x1C   0xEB00 0x0484      ADD      R4,R0,R4, LSL #+2
+   \       0x20   0x60A3             STR      R3,[R4, #+8]
+    763              reg++;
+   \       0x22   0x1D12             ADDS     R2,R2,#+4
+    764            }
+   \       0x24   0x1C49             ADDS     R1,R1,#+1
+   \                     ??HAL_FLASHEx_GetConfigBBAttributes_2: (+1)
+   \       0x26   0x000B             MOVS     R3,R1
+   \       0x28   0xB2DB             UXTB     R3,R3
+   \       0x2A   0x2B04             CMP      R3,#+4
+   \       0x2C   0xD3F3             BCC.N    ??HAL_FLASHEx_GetConfigBBAttributes_3
+    765          }
+   \       0x2E   0xBC10             POP      {R4}
+   \       0x30   0x4770             BX       LR
+    766          
+    767          /**
+    768            * @brief  Configuration of the privilege attribute.
+    769            *
+    770            * @param  PrivMode indicate privilege mode configuration
+    771            *      This parameter can be one of the following values:
+    772            *      @arg FLASH_SPRIV_GRANTED: access to secure Flash registers is granted to privileged or unprivileged access
+    773            *      @arg FLASH_SPRIV_DENIED: access to secure Flash registers is denied to unprivileged access
+    774            *      @arg FLASH_NSPRIV_GRANTED: access to non-secure Flash registers is granted to privileged or unprivileged access
+    775            *      @arg FLASH_NSPRIV_DENIED: access to non-secure Flash registers is denied to unprivilege access
+    776            *
+    777            * @retval None
+    778            */
+
+   \                                 In section .text, align 2, keep-with-next
+    779          void HAL_FLASHEx_ConfigPrivMode(uint32_t PrivMode)
+    780          {
+    781            /* Check the parameters */
+    782            assert_param(IS_FLASH_CFGPRIVMODE(PrivMode));
+    783          #if defined (FLASH_PRIVCFGR_SPRIV)
+    784            MODIFY_REG(FLASH->PRIVCFGR, (FLASH_PRIVCFGR_SPRIV | FLASH_PRIVCFGR_NSPRIV), PrivMode);
+   \                     HAL_FLASHEx_ConfigPrivMode: (+1)
+   \        0x0   0x.... 0x....      LDR.W    R1,??DataTable30_10
+   \        0x4   0x680A             LDR      R2,[R1, #+0]
+   \        0x6   0x0892             LSRS     R2,R2,#+2
+   \        0x8   0x0092             LSLS     R2,R2,#+2
+   \        0xA   0x4310             ORRS     R0,R0,R2
+   \        0xC   0x6008             STR      R0,[R1, #+0]
+    785          #else
+    786            MODIFY_REG(FLASH->PRIVCFGR, FLASH_PRIVCFGR_NSPRIV, PrivMode);
+    787          #endif /* FLASH_PRIVCFGR_SPRIV */
+    788          }
+   \        0xE   0x4770             BX       LR
+    789          
+    790          /**
+    791            * @brief  Return the value of the privilege attribute.
+    792            *
+    793            * @retval  It indicates the privilege mode configuration.
+    794            *      This return value can be one of the following values:
+    795            *      @arg FLASH_SPRIV_GRANTED: access to secure Flash registers is granted to privileged or unprivileged access
+    796            *      @arg FLASH_SPRIV_DENIED: access to secure Flash registers is denied to unprivileged access
+    797            *      @arg FLASH_NSPRIV_GRANTED: access to non-secure Flash registers is granted to privileged or unprivileged access
+    798            *      @arg FLASH_NSPRIV_DENIED: access to Flash registers is denied to unprivilege accessP
+    799            */
+
+   \                                 In section .text, align 2, keep-with-next
+    800          uint32_t HAL_FLASHEx_GetPrivMode(void)
+    801          {
+    802          #if defined (FLASH_PRIVCFGR_SPRIV)
+    803            return (FLASH->PRIVCFGR & (FLASH_PRIVCFGR_SPRIV | FLASH_PRIVCFGR_NSPRIV));
+   \                     HAL_FLASHEx_GetPrivMode: (+1)
+   \        0x0   0x.... 0x....      LDR.W    R0,??DataTable30_10
+   \        0x4   0x6800             LDR      R0,[R0, #+0]
+   \        0x6   0xF010 0x0003      ANDS     R0,R0,#0x3
+   \        0xA   0x4770             BX       LR
+    804          #else
+    805            return (FLASH->PRIVCFGR & FLASH_PRIVCFGR_NSPRIV);
+    806          #endif /* FLASH_PRIVCFGR_SPRIV */
+    807          }
+    808          
+    809          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    810          /**
+    811            * @brief  Configuration of the security inversion.
+    812            *
+    813            * @param  SecInvState indicate the flash security state configuration
+    814            *          This parameter can be one of the following values:
+    815            *            @arg FLASH_SEC_INV_DISABLE: Security state of Flash is not inverted
+    816            *            @arg FLASH_SEC_INV_ENABLE: Security state of Flash is inverted
+    817            *
+    818            * @retval HAL Status
+    819            */
+    820          HAL_StatusTypeDef HAL_FLASHEx_ConfigSecInversion(uint32_t SecInvState)
+    821          {
+    822            HAL_StatusTypeDef status;
+    823          
+    824            /* Check the parameters */
+    825            assert_param(IS_FLASH_CFGSECINV(SecInvState));
+    826          
+    827            /* Process Locked */
+    828            __HAL_LOCK(&pFlash);
+    829          
+    830            /* Wait for last operation to be completed */
+    831            status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
+    832          
+    833            if (status == HAL_OK)
+    834            {
+    835              MODIFY_REG(FLASH->SECCR, FLASH_CR_INV, SecInvState);
+    836            }
+    837          
+    838            /* Process Unlocked */
+    839            __HAL_UNLOCK(&pFlash);
+    840          
+    841            return status;
+    842          }
+    843          
+    844          /**
+    845            * @brief  Return the value of the security inversion.
+    846            *
+    847            * @retval  It indicates the flash security state configuration
+    848            *          This return value can be one of the following values:
+    849            *            @arg FLASH_SEC_INV_DISABLE: Security state of Flash is not inverted
+    850            *            @arg FLASH_SEC_INV_ENABLE: Security state of Flash is inverted
+    851            */
+    852          uint32_t HAL_FLASHEx_GetSecInversion(void)
+    853          {
+    854            return (FLASH->SECCR & FLASH_CR_INV);
+    855          }
+    856          #endif /* __ARM_FEATURE_CMSE */
+    857          
+    858          /**
+    859            * @brief  Configure the HDP extension area.
+    860            *
+    861            * @param  pHDPExtension pointer to an FLASH_HDPExtentionTypeDef structure that
+    862            *         contains the configuration information.
+    863            *
+    864            * @note   The field pHDPExtension->Banks should indicate which area is requested
+    865            *         for the HDP extension.
+    866            * @note   The field pHDPExtension->NbSectors should indicate the number of
+    867            *         sector to be added to the HDP area.
+    868            *
+    869            * @retval HAL Status
+    870            */
+
+   \                                 In section .text, align 2, keep-with-next
+    871          HAL_StatusTypeDef HAL_FLASHEx_ConfigHDPExtension(const FLASH_HDPExtensionTypeDef *pHDPExtension)
+    872          {
+    873            /* Check the parameters */
+    874            assert_param(IS_FLASH_BANK(pHDPExtension->Banks));
+    875            assert_param(IS_FLASH_SECTOR(pHDPExtension->NbSectors));
+    876          
+    877            /* Set the HDP extension register */
+    878            if (pHDPExtension->Banks == FLASH_BANK_1)
+   \                     HAL_FLASHEx_ConfigHDPExtension: (+1)
+   \        0x0   0x6801             LDR      R1,[R0, #+0]
+   \        0x2   0x2901             CMP      R1,#+1
+   \        0x4   0xD108             BNE.N    ??HAL_FLASHEx_ConfigHDPExtension_0
+    879            {
+    880              MODIFY_REG(FLASH->HDPEXTR, FLASH_HDPEXTR_HDP1_EXT, pHDPExtension->NbSectors);
+   \        0x6   0x.... 0x....      LDR.W    R1,??DataTable30_11
+   \        0xA   0x680A             LDR      R2,[R1, #+0]
+   \        0xC   0x09D2             LSRS     R2,R2,#+7
+   \        0xE   0x01D2             LSLS     R2,R2,#+7
+   \       0x10   0x6840             LDR      R0,[R0, #+4]
+   \       0x12   0x4302             ORRS     R2,R0,R2
+   \       0x14   0x600A             STR      R2,[R1, #+0]
+   \       0x16   0xE013             B.N      ??HAL_FLASHEx_ConfigHDPExtension_1
+    881            }
+    882            else if (pHDPExtension->Banks == FLASH_BANK_2)
+   \                     ??HAL_FLASHEx_ConfigHDPExtension_0: (+1)
+   \       0x18   0x6801             LDR      R1,[R0, #+0]
+   \       0x1A   0x2902             CMP      R1,#+2
+   \       0x1C   0xD109             BNE.N    ??HAL_FLASHEx_ConfigHDPExtension_2
+    883            {
+    884              MODIFY_REG(FLASH->HDPEXTR, FLASH_HDPEXTR_HDP2_EXT, (pHDPExtension->NbSectors << FLASH_HDPEXTR_HDP2_EXT_Pos));
+   \       0x1E   0x.... 0x....      LDR.W    R1,??DataTable30_11
+   \       0x22   0x680A             LDR      R2,[R1, #+0]
+   \       0x24   0xF432 0x02FE      BICS     R2,R2,#0x7F0000
+   \       0x28   0x6840             LDR      R0,[R0, #+4]
+   \       0x2A   0xEA52 0x4200      ORRS     R2,R2,R0, LSL #+16
+   \       0x2E   0x600A             STR      R2,[R1, #+0]
+   \       0x30   0xE006             B.N      ??HAL_FLASHEx_ConfigHDPExtension_1
+    885            }
+    886            else
+    887            {
+    888              FLASH->HDPEXTR = (pHDPExtension->NbSectors << FLASH_HDPEXTR_HDP2_EXT_Pos) | pHDPExtension->NbSectors;
+   \                     ??HAL_FLASHEx_ConfigHDPExtension_2: (+1)
+   \       0x32   0x6841             LDR      R1,[R0, #+4]
+   \       0x34   0x6840             LDR      R0,[R0, #+4]
+   \       0x36   0xEA50 0x4001      ORRS     R0,R0,R1, LSL #+16
+   \       0x3A   0x.... 0x....      LDR.W    R1,??DataTable30_11
+   \       0x3E   0x6008             STR      R0,[R1, #+0]
+    889            }
+    890          
+    891            return HAL_OK;
+   \                     ??HAL_FLASHEx_ConfigHDPExtension_1: (+1)
+   \       0x40   0x2000             MOVS     R0,#+0
+   \       0x42   0x4770             BX       LR
+    892          }
+    893          
+    894          /**
+    895            * @}
+    896            */
+    897          
+    898          /**
+    899            * @}
+    900            */
+    901          
+    902          /* Private functions ---------------------------------------------------------*/
+    903          
+    904          /** @addtogroup FLASHEx_Private_Functions
+    905            * @{
+    906            */
+    907          
+    908          /**
+    909            * @brief  Mass erase of FLASH memory
+    910            * @param  Banks Banks to be erased
+    911            *          This parameter can be one of the following values:
+    912            *            @arg FLASH_BANK_1: Bank1 to be erased
+    913            *            @arg FLASH_BANK_2: Bank2 to be erased
+    914            *            @arg FLASH_BANK_BOTH: Bank1 and Bank2 to be erased
+    915            * @retval None
+    916            */
+
+   \                                 In section .text, align 2, keep-with-next
+    917          static void FLASH_MassErase(uint32_t Banks)
+    918          {
+    919            __IO uint32_t *reg_cr;
+    920          
+    921            /* Check the parameters */
+    922            assert_param(IS_FLASH_BANK(Banks));
+    923          
+    924            /* Access to SECCR or NSCR registers depends on operation type */
+    925          #if defined (FLASH_OPTSR2_TZEN)
+    926            reg_cr = IS_FLASH_SECURE_OPERATION() ? &(FLASH->SECCR) : &(FLASH_NS->NSCR);
+   \                     FLASH_MassErase: (+1)
+   \        0x0   0x.... 0x....      LDR.W    R2,??DataTable30_1
+    927          #else
+    928            reg_cr = &(FLASH_NS->NSCR);
+    929          #endif /* FLASH_OPTSR2_TZEN */
+    930          
+    931            /* Flash Mass Erase */
+    932            if ((Banks & FLASH_BANK_BOTH) == FLASH_BANK_BOTH)
+   \        0x4   0xF010 0x0103      ANDS     R1,R0,#0x3
+   \        0x8   0x2903             CMP      R1,#+3
+   \        0xA   0xD106             BNE.N    ??FLASH_MassErase_0
+    933            {
+    934              /* Set Mass Erase Bit */
+    935              SET_BIT((*reg_cr), FLASH_CR_MER | FLASH_CR_START);
+   \        0xC   0x6810             LDR      R0,[R2, #+0]
+   \        0xE   0xF440 0x4000      ORR      R0,R0,#0x8000
+   \       0x12   0xF050 0x0020      ORRS     R0,R0,#0x20
+   \       0x16   0x6010             STR      R0,[R2, #+0]
+   \       0x18   0xE010             B.N      ??FLASH_MassErase_1
+    936            }
+    937            else
+    938            {
+    939              /* Proceed to erase Flash Bank  */
+    940              if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+   \                     ??FLASH_MassErase_0: (+1)
+   \       0x1A   0x07C1             LSLS     R1,R0,#+31
+   \       0x1C   0xD506             BPL.N    ??FLASH_MassErase_2
+    941              {
+    942                /* Erase Bank1 */
+    943                MODIFY_REG((*reg_cr), (FLASH_CR_BKSEL | FLASH_CR_BER | FLASH_CR_START), (FLASH_CR_BER | FLASH_CR_START));
+   \       0x1E   0x6813             LDR      R3,[R2, #+0]
+   \       0x20   0x.... 0x....      LDR.W    R1,??DataTable30_12
+   \       0x24   0x400B             ANDS     R3,R1,R3
+   \       0x26   0xF053 0x0328      ORRS     R3,R3,#0x28
+   \       0x2A   0x6013             STR      R3,[R2, #+0]
+    944              }
+    945          
+    946              if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+   \                     ??FLASH_MassErase_2: (+1)
+   \       0x2C   0x0780             LSLS     R0,R0,#+30
+   \       0x2E   0xD505             BPL.N    ??FLASH_MassErase_1
+    947              {
+    948                /* Erase Bank2 */
+    949                SET_BIT((*reg_cr), (FLASH_CR_BER | FLASH_CR_BKSEL | FLASH_CR_START));
+   \       0x30   0x6810             LDR      R0,[R2, #+0]
+   \       0x32   0xF040 0x4000      ORR      R0,R0,#0x80000000
+   \       0x36   0xF050 0x0028      ORRS     R0,R0,#0x28
+   \       0x3A   0x6010             STR      R0,[R2, #+0]
+    950              }
+    951            }
+    952          }
+   \                     ??FLASH_MassErase_1: (+1)
+   \       0x3C   0x4770             BX       LR
+    953          
+    954          /**
+    955            * @brief  Erase the specified FLASH memory sector
+    956            * @param  Sector FLASH sector to erase
+    957            *          This parameter can be a value of @ref FLASH_Sectors
+    958            * @param  Banks Bank(s) where the sector will be erased
+    959            *          This parameter can be one of the following values:
+    960            *            @arg FLASH_BANK_1: Sector in bank 1 to be erased
+    961            *            @arg FLASH_BANK_2: Sector in bank 2 to be erased
+    962            * @retval None
+    963            */
+
+   \                                 In section .text, align 2, keep-with-next
+    964          void FLASH_Erase_Sector(uint32_t Sector, uint32_t Banks)
+    965          {
+    966            __IO uint32_t *reg_cr;
+    967          
+    968            /* Check the parameters */
+    969            assert_param(IS_FLASH_SECTOR(Sector));
+    970            assert_param(IS_FLASH_BANK_EXCLUSIVE(Banks));
+    971          
+    972            /* Access to SECCR or NSCR registers depends on operation type */
+    973          #if defined (FLASH_OPTSR2_TZEN)
+    974            reg_cr = IS_FLASH_SECURE_OPERATION() ? &(FLASH->SECCR) : &(FLASH_NS->NSCR);
+   \                     FLASH_Erase_Sector: (+1)
+   \        0x0   0x....             LDR.N    R2,??DataTable30_1
+    975          #else
+    976            reg_cr = &(FLASH_NS->NSCR);
+    977          #endif /* FLASH_OPTSR2_TZEN */
+    978          
+    979            if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+   \        0x2   0x07C9             LSLS     R1,R1,#+31
+   \        0x4   0xD50B             BPL.N    ??FLASH_Erase_Sector_0
+    980            {
+    981              /* Reset Sector Number for Bank1 */
+    982              (*reg_cr) &= ~(FLASH_CR_SNB | FLASH_CR_BKSEL);
+   \        0x6   0x6813             LDR      R3,[R2, #+0]
+   \        0x8   0x.... 0x....      LDR.W    R1,??DataTable30_13
+   \        0xC   0x400B             ANDS     R3,R1,R3
+   \        0xE   0x6013             STR      R3,[R2, #+0]
+    983          
+    984              (*reg_cr) |= (FLASH_CR_SER | (Sector << FLASH_CR_SNB_Pos) | FLASH_CR_START);
+   \       0x10   0x6811             LDR      R1,[R2, #+0]
+   \       0x12   0xEA51 0x1180      ORRS     R1,R1,R0, LSL #+6
+   \       0x16   0xF051 0x0124      ORRS     R1,R1,#0x24
+   \       0x1A   0x6011             STR      R1,[R2, #+0]
+   \       0x1C   0xE00B             B.N      ??FLASH_Erase_Sector_1
+    985            }
+    986            else
+    987            {
+    988              /* Reset Sector Number for Bank2 */
+    989              (*reg_cr) &= ~(FLASH_CR_SNB);
+   \                     ??FLASH_Erase_Sector_0: (+1)
+   \       0x1E   0x6811             LDR      R1,[R2, #+0]
+   \       0x20   0xF431 0x51FE      BICS     R1,R1,#0x1FC0
+   \       0x24   0x6011             STR      R1,[R2, #+0]
+    990          
+    991              (*reg_cr) |= (FLASH_CR_SER | FLASH_CR_BKSEL | (Sector << FLASH_CR_SNB_Pos) | FLASH_CR_START);
+   \       0x26   0x6811             LDR      R1,[R2, #+0]
+   \       0x28   0xEA51 0x1180      ORRS     R1,R1,R0, LSL #+6
+   \       0x2C   0xF041 0x4100      ORR      R1,R1,#0x80000000
+   \       0x30   0xF051 0x0124      ORRS     R1,R1,#0x24
+   \       0x34   0x6011             STR      R1,[R2, #+0]
+    992            }
+    993          }
+   \                     ??FLASH_Erase_Sector_1: (+1)
+   \       0x36   0x4770             BX       LR
+    994          
+    995          #if defined (FLASH_SR_OBKERR)
+    996          /**
+    997            * @brief  Erase of FLASH OBK
+    998            * @retval None
+    999            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1000          static void FLASH_OBKErase()
+   1001          {
+   1002            __IO uint32_t *reg_obkcfgr;
+   1003          
+   1004            /* Access to SECOBKCFGR or NSOBKCFGR registers depends on operation type */
+   1005            reg_obkcfgr = IS_FLASH_SECURE_OPERATION() ? &(FLASH->SECOBKCFGR) : &(FLASH_NS->NSOBKCFGR);
+   \                     FLASH_OBKErase: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable30_3
+   1006          
+   1007            /* Set OBK Erase Bit */
+   1008            SET_BIT((*reg_obkcfgr), FLASH_OBKCFGR_ALT_SECT_ERASE);
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF051 0x0108      ORRS     R1,R1,#0x8
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+   1009          }
+   \        0xA   0x4770             BX       LR
+   1010          #endif /* FLASH_SR_OBKERR */
+   1011          
+   1012          /**
+   1013            * @brief  Enable the write protection of the desired bank1 or bank 2 sectors
+   1014            * @param  WRPSector specifies the sectors to be write protected.
+   1015            *         This parameter can be a value of @ref FLASH_OB_Write_Protection_Sectors
+   1016            *
+   1017            * @param  Banks the specific bank to apply WRP sectors
+   1018            *          This parameter can be one of the following values:
+   1019            *            @arg FLASH_BANK_1: enable WRP on specified bank1 sectors
+   1020            *            @arg FLASH_BANK_2: enable WRP on specified bank2 sectors
+   1021            *            @arg FLASH_BANK_BOTH: enable WRP on both bank1 and bank2 specified sectors
+   1022            *
+   1023            * @retval None
+   1024            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1025          static void FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks)
+   1026          {
+   1027            /* Check the parameters */
+   1028            assert_param(IS_FLASH_BANK(Banks));
+   1029          
+   1030            if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+   \                     FLASH_OB_EnableWRP: (+1)
+   \        0x0   0x07CA             LSLS     R2,R1,#+31
+   \        0x2   0xD503             BPL.N    ??FLASH_OB_EnableWRP_0
+   1031            {
+   1032              /* Enable Write Protection for bank 1 */
+   1033              FLASH->WRP1R_PRG &= (~(WRPSector & FLASH_WRPR_WRPSG));
+   \        0x4   0x....             LDR.N    R2,??DataTable30_14
+   \        0x6   0x6813             LDR      R3,[R2, #+0]
+   \        0x8   0x4383             BICS     R3,R3,R0
+   \        0xA   0x6013             STR      R3,[R2, #+0]
+   1034            }
+   1035          
+   1036            if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+   \                     ??FLASH_OB_EnableWRP_0: (+1)
+   \        0xC   0x0789             LSLS     R1,R1,#+30
+   \        0xE   0xD504             BPL.N    ??FLASH_OB_EnableWRP_1
+   1037            {
+   1038              /* Enable Write Protection for bank 2 */
+   1039              FLASH->WRP2R_PRG &= (~(WRPSector & FLASH_WRPR_WRPSG));
+   \       0x10   0x....             LDR.N    R1,??DataTable30_15
+   \       0x12   0x680A             LDR      R2,[R1, #+0]
+   \       0x14   0xEA32 0x0000      BICS     R0,R2,R0
+   \       0x18   0x6008             STR      R0,[R1, #+0]
+   1040            }
+   1041          }
+   \                     ??FLASH_OB_EnableWRP_1: (+1)
+   \       0x1A   0x4770             BX       LR
+   1042          
+   1043          /**
+   1044            * @brief  Disable the write protection of the desired bank1 or bank 2 sectors
+   1045            * @param  WRPSector specifies the sectors to disable write protection.
+   1046            *         This parameter can be a value of @ref FLASH_OB_Write_Protection_Sectors
+   1047            *
+   1048            * @param  Banks the specific bank to apply WRP sectors
+   1049            *          This parameter can be one of the following values:
+   1050            *            @arg FLASH_BANK_1: disable WRP on specified bank1 sectors
+   1051            *            @arg FLASH_BANK_2: disable WRP on specified bank2 sectors
+   1052            *            @arg FLASH_BANK_BOTH: disable WRP on both bank1 and bank2 specified sectors
+   1053            *
+   1054            * @retval None
+   1055            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1056          static void FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Banks)
+   1057          {
+   1058            /* Check the parameters */
+   1059            assert_param(IS_FLASH_BANK(Banks));
+   1060          
+   1061            if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+   \                     FLASH_OB_DisableWRP: (+1)
+   \        0x0   0x07CA             LSLS     R2,R1,#+31
+   \        0x2   0xD503             BPL.N    ??FLASH_OB_DisableWRP_0
+   1062            {
+   1063              /* Disable Write Protection for bank 1 */
+   1064              FLASH->WRP1R_PRG |= (WRPSector & FLASH_WRPR_WRPSG);
+   \        0x4   0x....             LDR.N    R2,??DataTable30_14
+   \        0x6   0x6813             LDR      R3,[R2, #+0]
+   \        0x8   0x4303             ORRS     R3,R0,R3
+   \        0xA   0x6013             STR      R3,[R2, #+0]
+   1065            }
+   1066          
+   1067            if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+   \                     ??FLASH_OB_DisableWRP_0: (+1)
+   \        0xC   0x0789             LSLS     R1,R1,#+30
+   \        0xE   0xD503             BPL.N    ??FLASH_OB_DisableWRP_1
+   1068            {
+   1069              /* Disable Write Protection for bank 2 */
+   1070              FLASH->WRP2R_PRG |= (WRPSector & FLASH_WRPR_WRPSG);
+   \       0x10   0x....             LDR.N    R1,??DataTable30_15
+   \       0x12   0x680A             LDR      R2,[R1, #+0]
+   \       0x14   0x4310             ORRS     R0,R0,R2
+   \       0x16   0x6008             STR      R0,[R1, #+0]
+   1071            }
+   1072          }
+   \                     ??FLASH_OB_DisableWRP_1: (+1)
+   \       0x18   0x4770             BX       LR
+   1073          
+   1074          /**
+   1075            * @brief  Get the write protection of the given bank 1 or bank 2 sectors
+   1076            * @param[in]  Bank specifies the bank where to get the write protection sectors.
+   1077            *         This parameter can be exclusively one of the following values:
+   1078            *         @arg FLASH_BANK_1: Get bank1 WRP sectors
+   1079            *         @arg FLASH_BANK_2: Get bank2 WRP sectors
+   1080            *
+   1081            * @param[out]  WRPState returns the write protection state of the returned sectors.
+   1082            *         This parameter can be one of the following values:
+   1083            *         @arg WRPState: OB_WRPSTATE_DISABLE or OB_WRPSTATE_ENABLE
+   1084          
+   1085            * @param[out]  WRPSector returns the write protected sectors on the given bank .
+   1086            *         This parameter can be a value of @ref FLASH_OB_Write_Protection_Sectors
+   1087            *
+   1088            * @retval None
+   1089            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1090          static void FLASH_OB_GetWRP(uint32_t Bank, uint32_t *WRPState, uint32_t *WRPSector)
+   1091          {
+   1092            uint32_t regvalue = 0U;
+   \                     FLASH_OB_GetWRP: (+1)
+   \        0x0   0x2300             MOVS     R3,#+0
+   1093          
+   1094            if (Bank == FLASH_BANK_1)
+   \        0x2   0x2801             CMP      R0,#+1
+   \        0x4   0xD101             BNE.N    ??FLASH_OB_GetWRP_0
+   1095            {
+   1096              regvalue = FLASH->WRP1R_CUR;
+   \        0x6   0x....             LDR.N    R3,??DataTable30_16
+   \        0x8   0x681B             LDR      R3,[R3, #+0]
+   1097            }
+   1098          
+   1099            if (Bank == FLASH_BANK_2)
+   \                     ??FLASH_OB_GetWRP_0: (+1)
+   \        0xA   0x2802             CMP      R0,#+2
+   \        0xC   0xD101             BNE.N    ??FLASH_OB_GetWRP_1
+   1100            {
+   1101              regvalue = FLASH->WRP2R_CUR;
+   \        0xE   0x....             LDR.N    R0,??DataTable30_17
+   \       0x10   0x6803             LDR      R3,[R0, #+0]
+   1102            }
+   1103          
+   1104            (*WRPSector) = (~regvalue) & FLASH_WRPR_WRPSG;
+   \                     ??FLASH_OB_GetWRP_1: (+1)
+   \       0x12   0x43DB             MVNS     R3,R3
+   \       0x14   0x6013             STR      R3,[R2, #+0]
+   1105          
+   1106            if (*WRPSector == 0U)
+   \       0x16   0x6810             LDR      R0,[R2, #+0]
+   \       0x18   0x2800             CMP      R0,#+0
+   \       0x1A   0xD102             BNE.N    ??FLASH_OB_GetWRP_2
+   1107            {
+   1108              (*WRPState) = OB_WRPSTATE_DISABLE;
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0x6008             STR      R0,[R1, #+0]
+   \       0x20   0xE001             B.N      ??FLASH_OB_GetWRP_3
+   1109            }
+   1110            else
+   1111            {
+   1112              (*WRPState) = OB_WRPSTATE_ENABLE;
+   \                     ??FLASH_OB_GetWRP_2: (+1)
+   \       0x22   0x2001             MOVS     R0,#+1
+   \       0x24   0x6008             STR      R0,[R1, #+0]
+   1113            }
+   1114          }
+   \                     ??FLASH_OB_GetWRP_3: (+1)
+   \       0x26   0x4770             BX       LR
+   1115          
+   1116          /**
+   1117            * @brief  Set the product state.
+   1118            *
+   1119            * @note   To configure the product state, the option lock bit OPTLOCK must be
+   1120            *         cleared with the call of the HAL_FLASH_OB_Unlock() function.
+   1121            * @note   To validate the product state, the option bytes must be reloaded
+   1122            *         through the call of the HAL_FLASH_OB_Launch() function.
+   1123            *
+   1124            * @param  ProductState specifies the product state.
+   1125            *         This parameter can be a value of @ref FLASH_OB_Product_State
+   1126            *
+   1127            * @retval None
+   1128            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1129          static void FLASH_OB_ProdStateConfig(uint32_t ProductState)
+   1130          {
+   1131            /* Check the parameters */
+   1132            assert_param(IS_OB_PRODUCT_STATE(ProductState));
+   1133          
+   1134            /* Configure the Product State in the option bytes register */
+   1135            MODIFY_REG(FLASH->OPTSR_PRG, FLASH_OPTSR_PRODUCT_STATE, ProductState);
+   \                     FLASH_OB_ProdStateConfig: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable30_18
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0xF432 0x427F      BICS     R2,R2,#0xFF00
+   \        0x8   0x4310             ORRS     R0,R0,R2
+   \        0xA   0x6008             STR      R0,[R1, #+0]
+   1136          }
+   \        0xC   0x4770             BX       LR
+   1137          
+   1138          /**
+   1139            * @brief  Get the the product state.
+   1140            * @retval ProductState returns the product state.
+   1141            *         This returned value can a value of @ref FLASH_OB_Product_State
+   1142            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1143          static uint32_t FLASH_OB_GetProdState(void)
+   1144          {
+   1145            return (FLASH->OPTSR_CUR & FLASH_OPTSR_PRODUCT_STATE);
+   \                     FLASH_OB_GetProdState: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable30_19
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0xF410 0x407F      ANDS     R0,R0,#0xFF00
+   \        0x8   0x4770             BX       LR
+   1146          }
+   1147          
+   1148          /**
+   1149            * @brief  Program the FLASH User Option Byte.
+   1150            *
+   1151            * @note   To configure the user option bytes, the option lock bit OPTLOCK must
+   1152            *         be cleared with the call of the HAL_FLASH_OB_Unlock() function.
+   1153            * @note   To validate the user option bytes, the option bytes must be reloaded
+   1154            *         through the call of the HAL_FLASH_OB_Launch() function.
+   1155            *
+   1156            * @param  UserType specifies The FLASH User Option Bytes to be modified.
+   1157            *         This parameter can be a combination of @ref FLASH_OB_USER_Type
+   1158            *
+   1159            * @param  UserConfig1 specifies values of the selected User Option Bytes.
+   1160            *         This parameter can be a combination of @ref FLASH_OB_USER_BOR_LEVEL,
+   1161            *         @ref FLASH_OB_USER_BORH_EN, @ref FLASH_OB_USER_IWDG_SW,
+   1162            *         @ref FLASH_OB_USER_WWDG_SW, @ref FLASH_OB_USER_nRST_STOP,
+   1163            *         @ref FLASH_OB_USER_nRST_STANDBY, @ref FLASH_OB_USER_IO_VDD_HSLV,
+   1164            *         @ref FLASH_OB_USER_IO_VDDIO2_HSLV, @ref FLASH_OB_USER_IWDG_STOP,
+   1165            *         @ref FLASH_OB_USER_IWDG_STANDBY, @ref FLASH_OB_USER_BOOT_UBE and @ref OB_USER_SWAP_BANK.
+   1166            * @param  UserConfig2 specifies values of the selected User Option Bytes.
+   1167            *         @ref FLASH_OB_USER_SRAM1_3_RST, @ref FLASH_OB_USER_SRAM2_RST,
+   1168            *         @ref FLASH_OB_USER_BKPRAM_ECC, @ref FLASH_OB_USER_SRAM3_ECC,
+   1169            *         @ref FLASH_OB_USER_SRAM2_ECC, @ref FLASH_OB_USER_SRAM1_ECC,
+   1170            *         @ref FLASH_OB_USER_SRAM1_RST and @ref OB_USER_TZEN.
+   1171            * @retval None
+   1172            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1173          static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig1, uint32_t UserConfig2)
+   1174          {
+   \                     FLASH_OB_UserConfig: (+1)
+   \        0x0   0xB4F0             PUSH     {R4-R7}
+   1175            uint32_t optr_reg1_val = 0U;
+   \        0x2   0x2700             MOVS     R7,#+0
+   1176            uint32_t optr_reg1_mask = 0U;
+   \        0x4   0x2600             MOVS     R6,#+0
+   1177            uint32_t optr_reg2_val = 0U;
+   \        0x6   0x2400             MOVS     R4,#+0
+   1178            uint32_t optr_reg2_mask = 0U;
+   \        0x8   0x2500             MOVS     R5,#+0
+   1179          
+   1180            /* Check the parameters */
+   1181            assert_param(IS_OB_USER_TYPE(UserType));
+   1182          
+   1183            if ((UserType & OB_USER_BOR_LEV) != 0U)
+   \        0xA   0x07C3             LSLS     R3,R0,#+31
+   \        0xC   0xD504             BPL.N    ??FLASH_OB_UserConfig_0
+   1184            {
+   1185              /* BOR level option byte should be modified */
+   1186              assert_param(IS_OB_USER_BOR_LEVEL(UserConfig1 & FLASH_OPTSR_BOR_LEV));
+   1187          
+   1188              /* Set value and mask for BOR level option byte */
+   1189              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_BOR_LEV);
+   \        0xE   0xF011 0x0303      ANDS     R3,R1,#0x3
+   \       0x12   0x431F             ORRS     R7,R3,R7
+   1190              optr_reg1_mask |= FLASH_OPTSR_BOR_LEV;
+   \       0x14   0xF056 0x0603      ORRS     R6,R6,#0x3
+   1191            }
+   1192          
+   1193            if ((UserType & OB_USER_BORH_EN) != 0U)
+   \                     ??FLASH_OB_UserConfig_0: (+1)
+   \       0x18   0x0783             LSLS     R3,R0,#+30
+   \       0x1A   0xD504             BPL.N    ??FLASH_OB_UserConfig_1
+   1194            {
+   1195              /* BOR high enable status bit should be modified */
+   1196              assert_param(IS_OB_USER_BORH_EN(UserConfig1 & FLASH_OPTSR_BORH_EN));
+   1197          
+   1198              /* Set value and mask for BOR high enable status bit */
+   1199              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_BORH_EN);
+   \       0x1C   0xF011 0x0304      ANDS     R3,R1,#0x4
+   \       0x20   0x431F             ORRS     R7,R3,R7
+   1200              optr_reg1_mask |= FLASH_OPTSR_BORH_EN;
+   \       0x22   0xF056 0x0604      ORRS     R6,R6,#0x4
+   1201            }
+   1202          
+   1203            if ((UserType & OB_USER_IWDG_SW) != 0U)
+   \                     ??FLASH_OB_UserConfig_1: (+1)
+   \       0x26   0x0743             LSLS     R3,R0,#+29
+   \       0x28   0xD504             BPL.N    ??FLASH_OB_UserConfig_2
+   1204            {
+   1205              /* IWDG_SW option byte should be modified */
+   1206              assert_param(IS_OB_USER_IWDG(UserConfig1 & FLASH_OPTSR_IWDG_SW));
+   1207          
+   1208              /* Set value and mask for IWDG_SW option byte */
+   1209              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_IWDG_SW);
+   \       0x2A   0xF011 0x0308      ANDS     R3,R1,#0x8
+   \       0x2E   0x431F             ORRS     R7,R3,R7
+   1210              optr_reg1_mask |= FLASH_OPTSR_IWDG_SW;
+   \       0x30   0xF056 0x0608      ORRS     R6,R6,#0x8
+   1211            }
+   1212          
+   1213            if ((UserType & OB_USER_WWDG_SW) != 0U)
+   \                     ??FLASH_OB_UserConfig_2: (+1)
+   \       0x34   0x0703             LSLS     R3,R0,#+28
+   \       0x36   0xD504             BPL.N    ??FLASH_OB_UserConfig_3
+   1214            {
+   1215              /* WWDG_SW option byte should be modified */
+   1216              assert_param(IS_OB_USER_WWDG(UserConfig1 & FLASH_OPTSR_WWDG_SW));
+   1217          
+   1218              /* Set value and mask for WWDG_SW option byte */
+   1219              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_WWDG_SW);
+   \       0x38   0xF011 0x0310      ANDS     R3,R1,#0x10
+   \       0x3C   0x431F             ORRS     R7,R3,R7
+   1220              optr_reg1_mask |= FLASH_OPTSR_WWDG_SW;
+   \       0x3E   0xF056 0x0610      ORRS     R6,R6,#0x10
+   1221            }
+   1222          
+   1223            if ((UserType & OB_USER_NRST_STOP) != 0U)
+   \                     ??FLASH_OB_UserConfig_3: (+1)
+   \       0x42   0x06C3             LSLS     R3,R0,#+27
+   \       0x44   0xD504             BPL.N    ??FLASH_OB_UserConfig_4
+   1224            {
+   1225              /* nRST_STOP option byte should be modified */
+   1226              assert_param(IS_OB_USER_STOP(UserConfig1 & FLASH_OPTSR_NRST_STOP));
+   1227          
+   1228              /* Set value and mask for nRST_STOP option byte */
+   1229              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_NRST_STOP);
+   \       0x46   0xF011 0x0340      ANDS     R3,R1,#0x40
+   \       0x4A   0x431F             ORRS     R7,R3,R7
+   1230              optr_reg1_mask |= FLASH_OPTSR_NRST_STOP;
+   \       0x4C   0xF056 0x0640      ORRS     R6,R6,#0x40
+   1231            }
+   1232          
+   1233            if ((UserType & OB_USER_NRST_STDBY) != 0U)
+   \                     ??FLASH_OB_UserConfig_4: (+1)
+   \       0x50   0x0683             LSLS     R3,R0,#+26
+   \       0x52   0xD504             BPL.N    ??FLASH_OB_UserConfig_5
+   1234            {
+   1235              /* nRST_STDBY option byte should be modified */
+   1236              assert_param(IS_OB_USER_STANDBY(UserConfig1 & FLASH_OPTSR_NRST_STDBY));
+   1237          
+   1238              /* Set value and mask for nRST_STDBY option byte */
+   1239              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_NRST_STDBY);
+   \       0x54   0xF011 0x0380      ANDS     R3,R1,#0x80
+   \       0x58   0x431F             ORRS     R7,R3,R7
+   1240              optr_reg1_mask |= FLASH_OPTSR_NRST_STDBY;
+   \       0x5A   0xF056 0x0680      ORRS     R6,R6,#0x80
+   1241            }
+   1242          
+   1243            if ((UserType & OB_USER_IO_VDD_HSLV) != 0U)
+   \                     ??FLASH_OB_UserConfig_5: (+1)
+   \       0x5E   0x0643             LSLS     R3,R0,#+25
+   \       0x60   0xD504             BPL.N    ??FLASH_OB_UserConfig_6
+   1244            {
+   1245              /* IO_VDD_HSLV option byte should be modified */
+   1246              assert_param(IS_OB_USER_IO_VDD_HSLV(UserConfig1 & FLASH_OPTSR_IO_VDD_HSLV));
+   1247          
+   1248              /* Set value and mask for IO_VDD_HSLV option byte */
+   1249              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_IO_VDD_HSLV);
+   \       0x62   0xF411 0x3380      ANDS     R3,R1,#0x10000
+   \       0x66   0x431F             ORRS     R7,R3,R7
+   1250              optr_reg1_mask |= FLASH_OPTSR_IO_VDD_HSLV;
+   \       0x68   0xF456 0x3680      ORRS     R6,R6,#0x10000
+   1251            }
+   1252          
+   1253            if ((UserType & OB_USER_IO_VDDIO2_HSLV) != 0U)
+   \                     ??FLASH_OB_UserConfig_6: (+1)
+   \       0x6C   0x0603             LSLS     R3,R0,#+24
+   \       0x6E   0xD504             BPL.N    ??FLASH_OB_UserConfig_7
+   1254            {
+   1255              /* IO_VDD_HSLV option byte should be modified */
+   1256              assert_param(IS_OB_USER_IO_VDDIO2_HSLV(UserConfig1 & FLASH_OPTSR_IO_VDDIO2_HSLV));
+   1257          
+   1258              /* Set value and mask for IO_VDD_HSLV option byte */
+   1259              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_IO_VDDIO2_HSLV);
+   \       0x70   0xF411 0x3300      ANDS     R3,R1,#0x20000
+   \       0x74   0x431F             ORRS     R7,R3,R7
+   1260              optr_reg1_mask |= FLASH_OPTSR_IO_VDDIO2_HSLV;
+   \       0x76   0xF456 0x3600      ORRS     R6,R6,#0x20000
+   1261            }
+   1262          
+   1263            if ((UserType & OB_USER_IWDG_STOP) != 0U)
+   \                     ??FLASH_OB_UserConfig_7: (+1)
+   \       0x7A   0x05C3             LSLS     R3,R0,#+23
+   \       0x7C   0xD504             BPL.N    ??FLASH_OB_UserConfig_8
+   1264            {
+   1265              /* IWDG_STOP option byte should be modified */
+   1266              assert_param(IS_OB_USER_IWDG_STOP(UserConfig1 & FLASH_OPTSR_IWDG_STOP));
+   1267          
+   1268              /* Set value and mask for IWDG_STOP option byte */
+   1269              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_IWDG_STOP);
+   \       0x7E   0xF411 0x1380      ANDS     R3,R1,#0x100000
+   \       0x82   0x431F             ORRS     R7,R3,R7
+   1270              optr_reg1_mask |= FLASH_OPTSR_IWDG_STOP;
+   \       0x84   0xF456 0x1680      ORRS     R6,R6,#0x100000
+   1271            }
+   1272          
+   1273            if ((UserType & OB_USER_IWDG_STDBY) != 0U)
+   \                     ??FLASH_OB_UserConfig_8: (+1)
+   \       0x88   0x0583             LSLS     R3,R0,#+22
+   \       0x8A   0xD504             BPL.N    ??FLASH_OB_UserConfig_9
+   1274            {
+   1275              /* IWDG_STDBY option byte should be modified */
+   1276              assert_param(IS_OB_USER_IWDG_STDBY(UserConfig1 & FLASH_OPTSR_IWDG_STDBY));
+   1277          
+   1278              /* Set value and mask for IWDG_STDBY option byte */
+   1279              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_IWDG_STDBY);
+   \       0x8C   0xF411 0x1300      ANDS     R3,R1,#0x200000
+   \       0x90   0x431F             ORRS     R7,R3,R7
+   1280              optr_reg1_mask |= FLASH_OPTSR_IWDG_STDBY;
+   \       0x92   0xF456 0x1600      ORRS     R6,R6,#0x200000
+   1281            }
+   1282          
+   1283          #if defined (FLASH_OPTSR_BOOT_UBE)
+   1284            if ((UserType & OB_USER_BOOT_UBE) != 0U)
+   \                     ??FLASH_OB_UserConfig_9: (+1)
+   \       0x96   0x0543             LSLS     R3,R0,#+21
+   \       0x98   0xD504             BPL.N    ??FLASH_OB_UserConfig_10
+   1285            {
+   1286              /* SWAP_BANK option byte should be modified */
+   1287              assert_param(IS_OB_USER_BOOT_UBE(UserConfig1 & FLASH_OPTSR_BOOT_UBE));
+   1288          
+   1289              /* Set value and mask for BOOT_UBE option byte */
+   1290              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_BOOT_UBE);
+   \       0x9A   0xF011 0x537F      ANDS     R3,R1,#0x3FC00000
+   \       0x9E   0x431F             ORRS     R7,R3,R7
+   1291              optr_reg1_mask |= FLASH_OPTSR_BOOT_UBE;
+   \       0xA0   0xF056 0x567F      ORRS     R6,R6,#0x3FC00000
+   1292            }
+   1293          #endif /* FLASH_OPTSR_BOOT_UBE */
+   1294          
+   1295            if ((UserType & OB_USER_SWAP_BANK) != 0U)
+   \                     ??FLASH_OB_UserConfig_10: (+1)
+   \       0xA4   0x0503             LSLS     R3,R0,#+20
+   \       0xA6   0xD505             BPL.N    ??FLASH_OB_UserConfig_11
+   1296            {
+   1297              /* SWAP_BANK option byte should be modified */
+   1298              assert_param(IS_OB_USER_SWAP_BANK(UserConfig1 & FLASH_OPTSR_SWAP_BANK));
+   1299          
+   1300              /* Set value and mask for SWAP_BANK option byte */
+   1301              optr_reg1_val |= (UserConfig1 & FLASH_OPTSR_SWAP_BANK);
+   \       0xA8   0xF011 0x4100      ANDS     R1,R1,#0x80000000
+   \       0xAC   0x4339             ORRS     R1,R1,R7
+   \       0xAE   0x000F             MOVS     R7,R1
+   1302              optr_reg1_mask |= FLASH_OPTSR_SWAP_BANK;
+   \       0xB0   0xF056 0x4600      ORRS     R6,R6,#0x80000000
+   1303            }
+   1304          
+   1305          #if defined (FLASH_OPTSR2_SRAM1_3_RST)
+   1306            if ((UserType & OB_USER_SRAM1_3_RST) != 0U)
+   \                     ??FLASH_OB_UserConfig_11: (+1)
+   \       0xB4   0x04C1             LSLS     R1,R0,#+19
+   \       0xB6   0xD504             BPL.N    ??FLASH_OB_UserConfig_12
+   1307            {
+   1308              /* SRAM13_RST option byte should be modified */
+   1309              assert_param(IS_OB_USER_SRAM1_3_RST(UserConfig2 & FLASH_OPTSR2_SRAM1_3_RST));
+   1310          
+   1311              /* Set value and mask for SRAM13_RST option byte */
+   1312              optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_SRAM1_3_RST);
+   \       0xB8   0xF012 0x0104      ANDS     R1,R2,#0x4
+   \       0xBC   0x430C             ORRS     R4,R1,R4
+   1313              optr_reg2_mask |= FLASH_OPTSR2_SRAM1_3_RST;
+   \       0xBE   0xF055 0x0504      ORRS     R5,R5,#0x4
+   1314            }
+   1315          #endif /* FLASH_OPTSR2_SRAM1_3_RST */
+   1316          
+   1317          #if defined (FLASH_OPTSR2_SRAM1_RST)
+   1318            if ((UserType & OB_USER_SRAM1_RST) != 0U)
+   1319            {
+   1320              /* SRAM1_RST option byte should be modified */
+   1321              assert_param(IS_OB_USER_SRAM1_RST(UserConfig2 & FLASH_OPTSR2_SRAM1_RST));
+   1322          
+   1323              /* Set value and mask for SRAM1_RST option byte */
+   1324              optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_SRAM1_RST);
+   1325              optr_reg2_mask |= FLASH_OPTSR2_SRAM1_RST;
+   1326            }
+   1327          #endif /* FLASH_OPTSR2_SRAM1_RST */
+   1328          
+   1329            if ((UserType & OB_USER_SRAM2_RST) != 0U)
+   \                     ??FLASH_OB_UserConfig_12: (+1)
+   \       0xC2   0x0481             LSLS     R1,R0,#+18
+   \       0xC4   0xD504             BPL.N    ??FLASH_OB_UserConfig_13
+   1330            {
+   1331              /* SRAM2_RST option byte should be modified */
+   1332              assert_param(IS_OB_USER_SRAM2_RST(UserConfig2 & FLASH_OPTSR2_SRAM2_RST));
+   1333          
+   1334              /* Set value and mask for SRAM2_RST option byte */
+   1335              optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_SRAM2_RST);
+   \       0xC6   0xF012 0x0108      ANDS     R1,R2,#0x8
+   \       0xCA   0x430C             ORRS     R4,R1,R4
+   1336              optr_reg2_mask |= FLASH_OPTSR2_SRAM2_RST;
+   \       0xCC   0xF055 0x0508      ORRS     R5,R5,#0x8
+   1337            }
+   1338          
+   1339            if ((UserType & OB_USER_BKPRAM_ECC) != 0U)
+   \                     ??FLASH_OB_UserConfig_13: (+1)
+   \       0xD0   0x0441             LSLS     R1,R0,#+17
+   \       0xD2   0xD504             BPL.N    ??FLASH_OB_UserConfig_14
+   1340            {
+   1341              /* BKPRAM_ECC option byte should be modified */
+   1342              assert_param(IS_OB_USER_BKPRAM_ECC(UserConfig2 & FLASH_OPTSR2_BKPRAM_ECC));
+   1343          
+   1344              /* Set value and mask for BKPRAM_ECC option byte */
+   1345              optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_BKPRAM_ECC);
+   \       0xD4   0xF012 0x0110      ANDS     R1,R2,#0x10
+   \       0xD8   0x430C             ORRS     R4,R1,R4
+   1346              optr_reg2_mask |= FLASH_OPTSR2_BKPRAM_ECC;
+   \       0xDA   0xF055 0x0510      ORRS     R5,R5,#0x10
+   1347            }
+   1348          
+   1349          #if defined (FLASH_OPTSR2_SRAM3_ECC)
+   1350            if ((UserType & OB_USER_SRAM3_ECC) != 0U)
+   \                     ??FLASH_OB_UserConfig_14: (+1)
+   \       0xDE   0x0401             LSLS     R1,R0,#+16
+   \       0xE0   0xD504             BPL.N    ??FLASH_OB_UserConfig_15
+   1351            {
+   1352              /* SRAM3_ECC option byte should be modified */
+   1353              assert_param(IS_OB_USER_SRAM3_ECC(UserConfig2 & FLASH_OPTSR2_SRAM3_ECC));
+   1354          
+   1355              /* Set value and mask for SRAM3_ECC option byte */
+   1356              optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_SRAM3_ECC);
+   \       0xE2   0xF012 0x0120      ANDS     R1,R2,#0x20
+   \       0xE6   0x430C             ORRS     R4,R1,R4
+   1357              optr_reg2_mask |= FLASH_OPTSR2_SRAM3_ECC;
+   \       0xE8   0xF055 0x0520      ORRS     R5,R5,#0x20
+   1358            }
+   1359          #endif /* FLASH_OPTSR2_SRAM3_ECC */
+   1360          
+   1361            if ((UserType & OB_USER_SRAM2_ECC) != 0U)
+   \                     ??FLASH_OB_UserConfig_15: (+1)
+   \       0xEC   0x03C1             LSLS     R1,R0,#+15
+   \       0xEE   0xD504             BPL.N    ??FLASH_OB_UserConfig_16
+   1362            {
+   1363              /* SRAM2_ECC option byte should be modified */
+   1364              assert_param(IS_OB_USER_SRAM2_ECC(UserConfig2 & FLASH_OPTSR2_SRAM2_ECC));
+   1365          
+   1366              /* Set value and mask for SRAM2_ECC option byte */
+   1367              optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_SRAM2_ECC);
+   \       0xF0   0xF012 0x0140      ANDS     R1,R2,#0x40
+   \       0xF4   0x430C             ORRS     R4,R1,R4
+   1368              optr_reg2_mask |= FLASH_OPTSR2_SRAM2_ECC;
+   \       0xF6   0xF055 0x0540      ORRS     R5,R5,#0x40
+   1369            }
+   1370          
+   1371          #if defined (FLASH_OPTSR2_SRAM1_ECC)
+   1372            if ((UserType & OB_USER_SRAM1_ECC) != 0U)
+   1373            {
+   1374              /* SRAM2_ECC option byte should be modified */
+   1375              assert_param(IS_OB_USER_SRAM1_ECC(UserConfig2 & FLASH_OPTSR2_SRAM1_ECC));
+   1376          
+   1377              /* Set value and mask for SRAM2_ECC option byte */
+   1378              optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_SRAM1_ECC);
+   1379              optr_reg2_mask |= FLASH_OPTSR2_SRAM1_ECC;
+   1380            }
+   1381          #endif /* FLASH_OPTSR2_SRAM1_ECC */
+   1382          
+   1383          #if defined (FLASH_OPTSR2_TZEN)
+   1384            if ((UserType & OB_USER_TZEN) != 0U)
+   \                     ??FLASH_OB_UserConfig_16: (+1)
+   \       0xFA   0x0301             LSLS     R1,R0,#+12
+   \       0xFC   0xD505             BPL.N    ??FLASH_OB_UserConfig_17
+   1385            {
+   1386              /* TZEN option byte should be modified */
+   1387              assert_param(IS_OB_USER_TZEN(UserConfig2 & FLASH_OPTSR2_TZEN));
+   1388          
+   1389              /* Set value and mask for TZEN option byte */
+   1390              optr_reg2_val |= (UserConfig2 & FLASH_OPTSR2_TZEN);
+   \       0xFE   0xF012 0x427F      ANDS     R2,R2,#0xFF000000
+   \      0x102   0x4322             ORRS     R2,R2,R4
+   \      0x104   0x0014             MOVS     R4,R2
+   1391              optr_reg2_mask |= FLASH_OPTSR2_TZEN;
+   \      0x106   0xF055 0x457F      ORRS     R5,R5,#0xFF000000
+   1392            }
+   1393          #endif /* FLASH_OPTSR2_TZEN */
+   1394          
+   1395            /* Check to write first User OB register or/and second one */
+   1396            if ((UserType & 0xFFFU) != 0U)
+   \                     ??FLASH_OB_UserConfig_17: (+1)
+   \      0x10A   0x0501             LSLS     R1,R0,#+20
+   \      0x10C   0xD005             BEQ.N    ??FLASH_OB_UserConfig_18
+   1397            {
+   1398              /* Configure the option bytes register */
+   1399              MODIFY_REG(FLASH->OPTSR_PRG, optr_reg1_mask, optr_reg1_val);
+   \      0x10E   0x....             LDR.N    R1,??DataTable30_18
+   \      0x110   0x680A             LDR      R2,[R1, #+0]
+   \      0x112   0xEA32 0x0606      BICS     R6,R2,R6
+   \      0x116   0x4337             ORRS     R7,R7,R6
+   \      0x118   0x600F             STR      R7,[R1, #+0]
+   1400            }
+   1401            if ((UserType & 0xFF000U) != 0U)
+   \                     ??FLASH_OB_UserConfig_18: (+1)
+   \      0x11A   0xF410 0x2F7F      TST      R0,#0xFF000
+   \      0x11E   0xD005             BEQ.N    ??FLASH_OB_UserConfig_19
+   1402            {
+   1403              /* Configure the option bytes register */
+   1404              MODIFY_REG(FLASH->OPTSR2_PRG, optr_reg2_mask, optr_reg2_val);
+   \      0x120   0x....             LDR.N    R0,??DataTable30_20
+   \      0x122   0x6801             LDR      R1,[R0, #+0]
+   \      0x124   0xEA31 0x0505      BICS     R5,R1,R5
+   \      0x128   0x432C             ORRS     R4,R4,R5
+   \      0x12A   0x6004             STR      R4,[R0, #+0]
+   1405            }
+   1406          }
+   \                     ??FLASH_OB_UserConfig_19: (+1)
+   \      0x12C   0xBCF0             POP      {R4-R7}
+   \      0x12E   0x4770             BX       LR
+   1407          
+   1408          /**
+   1409            * @brief  Return the FLASH User Option Byte values.
+   1410            * @param UserConfig1 FLASH User Option Bytes values
+   1411            *         2M: IWDG_SW(Bit3), WWDG_SW(Bit4), nRST_STOP(Bit 6), nRST_STDY(Bit 7),
+   1412            *         PRODUCT_STATE(Bit[8:15]), IO_VDD_HSLV(Bit 16), IO_VDDTO2_HSLV(Bit 17),
+   1413            *         IWDG_STOP(Bit 20), IWDG_STDBY (Bit 21), BOOT_UBE(Bit[22:29]) and SWAP_BANK(Bit 31).
+   1414            *         128K: IWDG_SW(Bit3), WWDG_SW(Bit4), nRST_STOP(Bit 6), nRST_STDY(Bit 7),
+   1415            *         PRODUCT_STATE(Bit[8:15]), IO_VDD_HSLV(Bit16), IO_VDDIO2_HSLV(Bit17), IWDG_STOP(Bit 20),
+   1416            *         IWDG_STDBY (Bit 21) and SWAP_BANK(Bit 31).
+   1417            * @param UserConfig2 FLASH User Option Bytes values
+   1418            *         2M: SRAM1_3_RST(Bit2), SRAM2_RST(Bit 3), BKPRAM_ECC(Bit 4), SRAM3_ECC(Bit 5),
+   1419            *         SRAM2_ECC(Bit 6).
+   1420            *         128K: SRAM2_RST(Bit 3), BKPRAM_ECC(Bit 4), SRAM2_ECC(Bit 6),
+   1421            *         SRAM1_RST(Bit9), SRAM1_ECC(Bit10).
+   1422            * @retval None
+   1423            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1424          static void FLASH_OB_GetUser(uint32_t *UserConfig1, uint32_t *UserConfig2)
+   1425          {
+   1426            (*UserConfig1) = FLASH->OPTSR_CUR & (~FLASH_OPTSR_PRODUCT_STATE);
+   \                     FLASH_OB_GetUser: (+1)
+   \        0x0   0x....             LDR.N    R2,??DataTable30_19
+   \        0x2   0x6812             LDR      R2,[R2, #+0]
+   \        0x4   0xF432 0x427F      BICS     R2,R2,#0xFF00
+   \        0x8   0x6002             STR      R2,[R0, #+0]
+   1427          
+   1428            (*UserConfig2) = FLASH->OPTSR2_CUR;
+   \        0xA   0x....             LDR.N    R0,??DataTable30_21
+   \        0xC   0x6800             LDR      R0,[R0, #+0]
+   \        0xE   0x6008             STR      R0,[R1, #+0]
+   1429          }
+   \       0x10   0x4770             BX       LR
+   1430          
+   1431          /**
+   1432            * @brief  Configure Boot address
+   1433            * @param  BootOption specifies the Boot address option byte to be programmed.
+   1434            *         This parameter can be one of the following values:
+   1435            *            @arg OB_BOOTADDR_NS: Non-secure boot address
+   1436            *            @arg OB_BOOTADDR_SEC: Secure boot address
+   1437            * @param  BootAddress: specifies the boot address value
+   1438            *         This parameter can be sector number between 0 and 0xFFFFFF00
+   1439            * @retval None
+   1440            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1441          static void FLASH_OB_BootAddrConfig(uint32_t BootOption, uint32_t BootAddress)
+   1442          {
+   1443            /* Check the parameters */
+   1444            assert_param(IS_OB_BOOT_CONFIG(BootOption));
+   1445          
+   1446            if (BootOption == OB_BOOT_NS)
+   \                     FLASH_OB_BootAddrConfig: (+1)
+   \        0x0   0x2801             CMP      R0,#+1
+   \        0x2   0xD105             BNE.N    ??FLASH_OB_BootAddrConfig_0
+   1447            {
+   1448              MODIFY_REG(FLASH->NSBOOTR_PRG, FLASH_BOOTR_BOOTADD, BootAddress);
+   \        0x4   0x....             LDR.N    R0,??DataTable30_22
+   \        0x6   0x6802             LDR      R2,[R0, #+0]
+   \        0x8   0xF002 0x02FF      AND      R2,R2,#0xFF
+   \        0xC   0x4311             ORRS     R1,R1,R2
+   \        0xE   0x6001             STR      R1,[R0, #+0]
+   1449            }
+   1450          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+   1451            else if (BootOption == OB_BOOT_SEC)
+   1452            {
+   1453              MODIFY_REG(FLASH->SECBOOTR_PRG, FLASH_BOOTR_BOOTADD, BootAddress);
+   1454            }
+   1455          #endif /* __ARM_FEATURE_CMSE */
+   1456            else
+   1457            {
+   1458              /* Empty statement (to be compliant MISRA 15.7) */
+   1459            }
+   1460          }
+   \                     ??FLASH_OB_BootAddrConfig_0: (+1)
+   \       0x10   0x4770             BX       LR
+   1461          
+   1462          /**
+   1463            * @brief  Configure the boot lock.
+   1464            *
+   1465            * @param  BootOption select the BOOT_LOCK option: secure or non-secure.
+   1466            *          This parameter can be one of the following values:
+   1467            *            @arg OB_BOOT_LOCK_SEC: Boot Lock mode deactivated
+   1468            *            @arg OB_BOOT_LOCK_NS: Boot Lock mode activated
+   1469            *
+   1470            * @param  BootLockConfig specifies the activation of the BOOT_LOCK.
+   1471            *          This parameter can be one of the following values:
+   1472            *            @arg OB_BOOT_LOCK_DISABLE: Boot Lock mode deactivated
+   1473            *            @arg OB_BOOT_LOCK_ENABLE: Boot Lock mode activated
+   1474            *
+   1475            * @retval None
+   1476            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1477          static void FLASH_OB_BootLockConfig(uint32_t BootOption, uint32_t BootLockConfig)
+   1478          {
+   1479            /* Check the parameters */
+   1480            assert_param(IS_OB_BOOT_CONFIG(BootOption));
+   1481            assert_param(IS_OB_BOOT_LOCK(BootLockConfig));
+   1482          
+   1483            /* Configure the option bytes register */
+   1484            if (BootOption == OB_BOOT_NS)
+   \                     FLASH_OB_BootLockConfig: (+1)
+   \        0x0   0x2801             CMP      R0,#+1
+   \        0x2   0xD105             BNE.N    ??FLASH_OB_BootLockConfig_0
+   1485            {
+   1486              MODIFY_REG(FLASH->NSBOOTR_PRG, FLASH_BOOTR_BOOT_LOCK, BootLockConfig);
+   \        0x4   0x....             LDR.N    R0,??DataTable30_22
+   \        0x6   0x6802             LDR      R2,[R0, #+0]
+   \        0x8   0x0A12             LSRS     R2,R2,#+8
+   \        0xA   0x0212             LSLS     R2,R2,#+8
+   \        0xC   0x4311             ORRS     R1,R1,R2
+   \        0xE   0x6001             STR      R1,[R0, #+0]
+   1487            }
+   1488          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+   1489            else if (BootOption == OB_BOOT_SEC)
+   1490            {
+   1491              MODIFY_REG(FLASH->SECBOOTR_PRG, FLASH_BOOTR_BOOT_LOCK, BootLockConfig);
+   1492            }
+   1493          #endif /* __ARM_FEATURE_CMSE */
+   1494            else
+   1495            {
+   1496              /* Empty statement (to be compliant MISRA 15.7) */
+   1497            }
+   1498          }
+   \                     ??FLASH_OB_BootLockConfig_0: (+1)
+   \       0x10   0x4770             BX       LR
+   1499          
+   1500          /**
+   1501            * @brief  Get the boot configuration
+   1502            * @param[in]  BootOption specifies the boot address option byte to be returned.
+   1503            *             This parameter can be one of the following values:
+   1504            *                @arg OB_BOOT_NS: Non-secure boot address
+   1505            *                @arg OB_BOOT_SEC: Secure boot address
+   1506            *
+   1507            * @param[out]  BootAddress specifies the boot address value
+   1508            *
+   1509            * @param[out] BootLockConfig returns the activation of the BOOT_LOCK.
+   1510            *             This parameter can be one of the following values:
+   1511            *               @arg OB_BOOT_LOCK_DISABLE: Boot Lock mode deactivated
+   1512            *               @arg OB_BOOT_LOCK_ENABLE: Boot Lock mode activated
+   1513            * @retval None
+   1514            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1515          static void FLASH_OB_GetBootConfig(uint32_t BootOption, uint32_t *BootAddress, uint32_t *BootLockConfig)
+   1516          {
+   1517            if (BootOption == OB_BOOT_NS)
+   \                     FLASH_OB_GetBootConfig: (+1)
+   \        0x0   0x2801             CMP      R0,#+1
+   \        0x2   0xD108             BNE.N    ??FLASH_OB_GetBootConfig_0
+   1518            {
+   1519              *BootAddress    = FLASH->NSBOOTR_CUR & FLASH_BOOTR_BOOTADD;
+   \        0x4   0x....             LDR.N    R0,??DataTable30_23
+   \        0x6   0x6803             LDR      R3,[R0, #+0]
+   \        0x8   0x0A1B             LSRS     R3,R3,#+8
+   \        0xA   0x021B             LSLS     R3,R3,#+8
+   \        0xC   0x600B             STR      R3,[R1, #+0]
+   1520              *BootLockConfig = FLASH->NSBOOTR_CUR & FLASH_BOOTR_BOOT_LOCK;
+   \        0xE   0x6800             LDR      R0,[R0, #+0]
+   \       0x10   0xF000 0x00FF      AND      R0,R0,#0xFF
+   \       0x14   0x6010             STR      R0,[R2, #+0]
+   1521            }
+   1522          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+   1523            else if (BootOption == OB_BOOT_SEC)
+   1524            {
+   1525              *BootAddress    = (FLASH->SECBOOTR_CUR & FLASH_BOOTR_BOOTADD);
+   1526              *BootLockConfig = (FLASH->SECBOOTR_CUR & FLASH_BOOTR_BOOT_LOCK);
+   1527            }
+   1528          #endif /* __ARM_FEATURE_CMSE */
+   1529            else
+   1530            {
+   1531              /* Empty statement (to be compliant MISRA 15.7) */
+   1532            }
+   1533          }
+   \                     ??FLASH_OB_GetBootConfig_0: (+1)
+   \       0x16   0x4770             BX       LR
+   1534          
+   1535          /**
+   1536            * @brief  Configure the OTP Block Lock.
+   1537            * @param  OTP_Block specifies the OTP Block to lock.
+   1538            *         This parameter can be a value of @ref FLASH_OTP_Blocks
+   1539            * @retval None
+   1540            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1541          static void FLASH_OB_OTP_LockConfig(uint32_t OTP_Block)
+   1542          {
+   1543            /* Configure the OTP Block lock in the option bytes register */
+   1544            FLASH->OTPBLR_PRG |= OTP_Block;
+   \                     FLASH_OB_OTP_LockConfig: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable30_24
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0x4310             ORRS     R0,R0,R2
+   \        0x6   0x6008             STR      R0,[R1, #+0]
+   1545          }
+   \        0x8   0x4770             BX       LR
+   1546          
+   1547          /**
+   1548            * @brief  Get the OTP Block Lock.
+   1549            * @retval OTP_Block specifies the OTP Block to lock.
+   1550            *         This return value can be a value of @ref FLASH_OTP_Blocks
+   1551            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1552          static uint32_t FLASH_OB_OTP_GetLock(void)
+   1553          {
+   1554            return (FLASH->OTPBLR_CUR);
+   \                     FLASH_OB_OTP_GetLock: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable30_25
+   \        0x2   0x6800             LDR      R0,[R0, #+0]
+   \        0x4   0x4770             BX       LR
+   1555          }
+   1556          
+   1557          #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+   1558          /**
+   1559            * @brief  Configure the watermark-based secure area.
+   1560            *
+   1561            * @param  Banks specifies the bank where to apply Watermark protection
+   1562            *         This parameter can be one of the following values:
+   1563            *            @arg FLASH_BANK_1: configure Watermark on bank1
+   1564            *            @arg FLASH_BANK_2: configure Watermark on bank2
+   1565            *            @arg FLASH_BANK_BOTH: configure Watermark on both bank1 and bank2
+   1566            *
+   1567            * @param  WMSecStartSector specifies the start sector of the secure area
+   1568            *         This parameter can be sector number between 0 and (max number of sectors in the bank - 1)
+   1569            *
+   1570            * @param  WMSecEndSector specifies the end sector of the secure area
+   1571            *         This parameter can be sector number between WMSecStartSector and WMSecEndSector(max number of sectors
+   1572            *         in the bank - 1)
+   1573            *
+   1574            * @retval None
+   1575            */
+   1576          static void FLASH_OB_WMSECConfig(uint32_t Banks, uint32_t WMSecStartSector, uint32_t WMSecEndSector)
+   1577          {
+   1578            /* Check the parameters */
+   1579            assert_param(IS_FLASH_BANK(Banks));
+   1580            assert_param(IS_FLASH_SECTOR(WMSecStartSector));
+   1581            assert_param(IS_FLASH_SECTOR(WMSecEndSector));
+   1582          
+   1583            /* Write SECWM registers */
+   1584            if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+   1585            {
+   1586              /* Configure Watermark Protection for bank 1 */
+   1587              FLASH->SECWM1R_PRG = ((WMSecEndSector << FLASH_SECWMR_SECWM_END_Pos) | WMSecStartSector);
+   1588            }
+   1589          
+   1590            if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+   1591            {
+   1592              /* Configure Watermark Protection for bank 2 */
+   1593              FLASH->SECWM2R_PRG = ((WMSecEndSector << FLASH_SECWMR_SECWM_END_Pos) | WMSecStartSector);
+   1594            }
+   1595          }
+   1596          
+   1597          /**
+   1598            * @brief  Return the watermark-based secure area configuration.
+   1599            *
+   1600            * @param  Bank [in] specifies the bank where to get the watermark protection.
+   1601            *         This parameter can be exclusively one of the following values:
+   1602            *         @arg FLASH_BANK_1: Get bank1 watermark configuration
+   1603            *         @arg FLASH_BANK_2: Get bank2 watermark configuration
+   1604            *
+   1605            * @param  WMSecStartSector [out] specifies the start sector of the secure area
+   1606            *
+   1607            * @param  WMSecEndSector [out] specifies the end sector of the secure area
+   1608            *
+   1609            * @retval None
+   1610            */
+   1611          static void FLASH_OB_GetWMSEC(uint32_t Bank, uint32_t *WMSecStartSector, uint32_t *WMSecEndSector)
+   1612          {
+   1613            uint32_t regvalue = 0U;
+   1614          
+   1615            /* Read SECWM register */
+   1616            if (Bank == FLASH_BANK_1)
+   1617            {
+   1618              regvalue = FLASH->SECWM1R_CUR;
+   1619            }
+   1620          
+   1621            if (Bank == FLASH_BANK_2)
+   1622            {
+   1623              regvalue = FLASH->SECWM2R_CUR;
+   1624            }
+   1625          
+   1626            /* Get configuration of secure area */
+   1627            *WMSecStartSector = (regvalue & FLASH_SECWMR_SECWM_STRT);
+   1628            *WMSecEndSector = ((regvalue & FLASH_SECWMR_SECWM_END) >> FLASH_SECWMR_SECWM_END_Pos);
+   1629          }
+   1630          #endif /* __ARM_FEATURE_CMSE */
+   1631          
+   1632          /**
+   1633            * @brief  Configure the hide protection area.
+   1634            *
+   1635            * @param  Banks specifies the bank where to apply hide protection
+   1636            *         This parameter can be one of the following values:
+   1637            *            @arg FLASH_BANK_1: configure HDP on bank1
+   1638            *            @arg FLASH_BANK_2: configure HDP on bank2
+   1639            *            @arg FLASH_BANK_BOTH: configure HDP on both bank1 and bank2
+   1640            *
+   1641            * @param  HDPStartSector specifies the start sector of the hide protection area
+   1642            *         This parameter can be sector number between 0 and (max number of sectors in the bank - 1)
+   1643            *
+   1644            * @param  HDPEndSector specifies the end sector of the hide protection area
+   1645            *         This parameter can be sector number between HDPStartSector and HDPEndSector (max number of sectors
+   1646            *         in the bank - 1)
+   1647            *
+   1648            * @retval None
+   1649            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1650          static void FLASH_OB_HDPConfig(uint32_t Banks, uint32_t HDPStartSector, uint32_t HDPEndSector)
+   1651          {
+   \                     FLASH_OB_HDPConfig: (+1)
+   \        0x0   0xB410             PUSH     {R4}
+   1652            /* Check the parameters */
+   1653            assert_param(IS_FLASH_BANK(Banks));
+   1654            assert_param(IS_FLASH_SECTOR(HDPStartSector));
+   1655            assert_param(IS_FLASH_SECTOR(HDPEndSector));
+   1656          
+   1657            /* Write HDP registers */
+   1658            if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+   \        0x2   0x07C3             LSLS     R3,R0,#+31
+   \        0x4   0xD503             BPL.N    ??FLASH_OB_HDPConfig_0
+   1659            {
+   1660              /* Configure hide Protection for bank 1 */
+   1661              FLASH->HDP1R_PRG = ((HDPEndSector << FLASH_HDPR_HDP_END_Pos) | HDPStartSector);
+   \        0x6   0xEA51 0x4302      ORRS     R3,R1,R2, LSL #+16
+   \        0xA   0x....             LDR.N    R4,??DataTable30_26
+   \        0xC   0x6023             STR      R3,[R4, #+0]
+   1662            }
+   1663          
+   1664            if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+   \                     ??FLASH_OB_HDPConfig_0: (+1)
+   \        0xE   0x0780             LSLS     R0,R0,#+30
+   \       0x10   0xD503             BPL.N    ??FLASH_OB_HDPConfig_1
+   1665            {
+   1666              /* Configure hide Protection for bank 2 */
+   1667              FLASH->HDP2R_PRG = ((HDPEndSector << FLASH_HDPR_HDP_END_Pos) | HDPStartSector);
+   \       0x12   0xEA51 0x4102      ORRS     R1,R1,R2, LSL #+16
+   \       0x16   0x....             LDR.N    R0,??DataTable30_27
+   \       0x18   0x6001             STR      R1,[R0, #+0]
+   1668            }
+   1669          }
+   \                     ??FLASH_OB_HDPConfig_1: (+1)
+   \       0x1A   0xBC10             POP      {R4}
+   \       0x1C   0x4770             BX       LR
+   1670          
+   1671          /**
+   1672            * @brief  Return the hide protection area configuration.
+   1673            *
+   1674            * @param  Bank [in] specifies the bank where to get the HDP protection.
+   1675            *         This parameter can be exclusively one of the following values:
+   1676            *         @arg FLASH_BANK_1: Get bank1 HDP configuration
+   1677            *         @arg FLASH_BANK_2: Get bank2 HDP configuration
+   1678            *
+   1679            * @param  HDPStartSector [out] specifies the start sector of the HDP area
+   1680            *
+   1681            * @param  HDPEndSector [out] specifies the end sector of the HDP area
+   1682            *
+   1683            * @retval None
+   1684            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1685          static void FLASH_OB_GetHDP(uint32_t Bank, uint32_t *HDPStartSector, uint32_t *HDPEndSector)
+   1686          {
+   1687            uint32_t regvalue = 0U;
+   \                     FLASH_OB_GetHDP: (+1)
+   \        0x0   0x2300             MOVS     R3,#+0
+   1688          
+   1689            /* Read SECWM register */
+   1690            if (Bank == FLASH_BANK_1)
+   \        0x2   0x2801             CMP      R0,#+1
+   \        0x4   0xD101             BNE.N    ??FLASH_OB_GetHDP_0
+   1691            {
+   1692              regvalue = FLASH->HDP1R_CUR;
+   \        0x6   0x....             LDR.N    R3,??DataTable30_28
+   \        0x8   0x681B             LDR      R3,[R3, #+0]
+   1693            }
+   1694          
+   1695            if (Bank == FLASH_BANK_2)
+   \                     ??FLASH_OB_GetHDP_0: (+1)
+   \        0xA   0x2802             CMP      R0,#+2
+   \        0xC   0xD101             BNE.N    ??FLASH_OB_GetHDP_1
+   1696            {
+   1697              regvalue = FLASH->HDP2R_CUR;
+   \        0xE   0x....             LDR.N    R0,??DataTable30_29
+   \       0x10   0x6803             LDR      R3,[R0, #+0]
+   1698            }
+   1699          
+   1700            /* Get configuration of HDP area */
+   1701            *HDPStartSector = (regvalue & FLASH_HDPR_HDP_STRT);
+   \                     ??FLASH_OB_GetHDP_1: (+1)
+   \       0x12   0xF013 0x007F      ANDS     R0,R3,#0x7F
+   \       0x16   0x6008             STR      R0,[R1, #+0]
+   1702            *HDPEndSector = ((regvalue & FLASH_HDPR_HDP_END) >> FLASH_HDPR_HDP_END_Pos);
+   \       0x18   0xF3C3 0x4006      UBFX     R0,R3,#+16,#+7
+   \       0x1C   0x6010             STR      R0,[R2, #+0]
+   1703          }
+   \       0x1E   0x4770             BX       LR
+   1704          
+   1705          #if defined(FLASH_EDATAR_EDATA_EN)
+   1706          /**
+   1707            * @brief  Configure the Flash high-cycle area.
+   1708            *
+   1709            * @param  Banks specifies the bank where to apply Flash high-cycle data area
+   1710            *          This parameter can be one of the following values:
+   1711            *            @arg FLASH_BANK_1: configure Flash high-cycle area on bank1
+   1712            *            @arg FLASH_BANK_2: configure Flash high-cycle area on bank2
+   1713            *            @arg FLASH_BANK_BOTH: configure Flash high-cycle area on both bank1 and bank2
+   1714            *
+   1715            * @param  EDATASize specifies the size (in sectors) of the Flash high-cycle data area
+   1716            *         This parameter can be sectors number between 0 and 8
+   1717            *
+   1718            * @retval None
+   1719            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1720          static void FLASH_OB_EDATAConfig(uint32_t Banks, uint32_t EDATASize)
+   1721          {
+   1722            /* Check the parameters */
+   1723            assert_param(IS_FLASH_BANK(Banks));
+   1724            assert_param(IS_FLASH_EDATA_SIZE(EDATASize));
+   1725          
+   1726            if (EDATASize != 0U)
+   \                     FLASH_OB_EDATAConfig: (+1)
+   \        0x0   0x2900             CMP      R1,#+0
+   \        0x2   0xD00E             BEQ.N    ??FLASH_OB_EDATAConfig_0
+   1727            {
+   1728              /* Write EDATA registers */
+   1729              if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+   \        0x4   0x07C2             LSLS     R2,R0,#+31
+   \        0x6   0xD504             BPL.N    ??FLASH_OB_EDATAConfig_1
+   1730              {
+   1731                /* Configure Flash high-cycle data for bank 1 */
+   1732                FLASH->EDATA1R_PRG = (FLASH_EDATAR_EDATA_EN | (EDATASize - 1U));
+   \        0x8   0x1E4A             SUBS     R2,R1,#+1
+   \        0xA   0xF452 0x4200      ORRS     R2,R2,#0x8000
+   \        0xE   0x....             LDR.N    R3,??DataTable30_30
+   \       0x10   0x601A             STR      R2,[R3, #+0]
+   1733              }
+   1734          
+   1735              if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+   \                     ??FLASH_OB_EDATAConfig_1: (+1)
+   \       0x12   0x0780             LSLS     R0,R0,#+30
+   \       0x14   0xD50F             BPL.N    ??FLASH_OB_EDATAConfig_2
+   1736              {
+   1737                /* Configure Flash high-cycle data for bank 2 */
+   1738                FLASH->EDATA2R_PRG = (FLASH_EDATAR_EDATA_EN | (EDATASize - 1U));
+   \       0x16   0x1E49             SUBS     R1,R1,#+1
+   \       0x18   0xF451 0x4100      ORRS     R1,R1,#0x8000
+   \       0x1C   0x....             LDR.N    R0,??DataTable30_31
+   \       0x1E   0x6001             STR      R1,[R0, #+0]
+   \       0x20   0xE009             B.N      ??FLASH_OB_EDATAConfig_2
+   1739              }
+   1740            }
+   1741            else
+   1742            {
+   1743              /* Write EDATA registers */
+   1744              if ((Banks & FLASH_BANK_1) == FLASH_BANK_1)
+   \                     ??FLASH_OB_EDATAConfig_0: (+1)
+   \       0x22   0x07C1             LSLS     R1,R0,#+31
+   \       0x24   0xD502             BPL.N    ??FLASH_OB_EDATAConfig_3
+   1745              {
+   1746                /* de-activate Flash high-cycle data for bank 1 */
+   1747                FLASH->EDATA1R_PRG = 0U;
+   \       0x26   0x2100             MOVS     R1,#+0
+   \       0x28   0x....             LDR.N    R2,??DataTable30_30
+   \       0x2A   0x6011             STR      R1,[R2, #+0]
+   1748              }
+   1749          
+   1750              if ((Banks & FLASH_BANK_2) == FLASH_BANK_2)
+   \                     ??FLASH_OB_EDATAConfig_3: (+1)
+   \       0x2C   0x0780             LSLS     R0,R0,#+30
+   \       0x2E   0xD502             BPL.N    ??FLASH_OB_EDATAConfig_2
+   1751              {
+   1752                /* de-activate Flash high-cycle data for bank 2 */
+   1753                FLASH->EDATA2R_PRG = 0U;
+   \       0x30   0x2000             MOVS     R0,#+0
+   \       0x32   0x....             LDR.N    R1,??DataTable30_31
+   \       0x34   0x6008             STR      R0,[R1, #+0]
+   1754              }
+   1755            }
+   1756          }
+   \                     ??FLASH_OB_EDATAConfig_2: (+1)
+   \       0x36   0x4770             BX       LR
+   1757          
+   1758          /**
+   1759            * @brief  Return the Flash high-cycle data area configuration.
+   1760            *
+   1761            * @param  Bank [in] specifies the bank where to get the Flash high-cycle data configuration.
+   1762            *         This parameter can be exclusively one of the following values:
+   1763            *         @arg FLASH_BANK_1: Get bank1 Flash high-cycle data configuration
+   1764            *         @arg FLASH_BANK_2: Get bank2 Flash high-cycle data configuration
+   1765            *
+   1766            * @param  EDATASize [out] specifies the size (in sectors) of the Flash high-cycle data area
+   1767            *
+   1768            * @retval None
+   1769            */
+
+   \                                 In section .text, align 2, keep-with-next
+   1770          static void FLASH_OB_GetEDATA(uint32_t Bank, uint32_t *EDATASize)
+   1771          {
+   1772            uint32_t regvalue = 0U;
+   \                     FLASH_OB_GetEDATA: (+1)
+   \        0x0   0x2200             MOVS     R2,#+0
+   1773          
+   1774            /* Read SECWM register */
+   1775            if (Bank == FLASH_BANK_1)
+   \        0x2   0x2801             CMP      R0,#+1
+   \        0x4   0xD101             BNE.N    ??FLASH_OB_GetEDATA_0
+   1776            {
+   1777              regvalue = FLASH->EDATA1R_CUR;
+   \        0x6   0x....             LDR.N    R2,??DataTable30_32
+   \        0x8   0x6812             LDR      R2,[R2, #+0]
+   1778            }
+   1779          
+   1780            if (Bank == FLASH_BANK_2)
+   \                     ??FLASH_OB_GetEDATA_0: (+1)
+   \        0xA   0x2802             CMP      R0,#+2
+   \        0xC   0xD101             BNE.N    ??FLASH_OB_GetEDATA_1
+   1781            {
+   1782              regvalue = FLASH->EDATA2R_CUR;
+   \        0xE   0x....             LDR.N    R0,??DataTable30_33
+   \       0x10   0x6802             LDR      R2,[R0, #+0]
+   1783            }
+   1784          
+   1785            /* Get configuration of secure area */
+   1786            *EDATASize = (regvalue & FLASH_EDATAR_EDATA_STRT);
+   \                     ??FLASH_OB_GetEDATA_1: (+1)
+   \       0x12   0xF012 0x0203      ANDS     R2,R2,#0x3
+   \       0x16   0x600A             STR      R2,[R1, #+0]
+   1787          }
+   \       0x18   0x4770             BX       LR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30:
+   \        0x0   0x....'....        DC32     pFlash
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_1:
+   \        0x0   0x4002'2028        DC32     0x40022028
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_2:
+   \        0x0   0x8000'0008        DC32     0x80000008
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_3:
+   \        0x0   0x4002'2040        DC32     0x40022040
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_4:
+   \        0x0   0x4002'2010        DC32     0x40022010
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_5:
+   \        0x0   0x192A'083B        DC32     0x192a083b
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_6:
+   \        0x0   0x6E7F'4C5D        DC32     0x6e7f4c5d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_7:
+   \        0x0   0x4002'2018        DC32     0x40022018
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_8:
+   \        0x0   0x4002'20C0        DC32     0x400220c0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_9:
+   \        0x0   0x4002'21C0        DC32     0x400221c0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_10:
+   \        0x0   0x4002'203C        DC32     0x4002203c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_11:
+   \        0x0   0x4002'2048        DC32     0x40022048
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_12:
+   \        0x0   0x7FFF'FFD7        DC32     0x7fffffd7
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_13:
+   \        0x0   0x7FFF'E03F        DC32     0x7fffe03f
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_14:
+   \        0x0   0x4002'20EC        DC32     0x400220ec
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_15:
+   \        0x0   0x4002'21EC        DC32     0x400221ec
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_16:
+   \        0x0   0x4002'20E8        DC32     0x400220e8
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_17:
+   \        0x0   0x4002'21E8        DC32     0x400221e8
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_18:
+   \        0x0   0x4002'2054        DC32     0x40022054
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_19:
+   \        0x0   0x4002'2050        DC32     0x40022050
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_20:
+   \        0x0   0x4002'2074        DC32     0x40022074
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_21:
+   \        0x0   0x4002'2070        DC32     0x40022070
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_22:
+   \        0x0   0x4002'2084        DC32     0x40022084
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_23:
+   \        0x0   0x4002'2080        DC32     0x40022080
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_24:
+   \        0x0   0x4002'2094        DC32     0x40022094
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_25:
+   \        0x0   0x4002'2090        DC32     0x40022090
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_26:
+   \        0x0   0x4002'20FC        DC32     0x400220fc
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_27:
+   \        0x0   0x4002'21FC        DC32     0x400221fc
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_28:
+   \        0x0   0x4002'20F8        DC32     0x400220f8
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_29:
+   \        0x0   0x4002'21F8        DC32     0x400221f8
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_30:
+   \        0x0   0x4002'20F4        DC32     0x400220f4
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_31:
+   \        0x0   0x4002'21F4        DC32     0x400221f4
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_32:
+   \        0x0   0x4002'20F0        DC32     0x400220f0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable30_33:
+   \        0x0   0x4002'21F0        DC32     0x400221f0
+   1788          #endif /* FLASH_EDATAR_EDATA_EN */
+   1789          
+   1790          /**
+   1791            * @}
+   1792            */
+   1793          
+   1794          #endif /* HAL_FLASH_MODULE_ENABLED */
+   1795          
+   1796          /**
+   1797            * @}
+   1798            */
+   1799          
+   1800          /**
+   1801            * @}
+   1802            */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   FLASH_Erase_Sector
+       0   FLASH_MassErase
+       0   FLASH_OBKErase
+       0   FLASH_OB_BootAddrConfig
+       0   FLASH_OB_BootLockConfig
+       0   FLASH_OB_DisableWRP
+       0   FLASH_OB_EDATAConfig
+       0   FLASH_OB_EnableWRP
+       0   FLASH_OB_GetBootConfig
+       0   FLASH_OB_GetEDATA
+       0   FLASH_OB_GetHDP
+       0   FLASH_OB_GetProdState
+       0   FLASH_OB_GetUser
+       0   FLASH_OB_GetWRP
+       4   FLASH_OB_HDPConfig
+       0   FLASH_OB_OTP_GetLock
+       0   FLASH_OB_OTP_LockConfig
+       0   FLASH_OB_ProdStateConfig
+      16   FLASH_OB_UserConfig
+      16   HAL_FLASHEx_ConfigBBAttributes
+        16   -> FLASH_WaitForLastOperation
+       0   HAL_FLASHEx_ConfigHDPExtension
+       0   HAL_FLASHEx_ConfigPrivMode
+      24   HAL_FLASHEx_Erase
+        24   -> FLASH_Erase_Sector
+        24   -> FLASH_MassErase
+        24   -> FLASH_OBKErase
+        24   -> FLASH_WaitForLastOperation
+      16   HAL_FLASHEx_Erase_IT
+        16   -> FLASH_Erase_Sector
+        16   -> FLASH_MassErase
+        16   -> FLASH_OBKErase
+        16   -> FLASH_WaitForLastOperation
+       4   HAL_FLASHEx_GetConfigBBAttributes
+       0   HAL_FLASHEx_GetOperation
+       0   HAL_FLASHEx_GetPrivMode
+       8   HAL_FLASHEx_OBGetConfig
+         8   -> FLASH_OB_GetBootConfig
+         8   -> FLASH_OB_GetEDATA
+         8   -> FLASH_OB_GetHDP
+         8   -> FLASH_OB_GetProdState
+         8   -> FLASH_OB_GetUser
+         8   -> FLASH_OB_GetWRP
+         8   -> FLASH_OB_OTP_GetLock
+       0   HAL_FLASHEx_OBK_Lock
+       8   HAL_FLASHEx_OBK_Swap
+         8   -> FLASH_WaitForLastOperation
+       0   HAL_FLASHEx_OBK_Unlock
+      16   HAL_FLASHEx_OBProgram
+        16   -> FLASH_OB_BootAddrConfig
+        16   -> FLASH_OB_BootLockConfig
+        16   -> FLASH_OB_DisableWRP
+        16   -> FLASH_OB_EDATAConfig
+        16   -> FLASH_OB_EnableWRP
+        16   -> FLASH_OB_HDPConfig
+        16   -> FLASH_OB_OTP_LockConfig
+        16   -> FLASH_OB_ProdStateConfig
+        16   -> FLASH_OB_UserConfig
+        16   -> FLASH_WaitForLastOperation
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable30
+       4  ??DataTable30_1
+       4  ??DataTable30_10
+       4  ??DataTable30_11
+       4  ??DataTable30_12
+       4  ??DataTable30_13
+       4  ??DataTable30_14
+       4  ??DataTable30_15
+       4  ??DataTable30_16
+       4  ??DataTable30_17
+       4  ??DataTable30_18
+       4  ??DataTable30_19
+       4  ??DataTable30_2
+       4  ??DataTable30_20
+       4  ??DataTable30_21
+       4  ??DataTable30_22
+       4  ??DataTable30_23
+       4  ??DataTable30_24
+       4  ??DataTable30_25
+       4  ??DataTable30_26
+       4  ??DataTable30_27
+       4  ??DataTable30_28
+       4  ??DataTable30_29
+       4  ??DataTable30_3
+       4  ??DataTable30_30
+       4  ??DataTable30_31
+       4  ??DataTable30_32
+       4  ??DataTable30_33
+       4  ??DataTable30_4
+       4  ??DataTable30_5
+       4  ??DataTable30_6
+       4  ??DataTable30_7
+       4  ??DataTable30_8
+       4  ??DataTable30_9
+      56  FLASH_Erase_Sector
+      62  FLASH_MassErase
+      12  FLASH_OBKErase
+      18  FLASH_OB_BootAddrConfig
+      18  FLASH_OB_BootLockConfig
+      26  FLASH_OB_DisableWRP
+      56  FLASH_OB_EDATAConfig
+      28  FLASH_OB_EnableWRP
+      24  FLASH_OB_GetBootConfig
+      26  FLASH_OB_GetEDATA
+      32  FLASH_OB_GetHDP
+      10  FLASH_OB_GetProdState
+      18  FLASH_OB_GetUser
+      40  FLASH_OB_GetWRP
+      30  FLASH_OB_HDPConfig
+       6  FLASH_OB_OTP_GetLock
+      10  FLASH_OB_OTP_LockConfig
+      14  FLASH_OB_ProdStateConfig
+     304  FLASH_OB_UserConfig
+      98  HAL_FLASHEx_ConfigBBAttributes
+      68  HAL_FLASHEx_ConfigHDPExtension
+      16  HAL_FLASHEx_ConfigPrivMode
+     184  HAL_FLASHEx_Erase
+     130  HAL_FLASHEx_Erase_IT
+      50  HAL_FLASHEx_GetConfigBBAttributes
+      26  HAL_FLASHEx_GetOperation
+      12  HAL_FLASHEx_GetPrivMode
+     144  HAL_FLASHEx_OBGetConfig
+      26  HAL_FLASHEx_OBK_Lock
+      56  HAL_FLASHEx_OBK_Swap
+      40  HAL_FLASHEx_OBK_Unlock
+     188  HAL_FLASHEx_OBProgram
+
+ 
+ 1'964 bytes in section .text
+ 
+ 1'964 bytes of CODE memory
+
+Errors: none
+Warnings: none
