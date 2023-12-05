@@ -116,7 +116,7 @@ KeepInCompilation int Write (uint32_t Address, uint32_t Size, uint8_t* buffer)
   QSPI_Init();
 
   /* Writes an amount of data to the QSPI memory */
-  if(W25Q64JV_ProgramRaw(buffer, Size, Address) != W25Q_OK){
+  if(W25Q64JV_Program(buffer, Size, Address) != W25Q_OK){
     return 0;
   }
 

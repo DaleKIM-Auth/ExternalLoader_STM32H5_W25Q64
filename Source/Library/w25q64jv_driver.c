@@ -263,21 +263,7 @@ W25Q_STATE W25Q64JV_EraseBlock(uint32_t BlockAddr)
   return W25Q_OK;
 }
 
-#if 0
-W25Q_STATE W25Q64JV_Program(uint8_t* pData, uint16_t len, uint8_t PageShift, uint32_t nPage)
-{
-  uint32_t RawAddr = 0;
-  if (nPage >= PAGE_COUNT || len == 0 || len > 256 || PageShift > 256 - len) {
-    return W25Q_PARAM_ERR;
-  }
-
-  RawAddr = PageToAddr(nPage, PageShift);
-
-  return W25Q64JV_ProgramRaw(pData, len, RawAddr);
-}
-#endif
-
-W25Q_STATE W25Q64JV_ProgramRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr)
+W25Q_STATE W25Q64JV_Program(uint8_t* pData, uint16_t len, uint32_t RawAddr)
 {
   XSPI_RegularCmdTypeDef Commands = { 0 };
   uint32_t EndAddr = 0;
@@ -286,10 +272,9 @@ W25Q_STATE W25Q64JV_ProgramRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr)
 
   printf("QSPI Program\n");
   printf("{ \n");
-  if (len > 256 || len == 0) {
-    return W25Q_PARAM_ERR;
-  }
+
   
+  printf("CurrentSize %d\n", CurrentSize);
   /* Calculation of the size between the write address and the end of the page */
   CurrentSize = MEM_PAGE_SIZE - (RawAddr % MEM_PAGE_SIZE);
 
@@ -301,6 +286,8 @@ W25Q_STATE W25Q64JV_ProgramRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr)
   /* Initialize the address variables */
   CurrentAddr = RawAddr;
   EndAddr = RawAddr + len;
+  
+  printf("CurrentAddr 0x%x, EndAddr 0x%x\n", RawAddr, EndAddr);
   
   Commands.OperationType = HAL_XSPI_OPTYPE_COMMON_CFG;
   Commands.InstructionMode = HAL_XSPI_INSTRUCTION_1_LINE;
@@ -338,6 +325,9 @@ W25Q_STATE W25Q64JV_ProgramRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr)
     CurrentAddr += CurrentSize;
     pData += CurrentSize;
     CurrentSize = ((CurrentAddr + MEM_PAGE_SIZE) > EndAddr) ? (EndAddr - CurrentAddr) : MEM_PAGE_SIZE;
+    
+    printf("CurrentAddr 0x%x\n", CurrentAddr);
+    printf("CurrentSize %d\n", CurrentSize);
     
   }while(CurrentAddr < EndAddr);
   

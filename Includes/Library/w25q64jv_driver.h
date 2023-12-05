@@ -133,7 +133,7 @@ W25Q_STATE W25Q64JV_ResetMemory(void);
 W25Q_STATE W25Q64JV_MemoryMappedMode(void);
 W25Q_STATE W25Q64JV_EraseChip(void);
 W25Q_STATE W25Q64JV_EraseBlock(uint32_t BlockAddr);
-W25Q_STATE W25Q64JV_ProgramRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr);
+W25Q_STATE W25Q64JV_Program(uint8_t* pData, uint16_t len, uint32_t RawAddr);
 //W25Q_STATE W25Q64JV_Read(uint8_t* pData, uint16_t len, uint8_t PageShift, uint32_t nPage);
 void DoTestFunctionInit(void);
 #endif /* __W25Q64JV_DRIVER__ */
