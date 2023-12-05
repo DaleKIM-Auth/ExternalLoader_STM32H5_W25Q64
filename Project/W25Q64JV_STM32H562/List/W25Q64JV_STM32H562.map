@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V9.40.1.364/W64 for ARM                  28/Nov/2023  13:53:37
+# IAR ELF Linker V9.40.1.364/W64 for ARM                  05/Dec/2023  18:10:26
 # Copyright 2007-2023 IAR Systems AB.
 #
 #    Output file  =
@@ -79,56 +79,79 @@ do not initialize { section .info, rw };
     .rodata   const            0x0    0xc8  Dev_Inf.o [2]
                             - 0xc8    0xc8
 
-"P1-P2", part 1 of 2:               0x3b04
-  RAM_BLOCK            0x2000'3004  0x3b04  <Block>
-    .text     ro code  0x2000'3004   0x2f8  Loader_Src.o [2]
-    .text     ro code  0x2000'32fc    0x66  ABImemset.o [5]
-    .text     ro code  0x2000'3364    0xf0  system_stm32h5xx.o [1]
-    .text     ro code  0x2000'3454    0x48  stm32h5xx_hal.o [1]
-    .text     ro code  0x2000'349c    0x28  printf.o [3]
-    .text     ro code  0x2000'34c4   0x7a0  w25q64jv_driver.o [1]
-    .text     ro code  0x2000'3c64   0xb0c  stm32h5xx_hal_rcc.o [1]
-    .text     ro code  0x2000'4770    0x30  stm32h5xx_hal_cortex.o [1]
-    .text     ro code  0x2000'47a0     0x2  stm32h5xx_hal.o [1]
-    .text     ro code  0x2000'47a2   0x13c  xprintftiny.o [3]
-    .text     ro code  0x2000'48e0   0x1d4  stm32h5xx_hal_uart.o [1]
-    .text     ro code  0x2000'4ab4   0x760  stm32h5xx_hal_xspi.o [1]
-    .text     ro code  0x2000'5214  0x12f8  stm32h5xx_hal_rcc_ex.o [1]
-    .text     ro code  0x2000'650c   0x16c  stm32h5xx_hal_gpio.o [1]
-    .text     ro code  0x2000'6678    0x1a  U32ToFlt.o [4]
-    .text     ro code  0x2000'6694   0x118  FltDiv.o [4]
-    .text     ro code  0x2000'67ac   0x162  FltAddSub.o [4]
-    .text     ro code  0x2000'6910    0xd8  FltMul.o [4]
-    .text     ro code  0x2000'69e8    0x18  FltToU32.o [4]
-    .text     ro code  0x2000'6a00    0x36  strlen.o [5]
-    .text     ro code  0x2000'6a36    0x16  xprout.o [3]
-    .text     ro code  0x2000'6a4c    0x20  putchar.o [3]
-    .rodata   const    0x2000'6a6c    0x10  Loader_Src.o [2]
-    .rodata   const    0x2000'6a7c     0x8  Loader_Src.o [2]
-    .rodata   const    0x2000'6a84     0xc  Loader_Src.o [2]
-    .rodata   const    0x2000'6a90    0x10  Loader_Src.o [2]
-    .rodata   const    0x2000'6aa0     0xc  stm32h5xx_hal_xspi.o [1]
-    .rodata   const    0x2000'6aac    0x10  system_stm32h5xx.o [1]
-    .rodata   const    0x2000'6abc    0x10  w25q64jv_driver.o [1]
-    .rodata   const    0x2000'6acc    0x10  w25q64jv_driver.o [1]
-    .rodata   const    0x2000'6adc    0x10  w25q64jv_driver.o [1]
-    .rodata   const    0x2000'6aec    0x14  w25q64jv_driver.o [1]
-    .data     rw data  0x2000'6b00     0x4  stm32h5xx_hal.o [1]
-    .data     rw data  0x2000'6b04     0x4  system_stm32h5xx.o [1]
-                     - 0x2000'6b08  0x3b04
+"P1-P2", part 1 of 2:               0x6464
+  RAM_BLOCK            0x2000'3004  0x6464  <Block>
+    .text     ro code  0x2000'3004   0x37c  Loader_Src.o [2]
+    .text     ro code  0x2000'3380    0x66  ABImemset.o [5]
+    .text     ro code  0x2000'33e8    0xf0  system_stm32h5xx.o [1]
+    .text     ro code  0x2000'34d8    0x48  stm32h5xx_hal.o [1]
+    .text     ro code  0x2000'3520   0x970  w25q64jv_driver.o [1]
+    .text     ro code  0x2000'3e90    0x28  printf.o [3]
+    .text     ro code  0x2000'3eb8   0xb60  stm32h5xx_hal_rcc.o [1]
+    .text     ro code  0x2000'4a18    0x30  stm32h5xx_hal_cortex.o [1]
+    .text     ro code  0x2000'4a48     0x2  stm32h5xx_hal.o [1]
+    .text     ro code  0x2000'4a4c   0x6a0  stm32h5xx_hal_uart.o [1]
+    .text     ro code  0x2000'50ec   0x78c  stm32h5xx_hal_xspi.o [1]
+    .text     ro code  0x2000'5878   0x268  stm32h5xx_hal_gpio.o [1]
+    .text     ro code  0x2000'5ae0  0x302c  stm32h5xx_hal_rcc_ex.o [1]
+    .text     ro code  0x2000'8b0c   0x13c  xprintftiny.o [3]
+    .text     ro code  0x2000'8c48    0x1a  U32ToFlt.o [4]
+    .text     ro code  0x2000'8c64   0x118  FltDiv.o [4]
+    .text     ro code  0x2000'8d7c   0x162  FltAddSub.o [4]
+    .text     ro code  0x2000'8ee0    0xd8  FltMul.o [4]
+    .text     ro code  0x2000'8fb8    0x18  FltToU32.o [4]
+    .text     ro code  0x2000'8fd0   0x230  I64DivMod.o [5]
+    .text     ro code  0x2000'9200     0x2  stm32h5xx_hal_xspi.o [1]
+    .text     ro code  0x2000'9204    0x20  stm32h5xx_hal_rcc_ex.o [1]
+    .text     ro code  0x2000'9224    0x36  strlen.o [5]
+    .text     ro code  0x2000'925c     0x2  I64DivZer.o [5]
+    .text     ro code  0x2000'925e    0x16  xprout.o [3]
+    .text     ro code  0x2000'9274    0x20  putchar.o [3]
+    .rodata   const    0x2000'9294     0xc  Loader_Src.o [2]
+    .rodata   const    0x2000'92a0     0x8  Loader_Src.o [2]
+    .rodata   const    0x2000'92a8    0x10  Loader_Src.o [2]
+    .rodata   const    0x2000'92b8     0x8  Loader_Src.o [2]
+    .rodata   const    0x2000'92c0     0xc  Loader_Src.o [2]
+    .rodata   const    0x2000'92cc    0x10  Loader_Src.o [2]
+    .rodata   const    0x2000'92dc     0xc  Loader_Src.o [2]
+    .rodata   const    0x2000'92e8     0x8  Loader_Src.o [2]
+    .rodata   const    0x2000'92f0    0x18  stm32h5xx_hal_uart.o [1]
+    .rodata   const    0x2000'9308    0x10  system_stm32h5xx.o [1]
+    .rodata   const    0x2000'9318     0x8  system_stm32h5xx.o [1]
+    .rodata   const    0x2000'9320     0xc  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'932c     0xc  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9338    0x10  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9348    0x10  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9358    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'936c    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9380    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9394    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'93a8    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'93bc    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'93d0    0x10  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'93e0    0x10  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'93f0    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9404    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9418    0x10  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9428    0x10  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'9438    0x14  w25q64jv_driver.o [1]
+    .rodata   const    0x2000'944c    0x14  w25q64jv_driver.o [1]
+    .data     rw data  0x2000'9460     0x4  stm32h5xx_hal.o [1]
+    .data     rw data  0x2000'9464     0x4  system_stm32h5xx.o [1]
+                     - 0x2000'9468  0x6464
 
 "P1-P2", part 2 of 2:                 0xf0
-  .bss                 0x2000'6b08    0xf0  <Block>
-    .bss      uninit   0x2000'6b08    0x5c  w25q64jv_driver.o [1]
-    .bss      uninit   0x2000'6b64    0x94  w25q64jv_driver.o [1]
-                     - 0x2000'6bf8    0xf0
+  .bss                 0x2000'9468    0xf0  <Block>
+    .bss      uninit   0x2000'9468    0x5c  w25q64jv_driver.o [1]
+    .bss      uninit   0x2000'94c4    0x94  w25q64jv_driver.o [1]
+                     - 0x2000'9558    0xf0
 
 Unused ranges:
 
          From           To      Size
          ----           --      ----
          0xc8        0x100      0x39
-  0x2000'6bf8  0x2004'0000  0x3'9409
+  0x2000'9558  0x2004'0000  0x3'6aa9
 
 
 
@@ -145,21 +168,21 @@ command line/config:
 C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir: [1]
     stm32h5xx_hal.o              74                 4
     stm32h5xx_hal_cortex.o       48
-    stm32h5xx_hal_gpio.o        364
-    stm32h5xx_hal_rcc.o       2'828
-    stm32h5xx_hal_rcc_ex.o    4'856
-    stm32h5xx_hal_uart.o        468
-    stm32h5xx_hal_xspi.o      1'888       12
-    system_stm32h5xx.o          240       16        4
-    w25q64jv_driver.o         1'952       68      240
+    stm32h5xx_hal_gpio.o        616
+    stm32h5xx_hal_rcc.o       2'912
+    stm32h5xx_hal_rcc_ex.o   12'364
+    stm32h5xx_hal_uart.o      1'696       24
+    stm32h5xx_hal_xspi.o      1'934
+    system_stm32h5xx.o          240       24        4
+    w25q64jv_driver.o         2'416      320      240
     -------------------------------------------------
-    Total:                   12'718       96      248
+    Total:                   22'300      368      248
 
 C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Loader_5723430765115092510.dir: [2]
     Dev_Inf.o                            200
-    Loader_Src.o                760       52
+    Loader_Src.o                892       92
     -------------------------------------------------
-    Total:                      760      252
+    Total:                      892      292
 
 dl7M_tln.a: [3]
     printf.o                     40
@@ -180,13 +203,15 @@ m7M_tl.a: [4]
 
 rt7M_tl.a: [5]
     ABImemset.o                 102
+    I64DivMod.o                 560
+    I64DivZer.o                   2
     strlen.o                     54
     -------------------------------------------------
-    Total:                      156
+    Total:                      718
 
-    Gaps                          8
+    Gaps                         12
 -----------------------------------------------------
-    Grand Total:             14'952      348      248
+    Grand Total:             25'232      660      248
 
 
 *******************************************************************************
@@ -195,90 +220,116 @@ rt7M_tl.a: [5]
 
 Entry                       Address    Size  Type      Object
 -----                       -------    ----  ----      ------
-.bss$$Base              0x2000'6b08           --   Gb  - Linker created -
+.bss$$Base              0x2000'9468           --   Gb  - Linker created -
 .bss$$Length                   0xf0           --   Gb  - Linker created -
-.bss$$Limit             0x2000'6bf8           --   Gb  - Linker created -
-AHBPrescTable           0x2000'6aac    0x10  Data  Gb  system_stm32h5xx.o [1]
-CheckSum                0x2000'30d7   0x112  Code  Gb  Loader_Src.o [2]
-HAL_GPIO_Init           0x2000'650d   0x154  Code  Gb  stm32h5xx_hal_gpio.o [1]
+.bss$$Limit             0x2000'9558           --   Gb  - Linker created -
+AHBPrescTable           0x2000'9308    0x10  Data  Gb  system_stm32h5xx.o [1]
+APBPrescTable           0x2000'9318     0x8  Data  Gb  system_stm32h5xx.o [1]
+CheckSum                0x2000'311b   0x128  Code  Gb  Loader_Src.o [2]
+DoTestFunctionInit      0x2000'3c8b    0x38  Code  Gb  w25q64jv_driver.o [1]
+HAL_GPIO_DeInit         0x2000'59cd    0xfc  Code  Gb  stm32h5xx_hal_gpio.o [1]
+HAL_GPIO_Init           0x2000'5879   0x154  Code  Gb  stm32h5xx_hal_gpio.o [1]
 HAL_GetTick             0x2000'3009     0x4  Code  Gb  Loader_Src.o [2]
-HAL_Init                0x2000'3455    0x3a  Code  Gb  stm32h5xx_hal.o [1]
+HAL_Init                0x2000'34d9    0x3a  Code  Gb  stm32h5xx_hal.o [1]
 HAL_InitTick            0x2000'3005     0x4  Code  Gb  Loader_Src.o [2]
-HAL_MspInit             0x2000'47a1     0x2  Code  Wk  stm32h5xx_hal.o [1]
+HAL_MspInit             0x2000'4a49     0x2  Code  Wk  stm32h5xx_hal.o [1]
 HAL_NVIC_SetPriorityGrouping
-                        0x2000'478f     0x8  Code  Gb  stm32h5xx_hal_cortex.o [1]
+                        0x2000'4a37     0x8  Code  Gb  stm32h5xx_hal_cortex.o [1]
+HAL_RCCEx_GetPLL1ClockFreq
+                        0x2000'6bfd   0x230  Code  Gb  stm32h5xx_hal_rcc_ex.o [1]
+HAL_RCCEx_GetPLL2ClockFreq
+                        0x2000'6e3d   0x22a  Code  Gb  stm32h5xx_hal_rcc_ex.o [1]
+HAL_RCCEx_GetPLL3ClockFreq
+                        0x2000'7067   0x21e  Code  Gb  stm32h5xx_hal_rcc_ex.o [1]
+HAL_RCCEx_GetPeriphCLKFreq
+                        0x2000'72bd  0x166a  Code  Gb  stm32h5xx_hal_rcc_ex.o [1]
 HAL_RCCEx_PeriphCLKConfig
-                        0x2000'5215  0x1114  Code  Gb  stm32h5xx_hal_rcc_ex.o [1]
-HAL_RCC_ClockConfig     0x2000'42b3   0x272  Code  Gb  stm32h5xx_hal_rcc.o [1]
-HAL_RCC_GetHCLKFreq     0x2000'4709    0x20  Code  Gb  stm32h5xx_hal_rcc.o [1]
+                        0x2000'5ae1  0x1114  Code  Gb  stm32h5xx_hal_rcc_ex.o [1]
+HAL_RCC_ClockConfig     0x2000'4507   0x272  Code  Gb  stm32h5xx_hal_rcc.o [1]
+HAL_RCC_GetHCLKFreq     0x2000'495d    0x20  Code  Gb  stm32h5xx_hal_rcc.o [1]
+HAL_RCC_GetPCLK1Freq    0x2000'497d    0x1a  Code  Gb  stm32h5xx_hal_rcc.o [1]
+HAL_RCC_GetPCLK2Freq    0x2000'4997    0x1a  Code  Gb  stm32h5xx_hal_rcc.o [1]
+HAL_RCC_GetPCLK3Freq    0x2000'49b1    0x1a  Code  Gb  stm32h5xx_hal_rcc.o [1]
 HAL_RCC_GetSysClockFreq
-                        0x2000'4541   0x1c2  Code  Gb  stm32h5xx_hal_rcc.o [1]
-HAL_RCC_OscConfig       0x2000'3c65   0x64e  Code  Gb  stm32h5xx_hal_rcc.o [1]
-HAL_UART_Transmit       0x2000'48e1    0xde  Code  Gb  stm32h5xx_hal_uart.o [1]
-HAL_XSPI_AutoPolling    0x2000'4e6f    0xd0  Code  Gb  stm32h5xx_hal_xspi.o [1]
-HAL_XSPI_Command        0x2000'4c05    0xe4  Code  Gb  stm32h5xx_hal_xspi.o [1]
-HAL_XSPI_Init           0x2000'4ab5   0x144  Code  Gb  stm32h5xx_hal_xspi.o [1]
-HAL_XSPI_MemoryMapped   0x2000'4f3f    0x78  Code  Gb  stm32h5xx_hal_xspi.o [1]
-HAL_XSPI_MspInit        0x2000'3b51    0xe4  Code  Gb  w25q64jv_driver.o [1]
-HAL_XSPI_Receive        0x2000'4d93    0xdc  Code  Gb  stm32h5xx_hal_xspi.o [1]
-HAL_XSPI_SetTimeout     0x2000'4fb7     0x6  Code  Gb  stm32h5xx_hal_xspi.o [1]
-HAL_XSPI_Transmit       0x2000'4ce9    0xaa  Code  Gb  stm32h5xx_hal_xspi.o [1]
+                        0x2000'4795   0x1c2  Code  Gb  stm32h5xx_hal_rcc.o [1]
+HAL_RCC_OscConfig       0x2000'3eb9   0x64e  Code  Gb  stm32h5xx_hal_rcc.o [1]
+HAL_UART_Init           0x2000'4a4d    0x7e  Code  Gb  stm32h5xx_hal_uart.o [1]
+HAL_UART_MspInit        0x2000'3cc3    0x7a  Code  Gb  w25q64jv_driver.o [1]
+HAL_UART_Transmit       0x2000'4acb    0xde  Code  Gb  stm32h5xx_hal_uart.o [1]
+HAL_XSPI_AutoPolling    0x2000'54df    0xd0  Code  Gb  stm32h5xx_hal_xspi.o [1]
+HAL_XSPI_Command        0x2000'5275    0xe4  Code  Gb  stm32h5xx_hal_xspi.o [1]
+HAL_XSPI_DeInit         0x2000'5231    0x36  Code  Gb  stm32h5xx_hal_xspi.o [1]
+HAL_XSPI_Init           0x2000'50ed   0x144  Code  Gb  stm32h5xx_hal_xspi.o [1]
+HAL_XSPI_MemoryMapped   0x2000'55af    0x6e  Code  Gb  stm32h5xx_hal_xspi.o [1]
+HAL_XSPI_MspDeInit      0x2000'9201     0x2  Code  Wk  stm32h5xx_hal_xspi.o [1]
+HAL_XSPI_MspInit        0x2000'3d3d    0xe4  Code  Gb  w25q64jv_driver.o [1]
+HAL_XSPI_Receive        0x2000'5403    0xdc  Code  Gb  stm32h5xx_hal_xspi.o [1]
+HAL_XSPI_SetTimeout     0x2000'561d     0x6  Code  Gb  stm32h5xx_hal_xspi.o [1]
+HAL_XSPI_Transmit       0x2000'5359    0xaa  Code  Gb  stm32h5xx_hal_xspi.o [1]
 Info_BLOCK$$Base                0x0           --   Gb  - Linker created -
 Info_BLOCK$$Limit              0xc8           --   Gb  - Linker created -
-Init                    0x2000'300d    0x42  Code  Gb  Loader_Src.o [2]
-MassErase               0x2000'3081    0x20  Code  Gb  Loader_Src.o [2]
+Init                    0x2000'300d    0x56  Code  Gb  Loader_Src.o [2]
+MassErase               0x2000'30a5    0x30  Code  Gb  Loader_Src.o [2]
 OSPI_AutoPollingMemReady
-                        0x2000'361d    0x84  Code  Gb  w25q64jv_driver.o [1]
-QSPI_Init               0x2000'34f7    0x6e  Code  Gb  w25q64jv_driver.o [1]
+                        0x2000'36e7    0x9a  Code  Gb  w25q64jv_driver.o [1]
+QSPI_DeInit             0x2000'35bb    0x5e  Code  Gb  w25q64jv_driver.o [1]
+QSPI_Init               0x2000'3553    0x68  Code  Gb  w25q64jv_driver.o [1]
 RAM_BLOCK$$Base         0x2000'3004           --   Gb  - Linker created -
-RAM_BLOCK$$Limit        0x2000'6b08           --   Gb  - Linker created -
-RCCEx_PLL2_Config       0x2000'6345    0xd2  Code  Lc  stm32h5xx_hal_rcc_ex.o [1]
-RCCEx_PLL3_Config       0x2000'6419    0xd2  Code  Lc  stm32h5xx_hal_rcc_ex.o [1]
-SectorErase             0x2000'30a1    0x36  Code  Gb  Loader_Src.o [2]
+RAM_BLOCK$$Limit        0x2000'9468           --   Gb  - Linker created -
+RCCEx_PLL2_Config       0x2000'8935    0xd2  Code  Lc  stm32h5xx_hal_rcc_ex.o [1]
+RCCEx_PLL3_Config       0x2000'8a0d    0xd2  Code  Lc  stm32h5xx_hal_rcc_ex.o [1]
+SectorErase             0x2000'30d5    0x46  Code  Gb  Loader_Src.o [2]
 StorageInfo                     0x0    0xc8  Data  Gb  Dev_Inf.o [2]
-SystemClock_Config      0x2000'323f    0x9c  Code  Gb  Loader_Src.o [2]
-SystemCoreClock         0x2000'6b04     0x4  Data  Gb  system_stm32h5xx.o [1]
-SystemInit              0x2000'3365    0x9a  Code  Gb  system_stm32h5xx.o [1]
-UART_EndRxTransfer      0x2000'4a57    0x5a  Code  Lc  stm32h5xx_hal_uart.o [1]
+SystemClock_Config      0x2000'32b3    0x9c  Code  Gb  Loader_Src.o [2]
+SystemCoreClock         0x2000'9464     0x4  Data  Gb  system_stm32h5xx.o [1]
+SystemInit              0x2000'33e9    0x9a  Code  Gb  system_stm32h5xx.o [1]
+UARTPrescTable          0x2000'92f0    0x18  Data  Gb  stm32h5xx_hal_uart.o [1]
+UART_AdvFeatureConfig   0x2000'4e03    0xda  Code  Gb  stm32h5xx_hal_uart.o [1]
+UART_CheckIdleState     0x2000'4edd    0xd0  Code  Gb  stm32h5xx_hal_uart.o [1]
+UART_EndRxTransfer      0x2000'5045    0x5a  Code  Lc  stm32h5xx_hal_uart.o [1]
+UART_SetConfig          0x2000'4ba9   0x25a  Code  Gb  stm32h5xx_hal_uart.o [1]
 UART_WaitOnFlagUntilTimeout
-                        0x2000'49bf    0x98  Code  Gb  stm32h5xx_hal_uart.o [1]
-Verify                  0x2000'31e9    0x56  Code  Gb  Loader_Src.o [2]
-W25Q64JV_EraseBlock     0x2000'370f    0x86  Code  Gb  w25q64jv_driver.o [1]
-W25Q64JV_EraseChip      0x2000'36a1    0x6e  Code  Gb  w25q64jv_driver.o [1]
-W25Q64JV_IsBusy         0x2000'3b1f    0x32  Code  Lc  w25q64jv_driver.o [1]
+                        0x2000'4fad    0x98  Code  Gb  stm32h5xx_hal_uart.o [1]
+Verify                  0x2000'3243    0x70  Code  Gb  Loader_Src.o [2]
+W25Q64JV_EraseBlock     0x2000'37ef    0x9c  Code  Gb  w25q64jv_driver.o [1]
+W25Q64JV_EraseChip      0x2000'3781    0x6e  Code  Gb  w25q64jv_driver.o [1]
+W25Q64JV_IsBusy         0x2000'3c59    0x32  Code  Lc  w25q64jv_driver.o [1]
 W25Q64JV_MemoryMappedMode
-                        0x2000'3565    0xb8  Code  Gb  w25q64jv_driver.o [1]
-W25Q64JV_ProgramRaw     0x2000'3799    0xea  Code  Gb  w25q64jv_driver.o [1]
+                        0x2000'3619    0xce  Code  Gb  w25q64jv_driver.o [1]
+W25Q64JV_ProgramRaw     0x2000'3891   0x100  Code  Gb  w25q64jv_driver.o [1]
 W25Q64JV_QaudModeEnable
-                        0x2000'3903    0xce  Code  Gb  w25q64jv_driver.o [1]
-W25Q64JV_ReadStatusReg  0x2000'3a97    0x88  Code  Lc  w25q64jv_driver.o [1]
-W25Q64JV_ResetMemory    0x2000'3889    0x7a  Code  Gb  w25q64jv_driver.o [1]
-W25Q64JV_WriteEnable    0x2000'39d1    0xc6  Code  Lc  w25q64jv_driver.o [1]
-Write                   0x2000'304f    0x32  Code  Gb  Loader_Src.o [2]
-XSPI_ConfigCmd          0x2000'500d   0x1f0  Code  Lc  stm32h5xx_hal_xspi.o [1]
+                        0x2000'3a19    0xdc  Code  Gb  w25q64jv_driver.o [1]
+W25Q64JV_ReadStatusReg  0x2000'3bd1    0x88  Code  Lc  w25q64jv_driver.o [1]
+W25Q64JV_ResetMemory    0x2000'3991    0x88  Code  Gb  w25q64jv_driver.o [1]
+W25Q64JV_WriteEnable    0x2000'3af5    0xd8  Code  Lc  w25q64jv_driver.o [1]
+Write                   0x2000'3063    0x42  Code  Gb  Loader_Src.o [2]
+XSPI_ConfigCmd          0x2000'5673   0x1f0  Code  Lc  stm32h5xx_hal_xspi.o [1]
 XSPI_WaitFlagStateUntilTimeout
-                        0x2000'4fbd    0x50  Code  Lc  stm32h5xx_hal_xspi.o [1]
-_PrintfTiny             0x2000'47bb   0x124  Code  Gb  xprintftiny.o [3]
-_Prout                  0x2000'6a37    0x16  Code  Gb  xprout.o [3]
+                        0x2000'5623    0x50  Code  Lc  stm32h5xx_hal_xspi.o [1]
+_PrintfTiny             0x2000'8b25   0x124  Code  Gb  xprintftiny.o [3]
+_Prout                  0x2000'925f    0x16  Code  Gb  xprout.o [3]
 __NVIC_SetPriorityGrouping
-                        0x2000'4771    0x1e  Code  Lc  stm32h5xx_hal_cortex.o [1]
-__aeabi_f2uiz           0x2000'69e9          Code  Gb  FltToU32.o [4]
-__aeabi_fadd            0x2000'67ad          Code  Gb  FltAddSub.o [4]
-__aeabi_fdiv            0x2000'6695          Code  Gb  FltDiv.o [4]
-__aeabi_fmul            0x2000'6911          Code  Gb  FltMul.o [4]
-__aeabi_memset          0x2000'32fd          Code  Gb  ABImemset.o [5]
-__aeabi_ui2f            0x2000'6679          Code  Gb  U32ToFlt.o [4]
-__iar_Memset            0x2000'32fd          Code  Gb  ABImemset.o [5]
-__iar_Memset_word       0x2000'3305          Code  Gb  ABImemset.o [5]
-__write                 0x2000'34c5    0x1c  Code  Gb  w25q64jv_driver.o [1]
-hospi1                  0x2000'6b08    0x5c  Data  Gb  w25q64jv_driver.o [1]
-huart1                  0x2000'6b64    0x94  Data  Gb  w25q64jv_driver.o [1]
-iar_fputc               0x2000'34e1    0x16  Code  Gb  w25q64jv_driver.o [1]
-out                     0x2000'47a3    0x18  Code  Lc  xprintftiny.o [3]
-printf                  0x2000'349d    0x28  Code  Gb  printf.o [3]
-putchar                 0x2000'6a4d    0x20  Code  Gb  putchar.o [3]
-strlen                  0x2000'6a01          Code  Gb  strlen.o [5]
-uwTickPrio              0x2000'6b00     0x4  Data  Gb  stm32h5xx_hal.o [1]
+                        0x2000'4a19    0x1e  Code  Lc  stm32h5xx_hal_cortex.o [1]
+__aeabi_f2uiz           0x2000'8fb9          Code  Gb  FltToU32.o [4]
+__aeabi_fadd            0x2000'8d7d          Code  Gb  FltAddSub.o [4]
+__aeabi_fdiv            0x2000'8c65          Code  Gb  FltDiv.o [4]
+__aeabi_fmul            0x2000'8ee1          Code  Gb  FltMul.o [4]
+__aeabi_ldiv0           0x2000'925d          Code  Gb  I64DivZer.o [5]
+__aeabi_memset          0x2000'3381          Code  Gb  ABImemset.o [5]
+__aeabi_ui2f            0x2000'8c49          Code  Gb  U32ToFlt.o [4]
+__aeabi_uldivmod        0x2000'8fd1          Code  Gb  I64DivMod.o [5]
+__iar_Memset            0x2000'3381          Code  Gb  ABImemset.o [5]
+__iar_Memset_word       0x2000'3389          Code  Gb  ABImemset.o [5]
+__iar_llswitch          0x2000'9205          Code  Wk  stm32h5xx_hal_rcc_ex.o [1]
+__write                 0x2000'3521    0x1c  Code  Gb  w25q64jv_driver.o [1]
+hospi1                  0x2000'9468    0x5c  Data  Gb  w25q64jv_driver.o [1]
+huart1                  0x2000'94c4    0x94  Data  Gb  w25q64jv_driver.o [1]
+iar_fputc               0x2000'353d    0x16  Code  Gb  w25q64jv_driver.o [1]
+out                     0x2000'8b0d    0x18  Code  Lc  xprintftiny.o [3]
+printf                  0x2000'3e91    0x28  Code  Gb  printf.o [3]
+putchar                 0x2000'9275    0x20  Code  Gb  putchar.o [3]
+strlen                  0x2000'9225          Code  Gb  strlen.o [5]
+uwTickPrio              0x2000'9460     0x4  Data  Gb  stm32h5xx_hal.o [1]
 
 
 [1] = C:\Workspace\W25Q64JV_STM32H562_FlashLoader\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir
@@ -287,8 +338,8 @@ uwTickPrio              0x2000'6b00     0x4  Data  Gb  stm32h5xx_hal.o [1]
 [4] = m7M_tl.a
 [5] = rt7M_tl.a
 
-  14'952 bytes of readonly  code memory
-     348 bytes of readonly  data memory
+  25'232 bytes of readonly  code memory
+     660 bytes of readonly  data memory
      248 bytes of readwrite data memory
 
 Errors: none

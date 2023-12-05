@@ -475,15 +475,14 @@ HAL_StatusTypeDef HAL_XSPI_DeInit(XSPI_HandleTypeDef *hxspi)
   /* Check the XSPI handle allocation */
   if (hxspi == NULL)
   {
-    printf("D\n");
     status = HAL_ERROR;
     /* No error code can be set as the handler is null */
   }
   else
   {
-    printf("E\n");
     /* Disable XSPI */
-    HAL_XSPI_DISABLE(hxspi);    
+    HAL_XSPI_DISABLE(hxspi);
+
     /* Disable free running clock if needed : must be done after XSPI disable */
     CLEAR_BIT(hxspi->Instance->DCR1, XSPI_DCR1_FRCK);
 
@@ -496,7 +495,6 @@ HAL_StatusTypeDef HAL_XSPI_DeInit(XSPI_HandleTypeDef *hxspi)
     /* De-initialize the low level hardware */
     hxspi->MspDeInitCallback(hxspi);
 #else
-
     /* De-initialize the low-level hardware */
     HAL_XSPI_MspDeInit(hxspi);
 #endif /* (USE_HAL_XSPI_REGISTER_CALLBACKS) && (USE_HAL_XSPI_REGISTER_CALLBACKS == 1U) */
@@ -504,7 +502,7 @@ HAL_StatusTypeDef HAL_XSPI_DeInit(XSPI_HandleTypeDef *hxspi)
     /* Reset the driver state */
     hxspi->State = HAL_XSPI_STATE_RESET;
   }
-printf("H\n");
+
   return status;
 }
 
@@ -1959,8 +1957,8 @@ HAL_StatusTypeDef HAL_XSPI_AutoPolling_IT(XSPI_HandleTypeDef *hxspi, XSPI_AutoPo
 HAL_StatusTypeDef HAL_XSPI_MemoryMapped(XSPI_HandleTypeDef *hxspi, XSPI_MemoryMappedTypeDef *const pCfg)
 {
   HAL_StatusTypeDef status;
-  uint32_t tickstart = HAL_GetTick();  
-  
+  uint32_t tickstart = HAL_GetTick();
+
   /* Check the parameters of the memory-mapped configuration structure */
   assert_param(IS_XSPI_TIMEOUT_ACTIVATION(pCfg->TimeOutActivation));
 
@@ -1995,7 +1993,6 @@ HAL_StatusTypeDef HAL_XSPI_MemoryMapped(XSPI_HandleTypeDef *hxspi, XSPI_MemoryMa
   }
   else
   {
-    printf("status %d\n", hxspi->State);
     status = HAL_ERROR;
     hxspi->ErrorCode = HAL_XSPI_ERROR_INVALID_SEQUENCE;
   }

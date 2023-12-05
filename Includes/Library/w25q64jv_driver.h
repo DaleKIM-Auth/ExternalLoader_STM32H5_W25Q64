@@ -126,6 +126,7 @@ typedef struct{
 }W25Q_STATUS_REG;
 
 void QSPI_Init(void);
+void QSPI_DeInit(void);
 void OSPI_AutoPollingMemReady(void);
 W25Q_STATE W25Q64JV_QaudModeEnable(void);
 W25Q_STATE W25Q64JV_ResetMemory(void);

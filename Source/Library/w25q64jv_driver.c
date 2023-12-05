@@ -48,22 +48,14 @@ PUTCHAR_PROTOTYPE
 }
 
 /**
-  * @brief OCTOSPI1 Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief OCTOSPI1 Initialization Function
+ * @param None
+ * @retval None
+ */
 void QSPI_Init(void)
 { 
-  printf("S]QSPI Init\n");
-  #if 0
-  if(HAL_XSPI_DeInit(&hospi1) != HAL_OK){
-    printf("QSPI init fail\n");
-    while(1);
-  }
-  #endif
-printf("A\n");
-
-  //HAL_XSPI_MspInit(&hospi1); 
+  printf("QSPI Init\n");
+  printf("{ \n");
       
   /* QSPI parametqer configuration */
   hospi1.Instance = OCTOSPI1;
@@ -83,18 +75,39 @@ printf("A\n");
   hospi1.Init.Refresh = 0;
   
   HAL_XSPI_Init(&hospi1);
-  printf("B\n");
   
   W25Q64JV_ResetMemory();
   OSPI_AutoPollingMemReady();
-  printf("E]QSPI Init\n");
+  printf("} /*Init*/\n");
 }
+
+
+void QSPI_DeInit(void)
+{  
+  printf("QSPI DeInit\n");
+  printf("{ \n");
+  if(hospi1.State != HAL_XSPI_STATE_RESET){
+    HAL_XSPI_DeInit(&hospi1);
+  }    
+    
+  HAL_GPIO_DeInit(GPIOA, GPIO_PIN_6|GPIO_PIN_7);
+  HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10);
+    
+  __HAL_RCC_OSPI1_FORCE_RESET();
+  __HAL_RCC_OSPI1_RELEASE_RESET();
+  __HAL_RCC_OSPI1_CLK_DISABLE();
+  printf("} /*DeInit*/\n");
+}
+
 
 W25Q_STATE W25Q64JV_MemoryMappedMode(void)
 {
   XSPI_RegularCmdTypeDef Commands = {0};
   XSPI_MemoryMappedTypeDef MemMappedCfg = {0};  
 
+  printf("QSPI MemoryMapped\n");
+  printf("{ \n");
+  
   if(W25Q64JV_WriteEnable(1) != W25Q_OK){        
     return W25Q_SPI_ERR;
   }
@@ -130,20 +143,22 @@ W25Q_STATE W25Q64JV_MemoryMappedMode(void)
   if(HAL_XSPI_MemoryMapped(&hospi1, &MemMappedCfg) != HAL_OK){      
     return W25Q_SPI_ERR;
   }
-
+  printf("} /*MemoryMapped*/\n");
   return W25Q_OK;
 }
 
 /**
-  * @brief  This function read the SR of the memory and wait the EOP.
-  * @param  hospi: OSPI handle
-  * @retval None
-  */
+ * @brief  This function read the SR of the memory and wait the EOP.
+ * @param  hospi: OSPI handle
+ * @retval None
+ */
 void OSPI_AutoPollingMemReady(void)
 {
   XSPI_RegularCmdTypeDef  sCommand = {0};
   XSPI_AutoPollingTypeDef sConfig = {0};
 
+  printf("QSPI AutoPolling\n");
+  printf("{ \n");
   /* Configure automatic polling mode to wait for memory ready ------ */
   sCommand.OperationType      = HAL_XSPI_OPTYPE_COMMON_CFG;
   sCommand.Instruction        = W25Q_READ_SR1;
@@ -170,6 +185,7 @@ void OSPI_AutoPollingMemReady(void)
   {
     while(1);
   }
+  printf("} /*AutoPolling*/\n");
 }
 
 
@@ -208,7 +224,9 @@ W25Q_STATE W25Q64JV_EraseBlock(uint32_t BlockAddr)
 {  
   XSPI_RegularCmdTypeDef Commands = { 0 };
   uint32_t RawAddr = 0;
-
+  
+  printf("QSPI EraseBlock\n");
+  printf("{ \n");
   if (BlockAddr >= BLOCK_COUNT) {
     return W25Q_PARAM_ERR;
   }
@@ -241,6 +259,7 @@ W25Q_STATE W25Q64JV_EraseBlock(uint32_t BlockAddr)
   while(W25Q64JV_IsBusy() == W25Q_BUSY){
   }
 
+  printf("} /*EraseBlock*/\n");
   return W25Q_OK;
 }
 
@@ -265,6 +284,8 @@ W25Q_STATE W25Q64JV_ProgramRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr)
   uint32_t CurrentAddr = 0;
   uint32_t CurrentSize = 0;
 
+  printf("QSPI Program\n");
+  printf("{ \n");
   if (len > 256 || len == 0) {
     return W25Q_PARAM_ERR;
   }
@@ -274,7 +295,7 @@ W25Q_STATE W25Q64JV_ProgramRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr)
 
   /* Check if the size of the data is less than the remaining place in the page */
   if (CurrentSize > len){
-      CurrentSize = len;
+    CurrentSize = len;
   }
 
   /* Initialize the address variables */
@@ -320,6 +341,7 @@ W25Q_STATE W25Q64JV_ProgramRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr)
     
   }while(CurrentAddr < EndAddr);
   
+  printf("} /*Program*/\n");
   return W25Q_OK;
 }
 
@@ -348,7 +370,7 @@ static W25Q_STATE W25Q64JV_ReadRaw(uint8_t* pData, uint16_t len, uint32_t RawAdd
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
   if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){
-      return W25Q_SPI_ERR;
+    return W25Q_SPI_ERR;
   }
 
   if(HAL_XSPI_Receive(&hospi1, pData, MAX_TIMEOUT_VALUE) != HAL_OK){  
@@ -358,10 +380,14 @@ static W25Q_STATE W25Q64JV_ReadRaw(uint8_t* pData, uint16_t len, uint32_t RawAdd
   return W25Q_OK;
 }
 #endif
+
 W25Q_STATE W25Q64JV_ResetMemory(void)
 {
   XSPI_RegularCmdTypeDef Commands = {0};  
-  printf("Reset Memory\n");
+  
+  printf("QSPI ResetMemory\n");
+  printf("{ \n");
+  
   Commands.OperationType = HAL_XSPI_OPTYPE_COMMON_CFG;
   Commands.InstructionMode = HAL_XSPI_INSTRUCTION_1_LINE;
   Commands.Instruction = W25Q_ENABLE_RST;
@@ -381,21 +407,21 @@ W25Q_STATE W25Q64JV_ResetMemory(void)
     return W25Q_SPI_ERR;
   }
   
-  #if 1
   while (W25Q64JV_IsBusy() == W25Q_BUSY) {
   }
-  #endif
 
+  printf("} /*ResetMemory*/\n");
   return W25Q_OK;
 }
 
 W25Q_STATE W25Q64JV_QaudModeEnable(void)
 { 
-  #if 1
   XSPI_RegularCmdTypeDef Commands = {0};    
   uint8_t RegValue = 0;
 
-  printf("QaudMode Enable\n");
+  printf("QSPI QaudMode\n");
+  printf("{ \n");
+  
   Commands.OperationType = HAL_XSPI_OPTYPE_COMMON_CFG;
   Commands.InstructionMode = HAL_XSPI_INSTRUCTION_1_LINE;
   Commands.Instruction = W25Q_WRITE_SR2;
@@ -438,30 +464,9 @@ W25Q_STATE W25Q64JV_QaudModeEnable(void)
   }
   
   OSPI_AutoPollingMemReady();  
-
-  return W25Q_OK;
-  #else
-   uint8_t RegValue = 0;
-
-  if(W25Q64JV_ReadStatusReg(&RegValue, 2) != W25Q_OK){  
-    return W25Q_SPI_ERR;
-  }
-
-  RegValue |= 0x2;
-  if(W25Q64JV_WriteStatusReg(RegValue, 2) != W25Q_OK){  
-    return W25Q_SPI_ERR;
-  }
-
-  /* Verification */
-  if ((RegValue & W25Q_WEL_MASK) != W25Q_WEL_MASK) {
-    return W25Q_SPI_ERR;
-  }
-
-  while (W25Q64JV_IsBusy() == W25Q_BUSY) {
-  }
   
-    return W25Q_OK; 
-  #endif
+  printf("} /*QaudMode*/\n");
+  return W25Q_OK;
 }
 
 static W25Q_STATE W25Q64JV_WriteEnable(uint8_t enable)
@@ -469,6 +474,8 @@ static W25Q_STATE W25Q64JV_WriteEnable(uint8_t enable)
   XSPI_RegularCmdTypeDef Commands = {0};  
   XSPI_AutoPollingTypeDef sConfig = {0};
   
+  printf("QSPI WriteEnable\n");
+  printf("{ \n");
   Commands.OperationType = HAL_XSPI_OPTYPE_COMMON_CFG;
   Commands.InstructionMode = HAL_XSPI_INSTRUCTION_1_LINE;
   Commands.Instruction = enable ? W25Q_WRITE_ENABLE : W25Q_WRITE_DISABLE;
@@ -507,6 +514,7 @@ static W25Q_STATE W25Q64JV_WriteEnable(uint8_t enable)
     while(1);
   }
   
+  printf("} /*WriteEnable*/\n");
   return W25Q_OK;
 }
 
@@ -608,16 +616,12 @@ static W25Q_STATE W25Q64JV_IsBusy(void)
   return BusyReg ? W25Q_BUSY : W25Q_OK;
 }
 
-
-
 #if 0
 static uint32_t PageToAddr(uint32_t nPage, uint8_t PageShift)
 {
   return nPage * MEM_PAGE_SIZE + PageShift;
 }
 #endif
-
-
 
 void DoTestFunctionInit(void)
 {
@@ -636,11 +640,11 @@ void DoTestFunctionInit(void)
 }
 
 /**
-* @brief UART MSP Initialization
-* This function configures the hardware resources used in this example
-* @param huart: UART handle pointer
-* @retval None
-*/
+ * @brief UART MSP Initialization
+ * This function configures the hardware resources used in this example
+ * @param huart: UART handle pointer
+ * @retval None
+ */
 void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};    
@@ -669,60 +673,61 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 }
 
 /**
-* @brief XSPI MSP Initialization
-* This function configures the hardware resources used in this example
-* @param hxspi: XSPI handle pointer
-* @retval None
-*/
+ * @brief XSPI MSP Initialization
+ * This function configures the hardware resources used in this example
+ * @param hxspi: XSPI handle pointer
+ * @retval None
+ */
 void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
   
-    /** Initializes the peripherals clock
-     */
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_OSPI;
-    PeriphClkInitStruct.OspiClockSelection = RCC_OSPICLKSOURCE_HCLK;
-    HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
+  /** Initializes the peripherals clock
+   */
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_OSPI;
+  PeriphClkInitStruct.OspiClockSelection = RCC_OSPICLKSOURCE_HCLK;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
     
-    /* Peripheral clock enable */
-    __HAL_RCC_OSPI1_CLK_ENABLE();
+  /* Peripheral clock enable */
+  __HAL_RCC_OSPI1_CLK_ENABLE();
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-    /**OCTOSPI1 GPIO Configuration
-    PA6     ------> OCTOSPI1_IO3
-    PA7     ------> OCTOSPI1_IO2
-    PB0     ------> OCTOSPI1_IO1
-    PB1     ------> OCTOSPI1_IO0
-    PB2     ------> OCTOSPI1_CLK
-    PB10     ------> OCTOSPI1_NCS
-    */
-    GPIO_InitStruct.Pin = GPIO_PIN_6;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF6_OCTOSPI1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  /**OCTOSPI1 GPIO Configuration
+     PA6     ------> OCTOSPI1_IO3
+     PA7     ------> OCTOSPI1_IO2
+     PB0     ------> OCTOSPI1_IO1
+     PB1     ------> OCTOSPI1_IO0
+     PB2     ------> OCTOSPI1_CLK
+     PB10     ------> OCTOSPI1_NCS
+  */
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF6_OCTOSPI1;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_7;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF6_OCTOSPI1;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF6_OCTOSPI1;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_10;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 }
+
