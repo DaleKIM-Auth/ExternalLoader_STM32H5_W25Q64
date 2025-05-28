@@ -1,13 +1,15 @@
 #include "w25q64jv_driver.h"
 
 XSPI_HandleTypeDef hospi1;
-UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart3;
 
 //static W25Q_STATE W25Q64JV_ReadRaw(uint8_t* pData, uint16_t len, uint32_t RawAddr);
 static W25Q_STATE W25Q64JV_WriteEnable(uint8_t enable);
 static W25Q_STATE W25Q64JV_ReadStatusReg(uint8_t* RegValue, uint8_t StatusReg);
 static W25Q_STATE W25Q64JV_WriteStatusReg(uint8_t RegValue, uint8_t StatusReg);
 static W25Q_STATE W25Q64JV_IsBusy(void);
+static void W25Q64JV_Delay(uint32_t ms);
+
 //static uint32_t PageToAddr(uint32_t nPage, uint8_t PageShift);
 
 #if defined(__ICCARM__)
@@ -43,7 +45,7 @@ size_t __write(int file, unsigned char const *ptr, size_t len)
  */
 PUTCHAR_PROTOTYPE
 {  
-    HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+    HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, 0xFFFF);
     return ch;
 }
 
@@ -59,7 +61,7 @@ void QSPI_Init(void)
       
   /* QSPI parametqer configuration */
   hospi1.Instance = OCTOSPI1;
-  hospi1.Init.FifoThresholdByte = 1;
+  hospi1.Init.FifoThresholdByte = 4;
   hospi1.Init.MemoryMode = HAL_XSPI_SINGLE_MEM;
   hospi1.Init.MemoryType = HAL_XSPI_MEMTYPE_MICRON;
   hospi1.Init.MemorySize = HAL_XSPI_SIZE_32MB;
@@ -67,7 +69,7 @@ void QSPI_Init(void)
   hospi1.Init.FreeRunningClock = HAL_XSPI_FREERUNCLK_DISABLE;
   hospi1.Init.ClockMode = HAL_XSPI_CLOCK_MODE_0;
   hospi1.Init.WrapSize = HAL_XSPI_WRAP_NOT_SUPPORTED;
-  hospi1.Init.ClockPrescaler = 6;
+  hospi1.Init.ClockPrescaler = 4;
   hospi1.Init.SampleShifting = HAL_XSPI_SAMPLE_SHIFT_NONE;
   hospi1.Init.DelayHoldQuarterCycle = HAL_XSPI_DHQC_DISABLE;
   hospi1.Init.ChipSelectBoundary = HAL_XSPI_BONDARYOF_NONE;
@@ -75,9 +77,7 @@ void QSPI_Init(void)
   hospi1.Init.Refresh = 0;
   
   HAL_XSPI_Init(&hospi1);
-  
-  W25Q64JV_ResetMemory();
-  OSPI_AutoPollingMemReady();
+
   printf("} /*Init*/\n");
 }
 
@@ -89,10 +89,15 @@ void QSPI_DeInit(void)
   if(hospi1.State != HAL_XSPI_STATE_RESET){
     HAL_XSPI_DeInit(&hospi1);
   }    
-    
+#if 0 // nucleo
+    HAL_GPIO_DeInit(GPIOE, GPIO_PIN_2);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_2);
+    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13);
+    HAL_GPIO_DeInit(GPIOG, GPIO_PIN_6);
+#else
   HAL_GPIO_DeInit(GPIOA, GPIO_PIN_6|GPIO_PIN_7);
   HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10);
-    
+#endif
   __HAL_RCC_OSPI1_FORCE_RESET();
   __HAL_RCC_OSPI1_RELEASE_RESET();
   __HAL_RCC_OSPI1_CLK_DISABLE();
@@ -252,7 +257,7 @@ W25Q_STATE W25Q64JV_EraseBlock(uint32_t BlockAddr)
   Commands.DataLength = 0U;
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
-  if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){
+  if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){
     return W25Q_SPI_ERR;
   }
 
@@ -272,7 +277,6 @@ W25Q_STATE W25Q64JV_Program(uint8_t* pData, uint32_t len, uint32_t RawAddr)
 
   printf("QSPI Program\n");
   printf("{ \n");
-
   
   printf("CurrentSize %d\n", CurrentSize);
   /* Calculation of the size between the write address and the end of the page */
@@ -287,11 +291,11 @@ W25Q_STATE W25Q64JV_Program(uint8_t* pData, uint32_t len, uint32_t RawAddr)
   CurrentAddr = RawAddr;
   EndAddr = RawAddr + len;
   
-  printf("CurrentAddr 0x%x, EndAddr 0x%x\n", RawAddr, EndAddr);
+  printf("CurrentAddr 0x%x, EndAddr 0x%x\n", CurrentAddr, EndAddr);
   
   Commands.OperationType = HAL_XSPI_OPTYPE_COMMON_CFG;
   Commands.InstructionMode = HAL_XSPI_INSTRUCTION_1_LINE;
-  Commands.Instruction = W25Q_PAGE_PROGRAM_QUAD_INP_4B;
+  Commands.Instruction = W25Q_PAGE_PROGRAM_QUAD_INP;
   Commands.AddressMode = HAL_XSPI_ADDRESS_1_LINE;
   Commands.AddressWidth = HAL_XSPI_ADDRESS_24_BITS;
   Commands.AlternateBytesMode = HAL_XSPI_ALT_BYTES_NONE;
@@ -303,18 +307,15 @@ W25Q_STATE W25Q64JV_Program(uint8_t* pData, uint32_t len, uint32_t RawAddr)
     Commands.Address = CurrentAddr;
     Commands.DataLength = CurrentSize;
 
-    while (W25Q64JV_IsBusy() == W25Q_BUSY) {
-    }
-
     if(W25Q64JV_WriteEnable(1) != W25Q_OK){
       return W25Q_SPI_ERR;
     }
 
-    if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){
+    if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){
       return W25Q_SPI_ERR;
     }
 
-    if(HAL_XSPI_Transmit(&hospi1, pData, MAX_TIMEOUT_VALUE) != HAL_OK){
+    if(HAL_XSPI_Transmit(&hospi1, pData, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){
       return W25Q_SPI_ERR;
     }
 
@@ -388,18 +389,20 @@ W25Q_STATE W25Q64JV_ResetMemory(void)
   Commands.DataLength = 0U;
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
-  if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){  
+  if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){  
     return W25Q_SPI_ERR;
   }
   
   Commands.Instruction = W25Q_RESET;
-  if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){  
+  if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){  
     return W25Q_SPI_ERR;
   }
   
   while (W25Q64JV_IsBusy() == W25Q_BUSY) {
   }
 
+  W25Q64JV_Delay(12);
+  
   printf("} /*ResetMemory*/\n");
   return W25Q_OK;
 }
@@ -422,12 +425,12 @@ W25Q_STATE W25Q64JV_QaudModeEnable(void)
   Commands.DataLength = 1U;
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
-  if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){     
+  if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){     
     return W25Q_SPI_ERR;
   }
 
   RegValue = 0x2;  
-  if(HAL_XSPI_Transmit(&hospi1, &RegValue, MAX_TIMEOUT_VALUE) != HAL_OK){  
+  if(HAL_XSPI_Transmit(&hospi1, &RegValue, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){  
     return W25Q_SPI_ERR;
   }
 
@@ -476,7 +479,7 @@ static W25Q_STATE W25Q64JV_WriteEnable(uint8_t enable)
   Commands.DataLength = 0U;
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
-  if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){     
+  if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){     
     return W25Q_SPI_ERR;
   }
   
@@ -489,7 +492,7 @@ static W25Q_STATE W25Q64JV_WriteEnable(uint8_t enable)
   Commands.DataLength = 1U;
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
-  if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){  
+  if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){  
     return W25Q_SPI_ERR;
   }
 
@@ -536,11 +539,11 @@ static W25Q_STATE W25Q64JV_ReadStatusReg(uint8_t* RegValue, uint8_t StatusReg)
   Commands.DataLength = 1U;
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
-  if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){  
+  if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){  
     return W25Q_SPI_ERR;
   }
 
-  if(HAL_XSPI_Receive(&hospi1, RegValue, MAX_TIMEOUT_VALUE) != HAL_OK){  
+  if(HAL_XSPI_Receive(&hospi1, RegValue, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){  
     return W25Q_SPI_ERR;
   }
 
@@ -581,11 +584,11 @@ static W25Q_STATE W25Q64JV_WriteStatusReg(uint8_t RegValue, uint8_t StatusReg)
   Commands.DataLength = 1U;
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
-  if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){  
+  if(HAL_XSPI_Command(&hospi1, &Commands, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){  
     return W25Q_SPI_ERR;
   }
 
-  if(HAL_XSPI_Transmit(&hospi1, &RegValue, MAX_TIMEOUT_VALUE) != HAL_OK){  
+  if(HAL_XSPI_Transmit(&hospi1, &RegValue, HAL_XSPI_TIMEOUT_DEFAULT_VALUE) != HAL_OK){  
     return W25Q_SPI_ERR;
   }
 
@@ -606,6 +609,16 @@ static W25Q_STATE W25Q64JV_IsBusy(void)
   return BusyReg ? W25Q_BUSY : W25Q_OK;
 }
 
+static void W25Q64JV_Delay(uint32_t ms)
+{
+  uint32_t cycles_per_ms = SystemCoreClock / 2000; 
+  uint32_t start = DWT->CYCCNT;
+  uint32_t delay_cycles = ms * cycles_per_ms;
+
+  while((DWT->CYCCNT - start) < delay_cycles){    
+  }
+}
+
 #if 0
 static uint32_t PageToAddr(uint32_t nPage, uint8_t PageShift)
 {
@@ -615,18 +628,18 @@ static uint32_t PageToAddr(uint32_t nPage, uint8_t PageShift)
 
 void DoTestFunctionInit(void)
 {
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 9600;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.Init.ClockPrescaler = UART_PRESCALER_DIV4;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;  
-  HAL_UART_Init(&huart1);    
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart3.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  HAL_UART_Init(&huart3);
 }
 
 /**
@@ -640,28 +653,43 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
   GPIO_InitTypeDef GPIO_InitStruct = {0};    
   RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct = {0};
   
-  /** Initializes the peripherals clock
-   */  
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART1;
-  PeriphClkInitStruct.Usart1ClockSelection = RCC_USART1CLKSOURCE_HSI;  
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3;
+  PeriphClkInitStruct.Usart3ClockSelection = RCC_USART3CLKSOURCE_HSI;
   HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
   
   /* Peripheral clock enable */
-  __HAL_RCC_USART1_CLK_ENABLE();  
-  __HAL_RCC_GPIOA_CLK_ENABLE();
- 
-  /**USART1 GPIO Configuration
-     PA9     ------> USART1_TX
-     PA10     ------> USART1_RX
+  __HAL_RCC_USART3_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+
+  /**USART3 GPIO Configuration
+  PD8     ------> USART3_TX
+  PD9     ------> USART3_RX
   */
-  GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);  
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct); 
 }
 
+/**
+  * @brief UART MSP De-Initialization
+  * This function freeze the hardware resources used in this example
+  * @param huart: UART handle pointer
+  * @retval None
+  */
+void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+{
+    /* Peripheral clock disable */
+    __HAL_RCC_USART3_CLK_DISABLE();
+
+    /**USART3 GPIO Configuration
+    PD8     ------> USART3_TX
+    PD9     ------> USART3_RX
+    */
+    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_8|GPIO_PIN_9);
+}
 /**
  * @brief XSPI MSP Initialization
  * This function configures the hardware resources used in this example
@@ -678,10 +706,50 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_OSPI;
   PeriphClkInitStruct.OspiClockSelection = RCC_OSPICLKSOURCE_HCLK;
   HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
-    
+  
   /* Peripheral clock enable */
   __HAL_RCC_OSPI1_CLK_ENABLE();
+#if 0 // for nucleo
+    __HAL_RCC_GPIOE_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    __HAL_RCC_GPIOG_CLK_ENABLE();
+    /**OCTOSPI1 GPIO Configuration
+    PE2     ------> OCTOSPI1_IO2
+    PB2     ------> OCTOSPI1_CLK
+    PD11     ------> OCTOSPI1_IO0
+    PD12     ------> OCTOSPI1_IO1
+    PD13     ------> OCTOSPI1_IO3
+    PG6     ------> OCTOSPI1_NCS
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_6;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
+    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+#else
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   /**OCTOSPI1 GPIO Configuration
@@ -719,5 +787,6 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  #endif
 }
 

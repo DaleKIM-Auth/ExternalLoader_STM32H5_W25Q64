@@ -20,21 +20,33 @@
 */
 
 #include "Loader_Src.h"
-#include <string.h>
 
 #pragma section=".bss"
 
+static void MX_ICACHE_Init(void);
 /* Private variables ---------------------------------------------------------*/
 
 /* Private functions ---------------------------------------------------------*/
 KeepInCompilation HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 { 
+  (void)HAL_InitTick;
+
+  /* DWT initialization */
+  if (!(CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk)){
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  }
+  DWT->CYCCNT = 0;
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+  
   return HAL_OK;
 }
 
 uint32_t HAL_GetTick(void)
 {
-  return 1;
+  uint32_t cycles_per_ms = SystemCoreClock / 2000;  
+  uwTick = (DWT->CYCCNT) / cycles_per_ms;
+  
+  return uwTick;
 }
 /** @defgroup STM32F469I_Discovery_QSPI_Private_Functions Private Functions
  * @{
@@ -59,11 +71,12 @@ int Init()
   memset(startadd, 0, size);
 
   /* init system */
-  SystemInit(); 
+  SystemInit();
   HAL_Init();  
-
+  
   /* Configure the system clock  */
-  SystemClock_Config();  
+  SystemClock_Config();     
+  MX_ICACHE_Init();
 
   /* UART init */
   DoTestFunctionInit();
@@ -77,6 +90,10 @@ int Init()
   
   /* QaudSPI Init */
   QSPI_Init();
+    
+  W25Q64JV_ResetMemory();
+  
+  OSPI_AutoPollingMemReady();
 
   W25Q64JV_QaudModeEnable();
   
@@ -105,8 +122,6 @@ KeepInCompilation int Write (uint32_t Address, uint32_t Size, uint8_t* buffer)
 {
   __disable_irq();
 
-  Address = Address & 0x0FFFFFFF;
-
   printf("/*********\n");
   printf("Write\n");
   printf("**********/\n");
@@ -114,6 +129,10 @@ KeepInCompilation int Write (uint32_t Address, uint32_t Size, uint8_t* buffer)
   QSPI_DeInit();
 
   QSPI_Init();
+
+  OSPI_AutoPollingMemReady();
+
+  Address = Address & 0x0FFFFFFF;
 
   /* Writes an amount of data to the QSPI memory */
   if(W25Q64JV_Program(buffer, Size, Address) != W25Q_OK){
@@ -322,38 +341,39 @@ KeepInCompilation uint64_t Verify (uint32_t MemoryAddr, uint32_t RAMBufferAddr, 
 
 int SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0, };
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0, };
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
-   */
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
+  */
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
 
   /** Initializes the RCC Oscillators according to the specified parameters
-   * in the RCC_OscInitTypeDef structure.
-   */
+  * in the RCC_OscInitTypeDef structure.
+  */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV2;
+  RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLL1_SOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 125;
+  RCC_OscInitStruct.PLL.PLLM = 32;
+  RCC_OscInitStruct.PLL.PLLN = 200;
   RCC_OscInitStruct.PLL.PLLP = 2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
-  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1_VCIRANGE_2;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1_VCIRANGE_1;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1_VCORANGE_WIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
   /** Initializes the CPU, AHB and APB buses clocks
-   */
+  */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-    |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2|RCC_CLOCKTYPE_PCLK3;
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
+                              |RCC_CLOCKTYPE_PCLK3;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
@@ -362,8 +382,31 @@ int SystemClock_Config(void)
 
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 
+  /** Configure the programming delay
+  */
+  __HAL_FLASH_SET_PROGRAM_DELAY(FLASH_PROGRAMMING_DELAY_2);
+
+  SystemCoreClock = 200000000U;
+
   return 1;
 }
 
+/**
+  * @brief ICACHE Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ICACHE_Init(void)
+{
+  /** Enable instruction cache (default 2-ways set associative cache)
+  */
+  HAL_ICACHE_Enable();
+}
+
+void HAL_MspInit(void)
+{
+  /* Disable the internal Pull-Up in Dead Battery pins of UCPD peripheral */
+  HAL_PWREx_DisableUCPDDeadBattery();
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

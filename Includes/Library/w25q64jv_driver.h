@@ -2,7 +2,10 @@
 #define __W25Q64JV_DRIVER__
 
 #include "stm32h5xx_hal.h"
-
+#include "stm32h5xx_ll_rcc.h"
+#include "stm32h5xx_ll_pwr.h"
+#include "stm32h5xx_ll_system.h"
+#include "stm32h5xx_ll_utils.h"
 /**
  * @defgroup W25Q_Commands W25Q Chip's Commands
  * @brief W25Q Chip commands from datasheet
@@ -70,27 +73,28 @@
  * @defgroup W25Q_Param Status Register Mask - 1
  * @brief User's chip parameters
  */
-#define W25Q_BUSY_MASK    0x1
-#define W25Q_WEL_MASK     0x2
-#define W25Q_BP0_MASK     0x3
-#define W25Q_BP1_MASK     0x4
-#define W25Q_BP2_MASK     0x5
-#define W25Q_TB_MASK      0x6
-#define W25Q_SEC_MASK     0x7
-#define W25Q_SRP_MASK     0x8
+#define W25Q_SR_MASK      0x01U
+#define W25Q_BUSY_MASK    (W25Q_SR_MASK)
+#define W25Q_WEL_MASK     (W25Q_SR_MASK << 1)
+#define W25Q_BP0_MASK     (W25Q_SR_MASK << 2)
+#define W25Q_BP1_MASK     (W25Q_SR_MASK << 3)
+#define W25Q_BP2_MASK     (W25Q_SR_MASK << 4)
+#define W25Q_TB_MASK      (W25Q_SR_MASK << 5)
+#define W25Q_SEC_MASK     (W25Q_SR_MASK << 6)
+#define W25Q_SRP_MASK     (W25Q_SR_MASK << 7)
 
 /**
  * @defgroup W25Q_Param W25Q Chip's Parameters
  * @brief User's chip parameters
  */
 
-#define MEM_FLASH_SIZE     64U 	               // 64 MB-bit
+#define MEM_FLASH_SIZE     32U 	               // 32 MB-bit
 #define MEM_BLOCK_SIZE     64U                 // 64 KB: 256 pages
 #define MEM_SECTOR_SIZE    4U                  // 4 KB : 16 pages
 #define MEM_PAGE_SIZE      256U                // 256 byte : 1 page
-#define BLOCK_COUNT        128U                // 128 blocks
-#define SECTOR_COUNT       (BLOCK_COUNT * 16)  // 8192 sectors
-#define PAGE_COUNT         (SECTOR_COUNT * 16) // 131'072 pages
+#define BLOCK_COUNT        64U                 // 128 blocks
+#define SECTOR_COUNT       (BLOCK_COUNT * 16)  // 1024 sectors
+#define PAGE_COUNT         (SECTOR_COUNT * 16) // 16384 pages
 
 #define MAX_TIMEOUT_VALUE (0xFFFFFF)
 

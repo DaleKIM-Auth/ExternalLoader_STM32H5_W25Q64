@@ -27,9 +27,8 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h5xx_hal_conf.h"
-#include <stdio.h>
 #include <string.h>
-
+#include <stdio.h>
 /** @addtogroup STM32H5xx_HAL_Driver
   * @{
   */
@@ -204,8 +203,8 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 /** @defgroup SBS_EPOCH_Selection  EPOCH Selection
   * @{
   */
-#define SBS_EPOCH_SEL_SECURE             0x0UL                         /*!< EPOCH secure selected */
-#define SBS_EPOCH_SEL_NONSECURE          SBS_EPOCHSELCR_EPOCH_SEL_0    /*!< EPOCH non secure selected */
+#define SBS_EPOCH_SEL_NONSECURE          0x0UL                         /*!< EPOCH non secure selected */
+#define SBS_EPOCH_SEL_SECURE             SBS_EPOCHSELCR_EPOCH_SEL_0    /*!< EPOCH secure selected */
 #define SBS_EPOCH_SEL_PUFCHECK           SBS_EPOCHSELCR_EPOCH_SEL_1    /*!< EPOCH all zeros for PUF integrity check */
 
 #define IS_SBS_EPOCH_SELECTION(SELECT) (((SELECT) == SBS_EPOCH_SEL_SECURE)    || \
@@ -233,9 +232,9 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
   * @{
   */
 #define SBS_HDPL_VALUE_0                     0x000000B4U   /*!< Hide protection level 0 */
-#define SBS_HDPL_VALUE_1                     0x00000051U   /*!< Hide protection level 0 */
-#define SBS_HDPL_VALUE_2                     0x0000008AU   /*!< Hide protection level 0 */
-#define SBS_HDPL_VALUE_3                     0x0000006FU   /*!< Hide protection level 0 */
+#define SBS_HDPL_VALUE_1                     0x00000051U   /*!< Hide protection level 1 */
+#define SBS_HDPL_VALUE_2                     0x0000008AU   /*!< Hide protection level 2 */
+#define SBS_HDPL_VALUE_3                     0x0000006FU   /*!< Hide protection level 3 */
 /**
   * @}
   */
@@ -280,8 +279,7 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define SBS_CLK                     SBS_SECCFGR_SBSSEC      /*!< SBS clock control */
 #define SBS_CLASSB                  SBS_SECCFGR_CLASSBSEC   /*!< Class B */
 #define SBS_FPU                     SBS_SECCFGR_FPUSEC      /*!< FPU */
-#define SBS_SMPS                    SBS_SECCFGR_SDCE_SEC_EN /*!< SMPS */
-#define SBS_ALL                     (SBS_CLK | SBS_CLASSB | SBS_FPU | SBS_SMPS) /*!< All */
+#define SBS_ALL                     (SBS_CLK | SBS_CLASSB | SBS_FPU) /*!< All */
 /**
   * @}
   */
@@ -323,10 +321,10 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define __HAL_DBGMCU_UNFREEZE_TIM4()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM4_STOP)
 #endif /* DBGMCU_APB1FZR1_DBG_TIM4_STOP */
 
-#if defined(DBGMCU_APB1FZR1_DBG_TIM4_STOP)
+#if defined(DBGMCU_APB1FZR1_DBG_TIM5_STOP)
 #define __HAL_DBGMCU_FREEZE_TIM5()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM5_STOP)
 #define __HAL_DBGMCU_UNFREEZE_TIM5()         CLEAR_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM5_STOP)
-#endif /* DBGMCU_APB1FZR1_DBG_TIM4_STOP */
+#endif /* DBGMCU_APB1FZR1_DBG_TIM5_STOP */
 
 #if defined(DBGMCU_APB1FZR1_DBG_TIM6_STOP)
 #define __HAL_DBGMCU_FREEZE_TIM6()           SET_BIT(DBGMCU->APB1FZR1, DBGMCU_APB1FZR1_DBG_TIM6_STOP)
@@ -669,7 +667,6 @@ extern HAL_TickFreqTypeDef      uwTickFreq;
 #define IS_SBS_ITEMS_ATTRIBUTES(__ITEM__) ((((__ITEM__) & SBS_CLK)    == SBS_CLK)    || \
                                            (((__ITEM__) & SBS_CLASSB) == SBS_CLASSB) || \
                                            (((__ITEM__) & SBS_FPU)    == SBS_FPU)    || \
-                                           (((__ITEM__) & SBS_SMPS)   == SBS_SMPS)  || \
                                            (((__ITEM__) & ~(SBS_ALL)) == 0U))
 
 #define IS_SBS_ATTRIBUTES(__ATTRIBUTES__) (((__ATTRIBUTES__) == SBS_SEC)  ||\
@@ -874,7 +871,7 @@ HAL_StatusTypeDef HAL_SBS_GetLock(uint32_t *pItem);
 void              HAL_SBS_ConfigAttributes(uint32_t Item, uint32_t Attributes);
 HAL_StatusTypeDef HAL_SBS_GetConfigAttributes(uint32_t Item, uint32_t *pAttributes);
 #endif /* __ARM_FEATURE_CMSE */
-void GPIO_Debug(uint32_t counter);
+
 /**
   * @}
   */

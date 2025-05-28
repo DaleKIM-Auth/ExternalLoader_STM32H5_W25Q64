@@ -27,14 +27,14 @@ __root struct StorageInfo const StorageInfo  =  {
 #else
 struct StorageInfo const StorageInfo  =  {
 #endif
-   "W25Q64JV_STM32H562_ExternalLoader",                                         // Device Name 
-   NOR_FLASH,                   					        // Device Type
-   0x90000000,                						        // Device Start Address
-   0x800000,                                                                    // Device Size in 8 MBytes
-   0x100,                    						        // Programming Page Size 256 Bytes
-   0xFF,                       						        // Initial Content of Erased Memory
+   "W25Q32JV_STM32H562_ExternalLoader",                     // Device Name 
+   NOR_FLASH,                                               // Device Type
+   0x90000000,                                              // Device Start Address
+   0x400000,                                                // Device Size in 4 MBytes
+   0x100,                                                   // Programming Page Size 256 Bytes
+   0xFF,                                                    // Initial Content of Erased Memory
 // Specify Size and Address of Sectors (view example below)
-   0x00000100, 0x00010000,     				 		        // Sector Num : 256 ,Sector Size: 64 KBytes
+   0x00000040, 0x00010000,                                  // block Num : 256 ,block Size: 64 KBytes
    0x00000000, 0x00000000,      
 }; 
 
