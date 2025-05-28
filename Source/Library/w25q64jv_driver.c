@@ -62,7 +62,7 @@ void QSPI_Init(void)
   hospi1.Init.FifoThresholdByte = 1;
   hospi1.Init.MemoryMode = HAL_XSPI_SINGLE_MEM;
   hospi1.Init.MemoryType = HAL_XSPI_MEMTYPE_MICRON;
-  hospi1.Init.MemorySize = HAL_XSPI_SIZE_8MB;
+  hospi1.Init.MemorySize = HAL_XSPI_SIZE_32MB;
   hospi1.Init.ChipSelectHighTimeCycle = 1;
   hospi1.Init.FreeRunningClock = HAL_XSPI_FREERUNCLK_DISABLE;
   hospi1.Init.ClockMode = HAL_XSPI_CLOCK_MODE_0;
@@ -263,7 +263,7 @@ W25Q_STATE W25Q64JV_EraseBlock(uint32_t BlockAddr)
   return W25Q_OK;
 }
 
-W25Q_STATE W25Q64JV_Program(uint8_t* pData, uint16_t len, uint32_t RawAddr)
+W25Q_STATE W25Q64JV_Program(uint8_t* pData, uint32_t len, uint32_t RawAddr)
 {
   XSPI_RegularCmdTypeDef Commands = { 0 };
   uint32_t EndAddr = 0;

@@ -1,12 +1,12 @@
-"--endian=little" 
+--endian=little
 
-"--cpu=Cortex-M33.no_se" 
+--cpu=Cortex-M33.no_se
 
-"--fpu=None" 
+--fpu=None
 
-"--semihosting" 
+--semihosting
 
-"--multicore_nr_of_cores=1" 
+--multicore_nr_of_cores=1
 
 
 
