@@ -2,7 +2,7 @@
 
  "C:\Program Files\IAR Systems\ewarm-9.60.3\arm\bin\armSIM2.dll"
 
- C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q64JV_STM32H562.stldr
+ C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q64JV_STM32H562.stldr
 
  "--plugin=C:\Program Files\IAR Systems\ewarm-9.60.3\arm\bin\armLibSupportUniversal.dll"
 

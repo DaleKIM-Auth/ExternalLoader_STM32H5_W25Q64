@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files\IAR Systems\ewarm-9.60.3\common\bin\cspybat" -f "C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\settings\W25Q64JV_STM32H562.W25Q64JV_STM32H562.general.xcl" --backend -f "C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\settings\W25Q64JV_STM32H562.W25Q64JV_STM32H562.driver.xcl" 
+"C:\Program Files\IAR Systems\ewarm-9.60.3\common\bin\cspybat" -f "C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\settings\W25Q64JV_STM32H562.W25Q64JV_STM32H562.general.xcl" --backend -f "C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\settings\W25Q64JV_STM32H562.W25Q64JV_STM32H562.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files\IAR Systems\ewarm-9.60.3\common\bin\cspybat" -f "C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\settings\W25Q64JV_STM32H562.W25Q64JV_STM32H562.general.xcl" "--debug_file=%~1" --backend -f "C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\settings\W25Q64JV_STM32H562.W25Q64JV_STM32H562.driver.xcl" 
+"C:\Program Files\IAR Systems\ewarm-9.60.3\common\bin\cspybat" -f "C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\settings\W25Q64JV_STM32H562.W25Q64JV_STM32H562.general.xcl" "--debug_file=%~1" --backend -f "C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\settings\W25Q64JV_STM32H562.W25Q64JV_STM32H562.driver.xcl" 
 
 @echo off 
 :end

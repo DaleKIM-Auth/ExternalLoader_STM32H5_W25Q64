@@ -1,21 +1,21 @@
-"C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Source\Library\stm32h5xx_hal_cortex.c"
+"C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Source\Library\stm32h5xx_hal_cortex.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -funsigned-char
 -MD
 -MF
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo\Library_12270351780628986503.dir\stm32h5xx_hal_cortex.pbi.dep
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo\Library_12270351780628986503.dir\stm32h5xx_hal_cortex.pbi.dep
 -o
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo\Library_12270351780628986503.dir\stm32h5xx_hal_cortex.pbi
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo\Library_12270351780628986503.dir\stm32h5xx_hal_cortex.pbi
 -I
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Source\Library
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Source\Library
 -I
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\CMSIS
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\CMSIS
 -I
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library
 -I
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Loader
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Loader
 -I
 C:\Program Files\IAR Systems\ewarm-9.60.3\arm\inc\c\aarch32
 -I
@@ -23,11 +23,11 @@ C:\Program Files\IAR Systems\ewarm-9.60.3\arm\inc
 -I
 C:\Program Files\IAR Systems\ewarm-9.60.3\arm\inc\c
 -I
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Includes\CMSIS
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Includes\CMSIS
 -I
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Includes\Library
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Includes\Library
 -I
-C:\WorkSpace\aa\ExternalLoader_STM32H5_W25Q64\ExternalLoader_STM32H5_W25Q64\Includes\Loader
+C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Includes\Loader
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

@@ -23,7 +23,6 @@
 
 #pragma section=".bss"
 
-static void MX_ICACHE_Init(void);
 /* Private variables ---------------------------------------------------------*/
 
 /* Private functions ---------------------------------------------------------*/
@@ -76,7 +75,6 @@ int Init()
   
   /* Configure the system clock  */
   SystemClock_Config();     
-  MX_ICACHE_Init();
 
   /* UART init */
   DoTestFunctionInit();
@@ -196,7 +194,7 @@ KeepInCompilation int SectorErase (uint32_t EraseStartAddress ,uint32_t EraseEnd
   QSPI_Init();
 
   while(EraseEndAddress >= EraseStartAddress){
-    BlockAddr = EraseStartAddress;
+    BlockAddr = EraseStartAddress / (MEM_BLOCK_SIZE * 1024U);
 
     /* Erases the specified block of the QSPI memory */
     W25Q64JV_EraseBlock(BlockAddr);
@@ -389,18 +387,6 @@ int SystemClock_Config(void)
   SystemCoreClock = 200000000U;
 
   return 1;
-}
-
-/**
-  * @brief ICACHE Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_ICACHE_Init(void)
-{
-  /** Enable instruction cache (default 2-ways set associative cache)
-  */
-  HAL_ICACHE_Enable();
 }
 
 void HAL_MspInit(void)
