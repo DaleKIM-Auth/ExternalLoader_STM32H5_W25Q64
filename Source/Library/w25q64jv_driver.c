@@ -96,7 +96,7 @@ void QSPI_DeInit(void)
     HAL_GPIO_DeInit(GPIOG, GPIO_PIN_6);
 #else
   HAL_GPIO_DeInit(GPIOA, GPIO_PIN_6|GPIO_PIN_7);
-  HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10);
+  HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_6);
 #endif
   __HAL_RCC_OSPI1_FORCE_RESET();
   __HAL_RCC_OSPI1_RELEASE_RESET();
@@ -232,7 +232,7 @@ W25Q_STATE W25Q64JV_EraseBlock(uint32_t BlockAddr)
   
   printf("QSPI EraseBlock\n");
   printf("{ \n");
-  if (BlockAddr >= BLOCK_COUNT) {
+  if (BlockAddr > BLOCK_COUNT) {
     return W25Q_PARAM_ERR;
   }
 
@@ -379,6 +379,9 @@ W25Q_STATE W25Q64JV_ResetMemory(void)
   printf("QSPI ResetMemory\n");
   printf("{ \n");
   
+  while (W25Q64JV_IsBusy() == W25Q_BUSY) {
+  } 
+    
   Commands.OperationType = HAL_XSPI_OPTYPE_COMMON_CFG;
   Commands.InstructionMode = HAL_XSPI_INSTRUCTION_1_LINE;
   Commands.Instruction = W25Q_ENABLE_RST;
@@ -398,10 +401,10 @@ W25Q_STATE W25Q64JV_ResetMemory(void)
     return W25Q_SPI_ERR;
   }
   
+  W25Q64JV_Delay(1);
+  
   while (W25Q64JV_IsBusy() == W25Q_BUSY) {
-  }
-
-  W25Q64JV_Delay(12);
+  } 
   
   printf("} /*ResetMemory*/\n");
   return W25Q_OK;
@@ -709,7 +712,7 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
   
   /* Peripheral clock enable */
   __HAL_RCC_OSPI1_CLK_ENABLE();
-#if 0 // for nucleo
+#if 0// for nucleo
     __HAL_RCC_GPIOE_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -724,28 +727,28 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
     */
     GPIO_InitStruct.Pin = GPIO_PIN_2;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
     HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = GPIO_PIN_2;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
@@ -758,34 +761,41 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
      PB0     ------> OCTOSPI1_IO1
      PB1     ------> OCTOSPI1_IO0
      PB2     ------> OCTOSPI1_CLK
-     PB10     ------> OCTOSPI1_NCS
+     PB6     ------> OCTOSPI1_NCS
   */
   GPIO_InitStruct.Pin = GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF6_OCTOSPI1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF6_OCTOSPI1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_10;
+  GPIO_InitStruct.Pin = GPIO_PIN_2;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  
+  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   #endif
 }

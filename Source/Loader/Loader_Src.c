@@ -42,7 +42,7 @@ KeepInCompilation HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 
 uint32_t HAL_GetTick(void)
 {
-  uint32_t cycles_per_ms = SystemCoreClock / 2000;  
+  uint32_t cycles_per_ms = SystemCoreClock / 200000;  
   uwTick = (DWT->CYCCNT) / cycles_per_ms;
   
   return uwTick;
@@ -181,6 +181,7 @@ KeepInCompilation int SectorErase (uint32_t EraseStartAddress ,uint32_t EraseEnd
   __disable_irq();
 
   uint32_t BlockAddr = 0;
+  
   EraseStartAddress &= 0x0FFFFFFF;
   EraseEndAddress &= 0x0FFFFFFF;
   EraseStartAddress = EraseStartAddress - EraseStartAddress % 0x10000;
