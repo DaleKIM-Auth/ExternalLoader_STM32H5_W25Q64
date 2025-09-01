@@ -26,9 +26,8 @@
 __root struct StorageInfo const StorageInfo  =  {
 #else
 struct StorageInfo const StorageInfo  =  {
-#endif
-   "W25Q128JV_NUCLEO-H563ZI",                               // Device Name 
-  //"W25Q128JV_H562_CustomBoard",                               // Device Name
+#endif   
+  "W25Q128JV_STM32H562_Nucleo",                               // Device Name
    NOR_FLASH,                                               // Device Type
    0x90000000,                                              // Device Start Address
    0x1000000,                                               // Device Size in 32 MBytes

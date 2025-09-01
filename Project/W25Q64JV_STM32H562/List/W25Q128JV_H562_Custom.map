@@ -1,15 +1,15 @@
 ###############################################################################
 #
-# IAR ELF Linker V9.60.3.422/W64 for ARM                  01/Sep/2025  19:05:35
+# IAR ELF Linker V9.60.3.422/W64 for ARM                  01/Sep/2025  20:18:01
 # Copyright 2007-2024 IAR Systems AB.
 #
 #    Output file  =
-#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_H562_CustomBoard.stldr
+#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_H562_Custom.stldr
 #    Map file     =
-#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\List\W25Q128JV_H562_CustomBoard.map
+#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\List\W25Q128JV_H562_Custom.map
 #    Command line =
 #        -f
-#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_H562_CustomBoard.stldr.rsp
+#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_H562_Custom.stldr.rsp
 #        (C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Obj\Loader_5723430765115092510.dir\Dev_Inf.o
 #        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Obj\Loader_5723430765115092510.dir\Loader_Src.o
 #        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\stm32h5xx_hal.o
@@ -32,13 +32,13 @@
 #        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\system_stm32h5xx.o
 #        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Obj\Library_12270351780628986503.dir\w25q64jv_driver.o
 #        --no_out_extension -o
-#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_H562_CustomBoard.stldr
-#        --strip --map
-#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\List\W25Q128JV_H562_CustomBoard.map
+#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_H562_Custom.stldr
+#        --map
+#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\List\W25Q128JV_H562_Custom.map
 #        --config C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\Target.icf
 #        --semihosting --entry Init --vfe --text_out locale
 #        --cpu=Cortex-M33.no_dsp.no_se --fpu=None) --dependencies=n
-#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_H562_CustomBoard.stldr.iar_deps
+#        C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_H562_Custom.stldr.iar_deps
 #
 ###############################################################################
 

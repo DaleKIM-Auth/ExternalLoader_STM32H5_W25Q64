@@ -3,9 +3,9 @@
     <Tool>
         <Name>linker</Name>
         <Parent>
-            <Path>C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_NUCLEO-H563ZI.stldr</Path>
+            <Path>C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\Exe\W25Q128JV_STM32H562_Nucleo.stldr</Path>
             <Output>
-                <Path>C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\List\W25Q128JV_NUCLEO-H563ZI.map</Path>
+                <Path>C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\List\W25Q128JV_STM32H562_Nucleo.map</Path>
             </Output>
         </Parent>
     </Tool>

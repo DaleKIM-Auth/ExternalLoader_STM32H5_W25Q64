@@ -715,11 +715,11 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>W25Q128JV_NUCLEO-H563ZI.stldr</state>
+                    <state>W25Q128JV_STM32H562_Nucleo.stldr</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IlinkKeepSymbols</name>
