@@ -69,7 +69,7 @@ void QSPI_Init(void)
   hospi1.Init.FreeRunningClock = HAL_XSPI_FREERUNCLK_DISABLE;
   hospi1.Init.ClockMode = HAL_XSPI_CLOCK_MODE_0;
   hospi1.Init.WrapSize = HAL_XSPI_WRAP_NOT_SUPPORTED;
-  hospi1.Init.ClockPrescaler = 4;
+  hospi1.Init.ClockPrescaler = 5;
   hospi1.Init.SampleShifting = HAL_XSPI_SAMPLE_SHIFT_NONE;
   hospi1.Init.DelayHoldQuarterCycle = HAL_XSPI_DHQC_DISABLE;
   hospi1.Init.ChipSelectBoundary = HAL_XSPI_BONDARYOF_NONE;
@@ -712,7 +712,7 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
   
   /* Peripheral clock enable */
   __HAL_RCC_OSPI1_CLK_ENABLE();
-#if 0// for nucleo
+#if 1// for nucleo
     __HAL_RCC_GPIOE_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -752,7 +752,7 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
     HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-#else
+#else // custom board
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   /**OCTOSPI1 GPIO Configuration
@@ -765,35 +765,35 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
   */
   GPIO_InitStruct.Pin = GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF6_OCTOSPI1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF6_OCTOSPI1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = GPIO_PIN_2;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF9_OCTOSPI1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   
   GPIO_InitStruct.Pin = GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

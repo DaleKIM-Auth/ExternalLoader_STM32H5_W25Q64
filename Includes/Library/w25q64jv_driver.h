@@ -88,13 +88,13 @@
  * @brief User's chip parameters
  */
 
-#define MEM_FLASH_SIZE     8U 	               // 8 MBytes
+#define MEM_FLASH_SIZE     32U 	               // 32 MBytes
 #define MEM_BLOCK_SIZE     64U                 // 64 KB: 256 pages
 #define MEM_SECTOR_SIZE    4U                  // 4 KB : 16 pages
 #define MEM_PAGE_SIZE      256U                // 256 byte : 1 page
-#define BLOCK_COUNT        128U                // 256 blocks
-#define SECTOR_COUNT       (BLOCK_COUNT * 16)  // 1024 sectors
-#define PAGE_COUNT         (SECTOR_COUNT * 16) // 16384 pages
+#define BLOCK_COUNT        512U                // 512 blocks
+#define SECTOR_COUNT       (BLOCK_COUNT * 16)  // 8,192 sectors
+#define PAGE_COUNT         (SECTOR_COUNT * 16) // 131,072 pages
 
 #define MAX_TIMEOUT_VALUE (0xFFFFFF)
 

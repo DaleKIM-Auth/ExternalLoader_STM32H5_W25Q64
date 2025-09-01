@@ -184,7 +184,7 @@ KeepInCompilation int SectorErase (uint32_t EraseStartAddress ,uint32_t EraseEnd
   
   EraseStartAddress &= 0x0FFFFFFF;
   EraseEndAddress &= 0x0FFFFFFF;
-  EraseStartAddress = EraseStartAddress - EraseStartAddress % 0x10000;
+  EraseStartAddress = EraseStartAddress - (EraseStartAddress % 0x10000);
   
   printf("/*********\n");
   printf("SectorErase\n");
@@ -201,7 +201,7 @@ KeepInCompilation int SectorErase (uint32_t EraseStartAddress ,uint32_t EraseEnd
     W25Q64JV_EraseBlock(BlockAddr);
 
     /* Reads current status of the QSPI memory */
-    EraseStartAddress += 0x10000;
+    EraseStartAddress += (MEM_BLOCK_SIZE * 1024);
   }
   
   __enable_irq();
