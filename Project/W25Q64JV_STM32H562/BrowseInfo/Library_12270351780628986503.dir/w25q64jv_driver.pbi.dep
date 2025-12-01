@@ -1,5 +1,4 @@
 C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo\Library_12270351780628986503.dir\w25q64jv_driver.pbi: \
-  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Source\Library\w25q64jv_driver.c \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\w25q64jv_driver.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_hal.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_hal_conf.h \
@@ -48,4 +47,5 @@ C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_rcc.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_pwr.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_system.h \
-  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_utils.h
+  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_utils.h \
+  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Source\Library\w25q64jv_driver.c

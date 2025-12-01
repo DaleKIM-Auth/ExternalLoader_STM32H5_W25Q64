@@ -64,12 +64,12 @@ void QSPI_Init(void)
   hospi1.Init.FifoThresholdByte = 4;
   hospi1.Init.MemoryMode = HAL_XSPI_SINGLE_MEM;
   hospi1.Init.MemoryType = HAL_XSPI_MEMTYPE_MICRON;
-  hospi1.Init.MemorySize = HAL_XSPI_SIZE_32MB;
+  hospi1.Init.MemorySize = HAL_XSPI_SIZE_256MB;
   hospi1.Init.ChipSelectHighTimeCycle = 1;
   hospi1.Init.FreeRunningClock = HAL_XSPI_FREERUNCLK_DISABLE;
   hospi1.Init.ClockMode = HAL_XSPI_CLOCK_MODE_0;
   hospi1.Init.WrapSize = HAL_XSPI_WRAP_NOT_SUPPORTED;
-  hospi1.Init.ClockPrescaler = 5;
+  hospi1.Init.ClockPrescaler = 4;
   hospi1.Init.SampleShifting = HAL_XSPI_SAMPLE_SHIFT_HALFCYCLE;
   hospi1.Init.DelayHoldQuarterCycle = HAL_XSPI_DHQC_DISABLE;
   hospi1.Init.ChipSelectBoundary = HAL_XSPI_BONDARYOF_NONE;
@@ -131,11 +131,14 @@ W25Q_STATE W25Q64JV_MemoryMappedMode(void)
 
   Commands.OperationType = HAL_XSPI_OPTYPE_READ_CFG;
   Commands.InstructionMode = HAL_XSPI_INSTRUCTION_1_LINE;
-  Commands.Instruction = W25Q_FAST_READ_QUAD_OUT;
-  Commands.AddressMode = HAL_XSPI_ADDRESS_1_LINE;
-  Commands.AddressWidth = HAL_XSPI_ADDRESS_24_BITS;
+  Commands.Instruction = W25Q_FAST_READ_QUAD_IO_4B;
+  Commands.AddressMode = HAL_XSPI_ADDRESS_4_LINES;
+  Commands.AddressWidth = HAL_XSPI_ADDRESS_32_BITS;
+  Commands.AlternateBytesMode = HAL_XSPI_ALT_BYTES_4_LINES;
+  Commands.AlternateBytesWidth = HAL_XSPI_ALT_BYTES_8_BITS;
+  Commands.AlternateBytes = 0xFFU;
   Commands.DataMode = HAL_XSPI_DATA_4_LINES;
-  Commands.DummyCycles = 8U;
+  Commands.DummyCycles = 4U;
   Commands.DQSMode = HAL_XSPI_DQS_DISABLE;
 
   if(HAL_XSPI_Command(&hospi1, &Commands, MAX_TIMEOUT_VALUE) != HAL_OK){          
@@ -712,7 +715,7 @@ void HAL_XSPI_MspInit(XSPI_HandleTypeDef* hxspi)
   
   /* Peripheral clock enable */
   __HAL_RCC_OSPI1_CLK_ENABLE();
-#if 1// for nucleo
+#if 0// for nucleo
     __HAL_RCC_GPIOE_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();

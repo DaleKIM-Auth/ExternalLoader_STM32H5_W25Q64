@@ -715,7 +715,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>W25Q128JV_STM32H562_Nucleo.stldr</state>
+                    <state>W25Q256JV_STM32H562.stldr</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
