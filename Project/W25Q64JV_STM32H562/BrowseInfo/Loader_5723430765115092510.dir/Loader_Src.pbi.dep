@@ -1,5 +1,4 @@
 C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo\Loader_5723430765115092510.dir\Loader_Src.pbi: \
-  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Source\Loader\Loader_Src.c \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Loader\Loader_Src.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_hal.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_hal_conf.h \
@@ -22,7 +21,6 @@ C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo
   C:\Program\ Files\IAR\ Systems\ewarm-9.60.3\arm\inc\c\aarch32\iccarm_builtin.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\CMSIS\mpu_armv8.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\system_stm32h5xx.h \
-  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_hal.h \
   C:\Program\ Files\IAR\ Systems\ewarm-9.60.3\arm\inc\c\stddef.h \
   C:\Program\ Files\IAR\ Systems\ewarm-9.60.3\arm\inc\c\ysizet.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_hal_rcc_ex.h \
@@ -46,9 +44,9 @@ C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\W25Q64JV_STM32H562\BrowseInfo
   C:\Program\ Files\IAR\ Systems\ewarm-9.60.3\arm\inc\c\string.h \
   C:\Program\ Files\IAR\ Systems\ewarm-9.60.3\arm\inc\c\DLib_Product_string.h \
   C:\Program\ Files\IAR\ Systems\ewarm-9.60.3\arm\inc\c\stdio.h \
-  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_hal_xspi.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\w25q64jv_driver.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_rcc.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_pwr.h \
   C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_system.h \
-  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_utils.h
+  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Project\..\Includes\Library\stm32h5xx_ll_utils.h \
+  C:\WorkSpace\ExternalLoader_STM32H5_W25Q64\Source\Loader\Loader_Src.c
